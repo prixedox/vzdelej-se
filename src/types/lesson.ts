@@ -17,7 +17,8 @@ export type VisualType =
   | "interactive-collision"
   | "interactive-pendulum"
   | "interactive-spring-oscillator"
-  | "interactive-orbit";
+  | "interactive-orbit"
+  | "interactive-pv-diagram";
 
 export interface VisualBlock {
   type: VisualType;

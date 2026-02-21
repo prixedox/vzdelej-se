@@ -16,6 +16,7 @@ import { InteractiveCollision } from "./interactive-collision";
 import { InteractivePendulum } from "./interactive-pendulum";
 import { InteractiveSpringOscillator } from "./interactive-spring-oscillator";
 import { InteractiveOrbit } from "./interactive-orbit";
+import { InteractivePVDiagram } from "./interactive-pv-diagram";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
 export function VisualBlock({
@@ -86,6 +87,9 @@ export function VisualBlock({
       break;
     case "interactive-orbit":
       content = <InteractiveOrbit {...(props as any)} />;
+      break;
+    case "interactive-pv-diagram":
+      content = <InteractivePVDiagram {...(props as any)} />;
       break;
     default:
       return null;
