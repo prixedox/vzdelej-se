@@ -10,6 +10,12 @@ import { InteractiveNumberLine } from "./interactive-number-line";
 import { InteractiveTrajectory } from "./interactive-trajectory";
 import { InteractiveVelocityGraph } from "./interactive-velocity-graph";
 import { InteractiveMotion } from "./interactive-motion";
+import { InteractiveRollerCoaster } from "./interactive-roller-coaster";
+import { InteractiveInclinedPlane } from "./interactive-inclined-plane";
+import { InteractiveCollision } from "./interactive-collision";
+import { InteractivePendulum } from "./interactive-pendulum";
+import { InteractiveSpringOscillator } from "./interactive-spring-oscillator";
+import { InteractiveOrbit } from "./interactive-orbit";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
 export function VisualBlock({
@@ -62,6 +68,24 @@ export function VisualBlock({
       break;
     case "interactive-motion":
       content = <InteractiveMotion {...(props as any)} />;
+      break;
+    case "interactive-roller-coaster":
+      content = <InteractiveRollerCoaster {...(props as any)} />;
+      break;
+    case "interactive-inclined-plane":
+      content = <InteractiveInclinedPlane {...(props as any)} />;
+      break;
+    case "interactive-collision":
+      content = <InteractiveCollision {...(props as any)} />;
+      break;
+    case "interactive-pendulum":
+      content = <InteractivePendulum {...(props as any)} />;
+      break;
+    case "interactive-spring-oscillator":
+      content = <InteractiveSpringOscillator {...(props as any)} />;
+      break;
+    case "interactive-orbit":
+      content = <InteractiveOrbit {...(props as any)} />;
       break;
     default:
       return null;

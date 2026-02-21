@@ -33,7 +33,11 @@ export async function getOrCreateStripeCustomer(userId: string): Promise<string>
 export function isSubscriptionActive(user: {
   subscriptionStatus: string | null;
   stripeCurrentPeriodEnd: Date | string | null;
+  role?: string | null;
 }): boolean {
+  // Admins always have full access
+  if (user.role === "admin") return true;
+
   if (user.subscriptionStatus === "active" || user.subscriptionStatus === "trialing") {
     if (user.stripeCurrentPeriodEnd) {
       const endTime = user.stripeCurrentPeriodEnd instanceof Date

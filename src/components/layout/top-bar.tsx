@@ -30,6 +30,11 @@ export function TopBar() {
 
         {session?.user && (
           <div className="flex items-center gap-4">
+            {session.user.role === "admin" && (
+              <span className="text-xs font-bold bg-red-500 text-white px-2 py-0.5 rounded-full">
+                Admin
+              </span>
+            )}
             <StreakCounter streak={session.user.streak} />
             <XPBar xp={session.user.xp} level={session.user.level} />
           </div>

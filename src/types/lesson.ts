@@ -11,7 +11,13 @@ export type VisualType =
   | "interactive-number-line"
   | "interactive-trajectory"
   | "interactive-velocity-graph"
-  | "interactive-motion";
+  | "interactive-motion"
+  | "interactive-roller-coaster"
+  | "interactive-inclined-plane"
+  | "interactive-collision"
+  | "interactive-pendulum"
+  | "interactive-spring-oscillator"
+  | "interactive-orbit";
 
 export interface VisualBlock {
   type: VisualType;

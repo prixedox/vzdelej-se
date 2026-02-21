@@ -103,7 +103,20 @@ Když tlačíte na zeď, zeď tlačí stejnou silou na vás. Když Země přitah
 - Plavec se odráží od stěny bazénu → stěna \"tlačí\" plavce dopředu
 - Raketa vypouští plyny dozadu → plyny tlačí raketu dopředu
 
-> [!tip] Akce a reakce vždy působí na **různá tělesa**! Nikdy se navzájem neruší.`,
+> [!tip] Akce a reakce vždy působí na **různá tělesa**! Nikdy se navzájem neruší.
+
+Vyzkoušejte si srážku dvou těles — 3. zákon v akci! Nastavte hmotnosti a rychlosti, pak klikněte Srazit:`,
+        visual: {
+          type: "interactive-collision",
+          props: {
+            collisionType: "choosable",
+            defaultM1: 4,
+            defaultM2: 2,
+            defaultV1: 8,
+            defaultV2: 0,
+          },
+          caption: "Nastavte hmotnosti a rychlosti, přepínejte pružnou/nepružnou srážku",
+        },
         examples: [
           {
             problem: "Astronaut ve vesmíru hodí kamenem. Co se stane?",
@@ -311,13 +324,15 @@ Těleso se rozjede, když: $F_{\\parallel} > F_t$, tj. $\\tan \\alpha > f$
 
 > [!key] Výsledná síla po sklonu: $F = m \\cdot g \\cdot (\\sin \\alpha - f \\cdot \\cos \\alpha)$`,
         visual: {
-          type: "interactive-trajectory",
+          type: "interactive-inclined-plane",
           props: {
-            trajectoryType: "free-fall",
-            defaultHeight: 20,
-            g: 10,
+            maxAngle: 60,
+            defaultAngle: 30,
+            maxMass: 20,
+            defaultMu: 0.3,
+            showDecomposition: true,
           },
-          caption: "Volný pád — speciální případ nakloněné roviny (úhel 90°)",
+          caption: "Měňte úhel, hmotnost a tření — sledujte síly a zda se blok rozjede",
         },
         examples: [
           {
@@ -548,13 +563,17 @@ kde $T$ je perioda (doba jednoho oběhu) a $f$ frekvence (počet oběhů za seku
 > [!key] V zatáčce musí tření poskytnout dostředivou sílu. Maximální bezpečná rychlost:
 > $$v_{\\max} = \\sqrt{f \\cdot g \\cdot r}$$`,
         visual: {
-          type: "interactive-velocity-graph",
+          type: "interactive-collision",
           props: {
-            mode: "function-explorer",
-            defaultExponent: 2,
-            xRange: [0, 5],
+            collisionType: "choosable",
+            defaultM1: 5,
+            defaultM2: 3,
+            defaultV1: 10,
+            defaultV2: -5,
+            showEnergyBars: true,
+            showMomentumBars: true,
           },
-          caption: "Dostředivá síla roste s druhou mocninou rychlosti — dvojnásobná rychlost = čtyřnásobná síla!",
+          caption: "Porovnejte pružnou a nepružnou srážku — sledujte zachování hybnosti a ztrátu energie",
         },
       },
       {

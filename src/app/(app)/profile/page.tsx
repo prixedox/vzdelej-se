@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { xpProgressInLevel } from "@/lib/utils/xp";
 import { Progress } from "@/components/ui/progress";
-import { User, Mail, Calendar, Star, Trophy, BookOpen } from "lucide-react";
+import { User, Mail, Calendar, Star, Trophy, BookOpen, Shield } from "lucide-react";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -76,6 +76,15 @@ export default async function ProfilePage() {
               </Badge>
             </div>
           </div>
+          {user.role === "admin" && (
+            <div className="flex items-center gap-3">
+              <Shield className="h-5 w-5 text-red-500" />
+              <div>
+                <p className="text-sm text-muted-foreground">Role</p>
+                <Badge variant="destructive">Admin</Badge>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

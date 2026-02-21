@@ -12,6 +12,7 @@ declare module "next-auth" {
       level: number;
       streak: number;
       dailyLessonsUsed: number;
+      role: string;
     };
   }
 }

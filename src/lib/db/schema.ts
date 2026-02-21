@@ -32,6 +32,7 @@ export const users = pgTable("users", {
     mode: "date",
   }),
   subscriptionStatus: text("subscription_status").default("free"), // free | active | canceled | past_due
+  role: text("role").default("user").notNull(), // "user" | "admin"
 
   // Gamification
   xp: integer("xp").default(0).notNull(),

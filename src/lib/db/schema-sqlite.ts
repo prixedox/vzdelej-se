@@ -24,6 +24,7 @@ export const users = sqliteTable("users", {
   stripePriceId: text("stripe_price_id"),
   stripeCurrentPeriodEnd: text("stripe_current_period_end"),
   subscriptionStatus: text("subscription_status").default("free"),
+  role: text("role").default("user").notNull(), // "user" | "admin"
   xp: integer("xp").default(0).notNull(),
   level: integer("level").default(1).notNull(),
   streak: integer("streak").default(0).notNull(),

@@ -58,6 +58,7 @@ export default async function DashboardPage() {
   const isPremium = isSubscriptionActive({
     subscriptionStatus: user.subscriptionStatus,
     stripeCurrentPeriodEnd: user.stripeCurrentPeriodEnd,
+    role: user.role,
   });
 
   const xpProgress = xpProgressInLevel(user.xp);

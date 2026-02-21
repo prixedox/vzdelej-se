@@ -18,8 +18,9 @@ export async function checkDailyLimit(userId: string): Promise<{
     return { allowed: false, used: 0, limit: FREE_DAILY_LESSONS, remaining: 0 };
   }
 
-  // Premium users have unlimited access
+  // Premium users and admins have unlimited access
   if (
+    user.role === "admin" ||
     user.subscriptionStatus === "active" ||
     user.subscriptionStatus === "trialing"
   ) {
@@ -66,8 +67,9 @@ export async function incrementDailyUsage(userId: string): Promise<void> {
 
   if (!user) return;
 
-  // Premium users don't need tracking
+  // Premium users and admins don't need tracking
   if (
+    user.role === "admin" ||
     user.subscriptionStatus === "active" ||
     user.subscriptionStatus === "trialing"
   ) {

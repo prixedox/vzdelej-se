@@ -96,6 +96,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             session.user.level = dbUser.level;
             session.user.streak = dbUser.streak;
             session.user.dailyLessonsUsed = dbUser.dailyLessonsUsed;
+            session.user.role = dbUser.role ?? "user";
           }
         } catch {
           // DB not available — return basic session

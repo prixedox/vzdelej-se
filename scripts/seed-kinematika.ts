@@ -375,13 +375,13 @@ $$\\begin{array}{c|cccc} t \\text{ (s)} & 0 & 1 & 2 & 3 \\\\ \\hline v \\text{ (
 
 Všimněte si: když zdvojnásobíte výšku, doba pádu se **nezvětší** dvakrát — roste pomaleji (s odmocninou).`,
         visual: {
-          type: "interactive-trajectory",
+          type: "interactive-roller-coaster",
           props: {
-            trajectoryType: "free-fall",
-            defaultHeight: 45,
-            g: 10,
+            trackProfile: "hills",
+            maxHeight: 45,
+            showFriction: false,
           },
-          caption: "Změňte výšku a sledujte, jak se mění doba pádu",
+          caption: "Posuňte kuličku po trati — sledujte, jak se mění rychlost a energie s výškou",
         },
       },
       {
@@ -622,6 +622,29 @@ Dolet: $x = v_0 \\cdot t = 3 \\cdot 0{,}5 = \\color{#16a34a}{1{,}5 \\text{ m}}$ 
 $$\\boxed{s = \\int_0^t v \\, dt = \\text{plocha pod } v(t)}$$
 
 > [!key] Obdélník pod grafem: $s = v \\cdot t$. Trojúhelník: $s = \\frac{1}{2} v \\cdot t$.`,
+      },
+      {
+        heading: "Kyvadlo — periodický pohyb",
+        body: `Kyvadlo je krásný příklad **periodického pohybu** — pohyb, který se pravidelně opakuje.
+
+Doba jednoho kyvu (perioda):
+$$\\boxed{T = 2\\pi\\sqrt{\\frac{L}{g}}}$$
+
+kde $L$ je délka kyvadla a $g$ tíhové zrychlení.
+
+> [!key] Perioda **nezávisí na hmotnosti** ani na amplitudě (pro malé výchylky). Závisí jen na délce a gravitaci!
+
+Spusťte kyvadlo a sledujte, jak se mění rychlost a energie během kyvu:`,
+        visual: {
+          type: "interactive-pendulum",
+          props: {
+            defaultLength: 1.5,
+            defaultAngle: 30,
+            showEnergyBars: true,
+            showGSlider: true,
+          },
+          caption: "Spusťte kyvadlo — sledujte přeměnu energie a vliv délky na periodu",
+        },
       },
       {
         heading: "Relativní pohyb",

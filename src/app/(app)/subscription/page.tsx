@@ -13,6 +13,7 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState<string | null>(null);
 
   const isPremium =
+    session?.user?.role === "admin" ||
     session?.user?.subscriptionStatus === "active" ||
     session?.user?.subscriptionStatus === "trialing";
 
