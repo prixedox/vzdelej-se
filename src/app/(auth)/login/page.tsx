@@ -16,7 +16,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/prehled";
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -112,7 +112,7 @@ function LoginForm() {
 
         <p className="text-center text-sm text-muted-foreground">
           Nemáte účet?{" "}
-          <Link href="/registrace" className="text-primary hover:underline font-medium">
+          <Link href="/register" className="text-primary hover:underline font-medium">
             Zaregistrujte se
           </Link>
         </p>

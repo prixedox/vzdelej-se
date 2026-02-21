@@ -21,7 +21,7 @@ export default function TopicPage() {
   const tree = subjectTrees[subjectSlug];
   const topic = tree ? findTopic(tree, topicSlug) : null;
 
-  const [selectedDifficulty, setSelectedDifficulty] = useState("začátečník");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("beginner");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPaywall, setShowPaywall] = useState(false);
@@ -30,7 +30,7 @@ export default function TopicPage() {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-bold">Téma nenalezeno</h2>
-        <Link href="/temata" className="text-primary hover:underline mt-2 inline-block">
+        <Link href="/topics" className="text-primary hover:underline mt-2 inline-block">
           Zpět na témata
         </Link>
       </div>
@@ -44,7 +44,7 @@ export default function TopicPage() {
     try {
       // First, find the topic in DB by slug
       const topicRes = await fetch(
-        `/api/lekce/generovat`,
+        `/api/lessons/generate`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -69,7 +69,7 @@ export default function TopicPage() {
       }
 
       const data = await topicRes.json();
-      router.push(`/lekce/${data.lessonCacheId}?progressId=${data.progressId}`);
+      router.push(`/lessons/${data.lessonCacheId}?progressId=${data.progressId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Nepodařilo se spustit lekci");
       setLoading(false);
@@ -79,7 +79,7 @@ export default function TopicPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <Link
-        href={`/temata/${subjectSlug}`}
+        href={`/topics/${subjectSlug}`}
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -112,9 +112,9 @@ export default function TopicPage() {
                   {diff.label}
                 </Badge>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {diff.value === "začátečník" && "Základy a jednoduché příklady"}
-                  {diff.value === "středně pokročilý" && "Kombinace konceptů"}
-                  {diff.value === "pokročilý" && "Náročné aplikační úlohy"}
+                  {diff.value === "beginner" && "Základy a jednoduché příklady"}
+                  {diff.value === "intermediate" && "Kombinace konceptů"}
+                  {diff.value === "advanced" && "Náročné aplikační úlohy"}
                 </p>
               </button>
             ))}

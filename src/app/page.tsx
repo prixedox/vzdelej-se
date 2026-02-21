@@ -57,7 +57,7 @@ const plans = [
       "XP a úrovně",
     ],
     cta: "Začít zdarma",
-    href: "/registrace",
+    href: "/register",
     popular: false,
   },
   {
@@ -71,7 +71,7 @@ const plans = [
       "Prioritní generování",
     ],
     cta: "Vyzkoušet Premium",
-    href: "/registrace",
+    href: "/register",
     popular: false,
   },
   {
@@ -85,7 +85,7 @@ const plans = [
       "Prioritní podpora",
     ],
     cta: "Nejlepší nabídka",
-    href: "/registrace",
+    href: "/register",
     popular: true,
   },
 ];
@@ -100,13 +100,13 @@ export default function LandingPage() {
             Vzdělej.se
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/cenik">
+            <Link href="/pricing">
               <Button variant="ghost" size="sm">Ceník</Button>
             </Link>
-            <Link href="/prihlaseni">
+            <Link href="/login">
               <Button variant="ghost" size="sm">Přihlásit se</Button>
             </Link>
-            <Link href="/registrace">
+            <Link href="/register">
               <Button size="sm">Registrace</Button>
             </Link>
           </div>
@@ -127,13 +127,13 @@ export default function LandingPage() {
             procvičení s okamžitou zpětnou vazbou. Začněte zdarma.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/registrace">
+            <Link href="/register">
               <Button size="lg" className="gap-2 text-base">
                 Začít se učit zdarma
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/cenik">
+            <Link href="/pricing">
               <Button size="lg" variant="outline" className="text-base">
                 Zobrazit ceník
               </Button>
@@ -229,7 +229,7 @@ export default function LandingPage() {
           <p className="text-blue-100 mb-8 text-lg">
             Zaregistrujte se a začněte se učit ještě dnes. Prvních 3 lekcí denně zdarma.
           </p>
-          <Link href="/registrace">
+          <Link href="/register">
             <Button
               size="lg"
               variant="secondary"

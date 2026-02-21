@@ -35,7 +35,7 @@ export default function LessonPage() {
   useEffect(() => {
     async function fetchLesson() {
       try {
-        const res = await fetch(`/api/lekce/${lessonId}`);
+        const res = await fetch(`/api/lessons/${lessonId}`);
         if (!res.ok) {
           throw new Error("Nepodařilo se načíst lekci");
         }
@@ -68,7 +68,7 @@ export default function LessonPage() {
     <div>
       <div className="mb-6">
         <p className="text-sm text-muted-foreground">
-          {data.lesson.topic?.subject === "matematika" ? "Matematika" : "Fyzika"} &gt;{" "}
+          {data.lesson.topic?.subject === "math" ? "Matematika" : "Fyzika"} &gt;{" "}
           {data.lesson.topic?.name}
         </p>
       </div>

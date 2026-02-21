@@ -74,4 +74,4 @@ export interface LessonContent {
 }
 
 export type LessonStatus = "not_started" | "in_progress" | "completed";
-export type Difficulty = "začátečník" | "středně pokročilý" | "pokročilý";
+export type Difficulty = "beginner" | "intermediate" | "advanced";

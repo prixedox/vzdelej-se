@@ -97,7 +97,7 @@ export function SlideRenderer({
             transition={{ delay: 0.4 }}
           >
             <Button asChild>
-              <Link href="/prehled">Zpět na přehled</Link>
+              <Link href="/dashboard">Zpět na přehled</Link>
             </Button>
           </motion.div>
         </div>

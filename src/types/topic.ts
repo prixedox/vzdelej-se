@@ -14,4 +14,4 @@ export interface TopicTreeData {
   topics: TopicNode[];
 }
 
-export type Subject = "matematika" | "fyzika";
+export type Subject = "math" | "physics";

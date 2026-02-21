@@ -13,7 +13,7 @@ export default function TopicsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {subjects.map((subject) => (
-          <Link key={subject.slug} href={`/temata/${subject.slug}`}>
+          <Link key={subject.slug} href={`/topics/${subject.slug}`}>
             <Card className="hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group h-full">
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between">

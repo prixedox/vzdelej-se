@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${appUrl}/predplatne?success=true`,
-      cancel_url: `${appUrl}/cenik?canceled=true`,
+      success_url: `${appUrl}/subscription?success=true`,
+      cancel_url: `${appUrl}/pricing?canceled=true`,
       locale: "cs",
       currency: "czk",
       metadata: {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Stripe checkout error:", error);
     return NextResponse.json(
-      { error: "Nepodařilo se vytvořit platební relaci" },
+      { error: "Failed to create checkout session" },
       { status: 500 }
     );
   }

@@ -13,10 +13,10 @@ import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/prehled", label: "Přehled", icon: LayoutDashboard },
-  { href: "/temata", label: "Témata", icon: BookOpen },
-  { href: "/profil", label: "Profil", icon: User },
-  { href: "/predplatne", label: "Předplatné", icon: CreditCard },
+  { href: "/dashboard", label: "Přehled", icon: LayoutDashboard },
+  { href: "/topics", label: "Témata", icon: BookOpen },
+  { href: "/profile", label: "Profil", icon: User },
+  { href: "/subscription", label: "Předplatné", icon: CreditCard },
 ];
 
 export function Sidebar() {
@@ -26,7 +26,7 @@ export function Sidebar() {
     <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
       <div className="flex flex-col flex-grow border-r bg-card pt-5 pb-4 overflow-y-auto">
         <div className="flex items-center flex-shrink-0 px-4 mb-8">
-          <Link href="/prehled" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2">
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Vzdělej.se
             </span>

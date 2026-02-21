@@ -14,13 +14,13 @@ import { Star, Trophy, Flame } from "lucide-react";
 
 export default async function DashboardPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/prihlaseni");
+  if (!session?.user?.id) redirect("/login");
 
   const user = await db.query.users.findFirst({
     where: eq(users.id, session.user.id),
   });
 
-  if (!user) redirect("/prihlaseni");
+  if (!user) redirect("/login");
 
   const today = getTodayDateString();
 

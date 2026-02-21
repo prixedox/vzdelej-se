@@ -14,7 +14,7 @@ const db = drizzle(sql, { schema });
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const DIFFICULTIES = ["začátečník", "středně pokročilý", "pokročilý"];
+const DIFFICULTIES = ["beginner", "intermediate", "advanced"];
 
 async function generateLesson(
   topic: typeof schema.topics.$inferSelect,
@@ -35,7 +35,7 @@ async function generateLesson(
     return;
   }
 
-  const subject = topic.subject === "matematika" ? "matematiky" : "fyziky";
+  const subject = topic.subject === "math" ? "matematiky" : "fyziky";
   const prompt = getLessonPrompt({
     topicName: topic.name,
     subject,

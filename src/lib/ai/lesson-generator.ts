@@ -43,7 +43,7 @@ export async function getOrGenerateLesson(params: {
   // Generate with Claude
   const content = await generateLessonContent({
     topicName: topic.name,
-    subject: topic.subject === "matematika" ? "matematiky" : "fyziky",
+    subject: topic.subject === "math" ? "matematiky" : "fyziky",
     difficulty,
     aiContext: topic.aiContext || topic.description || topic.name,
     variant,

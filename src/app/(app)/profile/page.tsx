@@ -11,13 +11,13 @@ import { User, Mail, Calendar, Star, Trophy, BookOpen } from "lucide-react";
 
 export default async function ProfilePage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/prihlaseni");
+  if (!session?.user?.id) redirect("/login");
 
   const user = await db.query.users.findFirst({
     where: eq(users.id, session.user.id),
   });
 
-  if (!user) redirect("/prihlaseni");
+  if (!user) redirect("/login");
 
   // Count completed lessons
   const [lessonStats] = await db

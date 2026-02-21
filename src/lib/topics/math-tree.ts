@@ -1,7 +1,7 @@
 import type { TopicTreeData } from "@/types/topic";
 
 export const mathTree: TopicTreeData = {
-  subject: "matematika",
+  subject: "math",
   subjectName: "Matematika",
   icon: "📐",
   topics: [

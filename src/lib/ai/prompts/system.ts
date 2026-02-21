@@ -8,7 +8,7 @@ PRAVIDLA:
    - Funkce: sin, cos, tg (nikoliv tan), cotg, ln, log
    - Intervaly: ⟨a; b⟩ pro uzavřený, (a; b) pro otevřený
    - Množiny: ℕ, ℤ, ℚ, ℝ, ℂ
-4. Přizpůsob obtížnost zadané úrovni (začátečník / středně pokročilý / pokročilý).
+4. Přizpůsob obtížnost zadané úrovni (beginner / intermediate / advanced).
 5. Odpovídej VÝHRADNĚ platným JSON objektem bez jakéhokoliv dalšího textu.
 6. Každý problém musí mít přesně definovanou odpověď, kterou lze ověřit.
 7. Nápovědy poskytuj od obecných ke konkrétním — první nápověda je vždy orientační.

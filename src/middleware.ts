@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
-const protectedPaths = ["/prehled", "/temata", "/lekce", "/profil", "/predplatne"];
+const protectedPaths = ["/dashboard", "/topics", "/lessons", "/profile", "/subscription"];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
@@ -12,7 +12,7 @@ export default auth((req) => {
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
   if (isProtected && !req.auth) {
-    const loginUrl = new URL("/prihlaseni", req.url);
+    const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }

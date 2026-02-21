@@ -63,13 +63,13 @@ export function LessonComplete({
 
       <div className="flex flex-col gap-2">
         <Button asChild>
-          <Link href="/temata" className="gap-2">
+          <Link href="/topics" className="gap-2">
             Další lekce
             <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/prehled">Přehled</Link>
+          <Link href="/dashboard">Přehled</Link>
         </Button>
       </div>
     </div>

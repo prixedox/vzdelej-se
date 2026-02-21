@@ -20,7 +20,7 @@ export const PROMPT_VERSION = "1.0";
 
 // Difficulties
 export const DIFFICULTIES = [
-  { value: "začátečník" as const, label: "Začátečník", color: "bg-green-100 text-green-800" },
-  { value: "středně pokročilý" as const, label: "Středně pokročilý", color: "bg-yellow-100 text-yellow-800" },
-  { value: "pokročilý" as const, label: "Pokročilý", color: "bg-red-100 text-red-800" },
+  { value: "beginner" as const, label: "Začátečník", color: "bg-green-100 text-green-800" },
+  { value: "intermediate" as const, label: "Středně pokročilý", color: "bg-yellow-100 text-yellow-800" },
+  { value: "advanced" as const, label: "Pokročilý", color: "bg-red-100 text-red-800" },
 ];

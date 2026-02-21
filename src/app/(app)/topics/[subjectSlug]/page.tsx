@@ -19,7 +19,7 @@ export default async function SubjectPage({
   return (
     <div className="max-w-4xl mx-auto">
       <Link
-        href="/temata"
+        href="/topics"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -53,7 +53,7 @@ export default async function SubjectPage({
                 <TopicCard
                   key={topic.slug}
                   topic={topic}
-                  href={`/temata/${subjectSlug}/${topic.slug}`}
+                  href={`/topics/${subjectSlug}/${topic.slug}`}
                 />
               ))}
             </div>

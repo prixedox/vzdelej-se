@@ -58,7 +58,7 @@ export function LessonShell({
       });
 
       try {
-        const res = await fetch(`/api/lekce/${lessonCacheId}/odpoved`, {
+        const res = await fetch(`/api/lessons/${lessonCacheId}/answer`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

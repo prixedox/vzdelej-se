@@ -27,8 +27,8 @@ export const authConfig: NextAuthConfig = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/prihlaseni",
-    newUser: "/prehled",
+    signIn: "/login",
+    newUser: "/dashboard",
   },
   callbacks: {
     async jwt({ token, user }) {

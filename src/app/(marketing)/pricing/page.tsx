@@ -16,7 +16,7 @@ const plans = [
       "XP a úrovně",
     ],
     cta: "Začít zdarma",
-    href: "/registrace",
+    href: "/register",
     popular: false,
   },
   {
@@ -30,7 +30,7 @@ const plans = [
       "Zrušení kdykoliv",
     ],
     cta: "Zvolit měsíční",
-    href: "/registrace",
+    href: "/register",
     popular: false,
   },
   {
@@ -44,7 +44,7 @@ const plans = [
       "Prioritní podpora",
     ],
     cta: "Nejlepší nabídka",
-    href: "/registrace",
+    href: "/register",
     popular: true,
   },
 ];
@@ -58,10 +58,10 @@ export default function PricingPage() {
             Vzdělej.se
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/prihlaseni">
+            <Link href="/login">
               <Button variant="ghost" size="sm">Přihlásit se</Button>
             </Link>
-            <Link href="/registrace">
+            <Link href="/register">
               <Button size="sm">Registrace</Button>
             </Link>
           </div>

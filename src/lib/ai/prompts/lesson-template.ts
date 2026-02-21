@@ -75,9 +75,9 @@ POŽADAVKY:
 - Každý problém musí mít 3 nápovědy
 - acceptableAnswers musí obsahovat expectedAnswer + všechny rozumné varianty (s/bez jednotek, čárka/tečka, zlomek/desetinné číslo)
 - Pro obtížnost "${difficulty}":
-  ${difficulty === "začátečník" ? "- Jednoduché příklady, základní koncepty, hodně vysvětlování" : ""}
-  ${difficulty === "středně pokročilý" ? "- Střední obtížnost, kombinace konceptů, méně vedení" : ""}
-  ${difficulty === "pokročilý" ? "- Náročné příklady, aplikace, minimální vedení, komplexní problémy" : ""}
+  ${difficulty === "beginner" ? "- Jednoduché příklady, základní koncepty, hodně vysvětlování" : ""}
+  ${difficulty === "intermediate" ? "- Střední obtížnost, kombinace konceptů, méně vedení" : ""}
+  ${difficulty === "advanced" ? "- Náročné příklady, aplikace, minimální vedení, komplexní problémy" : ""}
 
 Vrať POUZE validní JSON bez jakéhokoliv jiného textu.`;
 }

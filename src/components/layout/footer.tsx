@@ -18,12 +18,12 @@ export function Footer() {
             <h4 className="font-semibold mb-3">Odkazy</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/cenik" className="hover:text-foreground transition-colors">
+                <Link href="/pricing" className="hover:text-foreground transition-colors">
                   Ceník
                 </Link>
               </li>
               <li>
-                <Link href="/podminky" className="hover:text-foreground transition-colors">
+                <Link href="/terms" className="hover:text-foreground transition-colors">
                   Podmínky služby
                 </Link>
               </li>

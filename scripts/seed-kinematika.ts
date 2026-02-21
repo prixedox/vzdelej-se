@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 
 const client = createClient({ url: "file:./sqlite.db" });
 
-const TOPIC_ID = "5c24c270-e19d-4445-ac73-2f57e5c19029";
+const TOPIC_ID = "1053a176-b98d-4951-90dd-8ea58f0e5ed7";
 
 // ═══════════════════════════════════════════════════════════════
 // ZAČÁTEČNÍK — Intuitive, visual, discovery-based
@@ -769,9 +769,9 @@ $$s = 200 + 50 = 250 \\text{ m}$$`,
 
 async function main() {
   const difficulties = [
-    { label: "začátečník", content: beginner, variant: 1 },
-    { label: "středně pokročilý", content: intermediate, variant: 1 },
-    { label: "pokročilý", content: advanced, variant: 1 },
+    { label: "beginner", content: beginner, variant: 1 },
+    { label: "intermediate", content: intermediate, variant: 1 },
+    { label: "advanced", content: advanced, variant: 1 },
   ];
 
   console.log("\n📝 Seeding Brilliant-style lessons for: Kinematika\n");

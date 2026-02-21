@@ -29,7 +29,7 @@ export function ContinueLearning({
             Vyberte si téma a začněte svou první lekci
           </p>
           <Button asChild>
-            <Link href="/temata" className="gap-2">
+            <Link href="/topics" className="gap-2">
               Procházet témata
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -65,7 +65,7 @@ export function ContinueLearning({
               </div>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link href={`/temata`}>
+              <Link href={`/topics`}>
                 {lesson.status === "completed" ? "Opakovat" : "Pokračovat"}
               </Link>
             </Button>

@@ -26,7 +26,7 @@ export default function RegisterPage() {
       await signIn("credentials", {
         email,
         password,
-        redirectTo: "/prehled",
+        redirectTo: "/dashboard",
       });
     } catch {
       setError("Registrace se nezdařila. Zkuste to prosím znovu.");
@@ -47,7 +47,7 @@ export default function RegisterPage() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => signIn("google", { redirectTo: "/prehled" })}
+            onClick={() => signIn("google", { redirectTo: "/dashboard" })}
           >
             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
               <path
@@ -122,7 +122,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-muted-foreground">
             Už máte účet?{" "}
-            <Link href="/prihlaseni" className="text-primary hover:underline font-medium">
+            <Link href="/login" className="text-primary hover:underline font-medium">
               Přihlaste se
             </Link>
           </p>

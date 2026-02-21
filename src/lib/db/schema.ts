@@ -100,7 +100,7 @@ export const topics = pgTable(
     slug: text("slug").notNull(),
     name: text("name").notNull(), // Czech name
     description: text("description"),
-    subject: text("subject").notNull(), // "matematika" | "fyzika"
+    subject: text("subject").notNull(), // "math" | "physics"
     parentId: text("parent_id"),
     order: integer("order").default(0).notNull(),
     isLeaf: boolean("is_leaf").default(false).notNull(),
@@ -126,7 +126,7 @@ export const lessonCache = pgTable(
     topicId: text("topic_id")
       .notNull()
       .references(() => topics.id, { onDelete: "cascade" }),
-    difficulty: text("difficulty").notNull(), // "začátečník" | "středně pokročilý" | "pokročilý"
+    difficulty: text("difficulty").notNull(), // "beginner" | "intermediate" | "advanced"
     variant: integer("variant").default(1).notNull(),
     content: jsonb("content").notNull(), // Full lesson JSON
     model: text("model").notNull(), // e.g. "claude-sonnet-4-5-20250929"

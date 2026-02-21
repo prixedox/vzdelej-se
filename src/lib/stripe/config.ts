@@ -11,7 +11,7 @@ export const PLANS = [
     name: "Měsíční",
     price: 199,
     currency: "CZK",
-    interval: "měsíc" as const,
+    interval: "month" as const,
     priceId: process.env.STRIPE_MONTHLY_PRICE_ID!,
     features: [
       "Neomezený přístup ke všem lekcím",
@@ -25,7 +25,7 @@ export const PLANS = [
     name: "Roční",
     price: 1490,
     currency: "CZK",
-    interval: "rok" as const,
+    interval: "year" as const,
     priceId: process.env.STRIPE_YEARLY_PRICE_ID!,
     popular: true,
     savings: "Ušetříte 38 %",

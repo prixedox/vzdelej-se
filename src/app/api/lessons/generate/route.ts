@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     });
     if (!topic) {
       return NextResponse.json(
-        { error: "Téma nenalezeno" },
+        { error: "Topic not found" },
         { status: 404 }
       );
     }
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "daily_limit_reached",
-        message: "Dosáhli jste denního limitu bezplatných lekcí",
+        message: "Daily free lesson limit reached",
         used: limit.used,
         limit: limit.limit,
       },
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Lesson generation failed:", error);
     return NextResponse.json(
-      { error: "Generování lekce selhalo. Zkuste to prosím znovu." },
+      { error: "Lesson generation failed. Please try again." },
       { status: 500 }
     );
   }

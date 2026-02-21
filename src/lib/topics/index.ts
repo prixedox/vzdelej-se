@@ -3,13 +3,13 @@ import { physicsTree } from "./physics-tree";
 import type { TopicTreeData, TopicNode } from "@/types/topic";
 
 export const subjectTrees: Record<string, TopicTreeData> = {
-  matematika: mathTree,
-  fyzika: physicsTree,
+  math: mathTree,
+  physics: physicsTree,
 };
 
 export const subjects = [
   {
-    slug: "matematika",
+    slug: "math",
     name: "Matematika",
     description: "Algebra, funkce, geometrie, kombinatorika a analýza",
     icon: "📐",
@@ -17,7 +17,7 @@ export const subjects = [
     leafCount: 21,
   },
   {
-    slug: "fyzika",
+    slug: "physics",
     name: "Fyzika",
     description: "Mechanika, termodynamika, elektřina, vlnění a moderní fyzika",
     icon: "⚛️",

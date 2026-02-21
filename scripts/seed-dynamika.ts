@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 
 const client = createClient({ url: "file:./sqlite.db" });
 
-const TOPIC_ID = "dca833e8-cce1-4381-9d84-5afb84f7bab8";
+const TOPIC_ID = "856d07f1-a44e-44ad-ae92-4bdea01d29f7";
 
 // ═══════════════════════════════════════════════════════════════
 // ZAČÁTEČNÍK — Intuitive, visual, discovery-based
@@ -698,9 +698,9 @@ Gravitační síla vzroste $8$-krát.`,
 
 async function main() {
   const difficulties = [
-    { label: "začátečník", content: beginner, variant: 1 },
-    { label: "středně pokročilý", content: intermediate, variant: 1 },
-    { label: "pokročilý", content: advanced, variant: 1 },
+    { label: "beginner", content: beginner, variant: 1 },
+    { label: "intermediate", content: intermediate, variant: 1 },
+    { label: "advanced", content: advanced, variant: 1 },
   ];
 
   console.log("\n📝 Seeding Brilliant-style lessons for: Dynamika\n");

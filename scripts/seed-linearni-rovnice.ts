@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 
 const client = createClient({ url: "file:./sqlite.db" });
 
-const TOPIC_ID = "9a6efa49-3732-4e9f-be89-32ed401a8d05";
+const TOPIC_ID = "63c5c499-2894-4ee9-98cd-309bb14907b5";
 
 // ═══════════════════════════════════════════════════════════════
 // ZAČÁTEČNÍK — Discovery-based, visual, Brilliant-style
@@ -705,9 +705,9 @@ Pro $a = 3$: $0 \\cdot x = 9$, tedy $0 = 9$ — **spor**, nemá řešení.
 
 async function main() {
   const difficulties = [
-    { label: "začátečník", content: beginner, variant: 1 },
-    { label: "středně pokročilý", content: intermediate, variant: 1 },
-    { label: "pokročilý", content: advanced, variant: 1 },
+    { label: "beginner", content: beginner, variant: 1 },
+    { label: "intermediate", content: intermediate, variant: 1 },
+    { label: "advanced", content: advanced, variant: 1 },
   ];
 
   console.log("\n📝 Seeding Brilliant-style lessons for: Lineární rovnice\n");
