@@ -22,7 +22,8 @@ export type VisualType =
   | "interactive-electric-field"
   | "interactive-circuit"
   | "interactive-wave"
-  | "interactive-optics";
+  | "interactive-optics"
+  | "interactive-atom";
 
 export interface VisualBlock {
   type: VisualType;

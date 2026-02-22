@@ -21,6 +21,7 @@ import { InteractiveElectricField } from "./interactive-electric-field";
 import { InteractiveCircuit } from "./interactive-circuit";
 import { InteractiveWave } from "./interactive-wave";
 import { InteractiveOptics } from "./interactive-optics";
+import { InteractiveAtom } from "./interactive-atom";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
 export function VisualBlock({
@@ -106,6 +107,9 @@ export function VisualBlock({
       break;
     case "interactive-optics":
       content = <InteractiveOptics {...(props as any)} />;
+      break;
+    case "interactive-atom":
+      content = <InteractiveAtom {...(props as any)} />;
       break;
     default:
       return null;
