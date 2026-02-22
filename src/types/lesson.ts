@@ -20,7 +20,9 @@ export type VisualType =
   | "interactive-orbit"
   | "interactive-pv-diagram"
   | "interactive-electric-field"
-  | "interactive-circuit";
+  | "interactive-circuit"
+  | "interactive-wave"
+  | "interactive-optics";
 
 export interface VisualBlock {
   type: VisualType;
