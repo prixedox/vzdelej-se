@@ -409,8 +409,8 @@ Izobaricky dej vykona vetsi praci, protoze tlak zustava vysoky po celou dobu roz
     {
       id: "ip-i-5",
       problemStatement: "Dvouatomovy plyn ($\\gamma = 1{,}4$, $3$ moly) pri $500$ K se adiabaticky stlaci tak, ze se jeho teplota zvysi na $800$ K. Jakou praci jsme na plynu vykonali?",
-      expectedAnswer: "-18740",
-      acceptableAnswers: ["-18740", "-18740 J", "-18.7 kJ", "-18,7 kJ", "18740", "18740 J"],
+      expectedAnswer: "-18707",
+      acceptableAnswers: ["-18707", "-18707 J", "-18710", "-18700", "-18.7 kJ", "-18,7 kJ", "18707", "18707 J"],
       numericTolerance: 200,
       hints: [
         "$W = \\frac{nR(T_1 - T_2)}{\\gamma - 1}$.",
@@ -512,7 +512,7 @@ $$\\left(p + \\frac{n^2 a}{V^2}\\right)(V - nb) = nRT$$
 | CO$_2$ | $0{,}365$ | $4{,}28 \\times 10^{-5}$ |
 | H$_2$O | $0{,}554$ | $3{,}05 \\times 10^{-5}$ |
 
-> [!info] Clen $a/V_m^2$ **zvysuje tlak** (molekuly se pritahuji, "pomahaji" tlacit na stenu), clen $b$ **zmensuje dostupny objem** (molekuly samy zabiraji misto).`,
+> [!info] Clen $a/V_m^2$ koriguje **snizeni tlaku** (molekuly se navzajem pritahuji, takze skutecny tlak je nizsi nez u idealniho plynu), clen $b$ **zmensuje dostupny objem** (molekuly samy zabiraji misto).`,
       },
       {
         heading: "Kineticka teorie plynu",

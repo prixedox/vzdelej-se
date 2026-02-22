@@ -728,8 +728,8 @@ $$P = \\varepsilon \\sigma A T^4 = 1 \\cdot 5{,}67 \\times 10^{-8} \\cdot 0{,}5 
     {
       id: "tt-a-3",
       problemStatement: "Stena se sklada ze tri vrstev: cihla ($d_1 = 0{,}2$ m, $k_1 = 0{,}8$), polystyren ($d_2 = 0{,}15$ m, $k_2 = 0{,}033$), omitka ($d_3 = 0{,}02$ m, $k_3 = 0{,}7$). Plocha $A = 12$ m$^2$. Uvnitr $22$ $\\degree$C, venku $-10$ $\\degree$C. Jaky je tepelny tok stenou?",
-      expectedAnswer: "83.5",
-      acceptableAnswers: ["83.5", "83,5", "84", "83.5 W", "83,5 W"],
+      expectedAnswer: "79.6",
+      acceptableAnswers: ["79.6", "79,6", "80"],
       numericTolerance: 2,
       hints: [
         "Seriovy odpor: $R = R_1 + R_2 + R_3$, kde $R_i = d_i/(k_i A)$.",
@@ -739,7 +739,7 @@ $$P = \\varepsilon \\sigma A T^4 = 1 \\cdot 5{,}67 \\times 10^{-8} \\cdot 0{,}5 
 $$R_2 = \\frac{0{,}15}{0{,}033 \\cdot 12} = 0{,}3788 \\text{ K/W}$$
 $$R_3 = \\frac{0{,}02}{0{,}7 \\cdot 12} = 0{,}002381 \\text{ K/W}$$
 $$R_{\\text{celk}} = 0{,}02083 + 0{,}3788 + 0{,}002381 = 0{,}402 \\text{ K/W}$$
-$$P = \\frac{\\Delta T}{R_{\\text{celk}}} = \\frac{32}{0{,}402} \\approx 83{,}5 \\text{ W}$$
+$$P = \\frac{\\Delta T}{R_{\\text{celk}}} = \\frac{32}{0{,}402} \\approx 79{,}6 \\text{ W}$$
 
 Polystyren tvori pres $94\\%$ celkoveho odporu -- je to klicova izolacni vrstva.`,
       difficulty: "hard" as const,
@@ -762,8 +762,8 @@ Zadny skutecny stroj nemuze mit vyssi ucinnost nez $50\\%$ pri techto teplotach.
     {
       id: "tt-a-5",
       problemStatement: "Vypocitejte celkovou zmenu entropie, kdyz $1$ kg vody o teplote $80$ $\\degree$C ($353$ K) smichame s $1$ kg vody o teplote $20$ $\\degree$C ($293$ K). Vysledna teplota je $50$ $\\degree$C ($323$ K). Pouzijte $\\Delta S = mc \\ln(T_2/T_1)$, $c = 4180$ J/(kg$\\cdot$K).",
-      expectedAnswer: "24.8",
-      acceptableAnswers: ["24.8", "24,8", "25", "24.8 J/K", "24,8 J/K"],
+      expectedAnswer: "36.6",
+      acceptableAnswers: ["36.6", "36,6", "37"],
       numericTolerance: 1,
       hints: [
         "Spocitejte $\\Delta S$ pro kazdou porci zvlast: $\\Delta S_1 = mc\\ln(323/353)$, $\\Delta S_2 = mc\\ln(323/293)$.",
@@ -775,7 +775,7 @@ $$\\Delta S_1 = mc\\ln\\frac{T_f}{T_1} = 1 \\cdot 4180 \\cdot \\ln\\frac{323}{35
 Studena voda (ohriva se z $293$ K na $323$ K):
 $$\\Delta S_2 = mc\\ln\\frac{T_f}{T_2} = 1 \\cdot 4180 \\cdot \\ln\\frac{323}{293} = 4180 \\cdot 0{,}0975 = 407{,}6 \\text{ J/K}$$
 
-$$\\Delta S_{\\text{celk}} = \\Delta S_1 + \\Delta S_2 = -371 + 407{,}6 = 24{,}8 \\text{ J/K} > 0$$
+$$\\Delta S_{\\text{celk}} = \\Delta S_1 + \\Delta S_2 = -371 + 407{,}6 = 36{,}6 \\text{ J/K} > 0$$
 
 Celkova entropie roste -- michani je nevratny proces.`,
       difficulty: "hard" as const,

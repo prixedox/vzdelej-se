@@ -335,7 +335,7 @@ $$\\begin{array}{l|c|c} \\text{Těleso} & v_1 \\text{ (km/s)} & v_2 \\text{ (km/
   practiceProblems: [
     {
       id: "gr-i-1",
-      problemStatement: "Jaká je oběžná rychlost satelitu ve výšce $200$ km nad Zemí? ($R_Z = 6{,}371 \\times 10^6$ m, $g_0 = 10$ m/s²)",
+      problemStatement: "Jaká je oběžná rychlost satelitu ve výšce $200$ km nad Zemí? ($R_Z = 6{,}371 \\times 10^6$ m, $g_0 = 9{,}81$ m/s²)",
       expectedAnswer: "7790",
       acceptableAnswers: ["7790", "7790 m/s", "7.8 km/s", "7,8 km/s", "7800"],
       numericTolerance: 50,
@@ -343,7 +343,7 @@ $$\\begin{array}{l|c|c} \\text{Těleso} & v_1 \\text{ (km/s)} & v_2 \\text{ (km/
         "$v = \\sqrt{g_0 R_Z^2 / r}$, kde $r = R_Z + h$.",
         "$r = 6{,}571 \\times 10^6$ m.",
       ],
-      solutionExplanation: `$$v = \\sqrt{\\frac{g_0 R_Z^2}{r}} = \\sqrt{\\frac{10 \\cdot (6{,}371 \\times 10^6)^2}{6{,}571 \\times 10^6}} \\approx 7790 \\text{ m/s}$$`,
+      solutionExplanation: `$$v = \\sqrt{\\frac{g_0 R_Z^2}{r}} = \\sqrt{\\frac{9{,}81 \\cdot (6{,}371 \\times 10^6)^2}{6{,}571 \\times 10^6}} \\approx 7790 \\text{ m/s}$$`,
       difficulty: "medium" as const,
     },
     {
@@ -376,15 +376,15 @@ $$\\approx \\sqrt[3]{7{,}53 \\times 10^{22}} \\approx 4{,}22 \\times 10^7 \\text
     {
       id: "gr-i-4",
       problemStatement: "Gravitační potenciální energie satelitu ($500$ kg) na oběžné dráze ve výšce $r = 2R_Z$. Jaká je jeho celková mechanická energie? ($g_0 = 10$ m/s², $R_Z = 6{,}4 \\times 10^6$ m)",
-      expectedAnswer: "-16000000",
-      acceptableAnswers: ["-16000000", "-16 MJ", "-1.6e7", "-16000000 J"],
-      numericTolerance: 1000000,
+      expectedAnswer: "-8000000000",
+      acceptableAnswers: ["-8000000000", "-8 GJ", "-8e9", "-8000000000 J"],
+      numericTolerance: 100000000,
       hints: [
         "Na kruhové dráze: $E = -\\frac{g_0 R_Z^2 m}{2r}$.",
-        "$E = -\\frac{10 \\cdot (6{,}4 \\times 10^6)^2 \\cdot 500}{2 \\cdot 12{,}8 \\times 10^6}$",
+        "$E = -\\frac{10 \\cdot (6{,}4 \\times 10^6)^2 \\cdot 500}{2 \\cdot 1{,}28 \\times 10^7}$",
       ],
       solutionExplanation: `$$E = -\\frac{GMm}{2r} = -\\frac{g_0 R^2 m}{2r} = -\\frac{10 \\cdot (6{,}4 \\times 10^6)^2 \\cdot 500}{2 \\cdot 1{,}28 \\times 10^7}$$
-$$= -\\frac{2{,}048 \\times 10^{17}}{2{,}56 \\times 10^7} \\approx -1{,}6 \\times 10^7 \\text{ J} = -16 \\text{ MJ}$$`,
+$$= -\\frac{2{,}048 \\times 10^{17}}{2{,}56 \\times 10^7} = -8 \\times 10^9 \\text{ J} = -8 \\text{ GJ}$$`,
       difficulty: "hard" as const,
     },
     {

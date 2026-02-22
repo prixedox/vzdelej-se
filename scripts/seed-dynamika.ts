@@ -680,7 +680,7 @@ $$21{,}34 = 10a \\implies a \\approx 2{,}13 \\text{ m/s}^2$$`,
       id: "dyn-p-4",
       problemStatement: "Družice obíhá Zemi ve výšce, kde $g = 8 \\text{ m/s}^2$, s periodou $T = 6000$ s. Jaký je poloměr oběžné dráhy? (Použijte $a_d = g$ a $a_d = \\omega^2 r$.)",
       expectedAnswer: "7300",
-      acceptableAnswers: ["7300", "7296", "7300 m", "7.3 km"],
+      acceptableAnswers: ["7300", "7296", "7300 km", "7296 km"],
       numericTolerance: 100,
       hints: [
         "$\\omega = 2\\pi / T$ a $g = \\omega^2 r$, tedy $r = g/\\omega^2$.",

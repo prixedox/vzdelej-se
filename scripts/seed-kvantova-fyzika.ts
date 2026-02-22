@@ -449,7 +449,7 @@ $$A = A_0 \\cdot \\left(\\frac{1}{2}\\right)^3 = 800 \\cdot \\frac{1}{8} = 100 \
         "$\\Delta m = 2 \\cdot m_p + 2 \\cdot m_n - m_{He}$",
       ],
       solutionExplanation: `$$\\Delta m = 2 \\cdot 1{,}0073 + 2 \\cdot 1{,}0087 - 4{,}0026 = 2{,}0146 + 2{,}0174 - 4{,}0026 = 0{,}0294 \\text{ u}$$
-Vazebna energie: $E_{\\text{vaz}} = 0{,}0294 \\cdot 931{,}5 \\approx 27{,}4$ MeV, tedy $\\approx 7{,}1$ MeV na nukleon.`,
+Vazebna energie: $E_{\\text{vaz}} = 0{,}0294 \\cdot 931{,}5 \\approx 27{,}4$ MeV, tedy $\\approx 6{,}9$ MeV na nukleon.`,
       difficulty: "medium" as const,
     },
     {
@@ -684,18 +684,18 @@ $$T \\approx e^{-2{,}88} \\approx 0{,}056 \\approx 5{,}6\\%$$
     },
     {
       id: "kf-a-3",
-      problemStatement: "Jadro $^{56}_{26}Fe$ ma hmotnost $55{,}9349$ u. Vypoctete vazebnou energii na nukleon (v MeV). ($m_p = 1{,}0073$ u, $m_n = 1{,}0087$ u, $1$ u $= 931{,}5$ MeV/$c^2$)",
+      problemStatement: "Jadro $^{56}_{26}Fe$ ma hmotnost $55{,}922$ u. Vypoctete vazebnou energii na nukleon (v MeV). ($m_p = 1{,}0073$ u, $m_n = 1{,}0087$ u, $1$ u $= 931{,}5$ MeV/$c^2$)",
       expectedAnswer: "8.8",
-      acceptableAnswers: ["8.8", "8,8", "8.79", "8,79", "8.8 MeV"],
+      acceptableAnswers: ["8.8", "8,8", "8.79", "8,79", "8.80", "8,80", "8.8 MeV"],
       numericTolerance: 0.1,
       hints: [
-        "$\\Delta m = 26 \\cdot m_p + 30 \\cdot m_n - 55{,}9349$.",
-        "$\\Delta m = 26 \\cdot 1{,}0073 + 30 \\cdot 1{,}0087 - 55{,}9349$.",
+        "$\\Delta m = 26 \\cdot m_p + 30 \\cdot m_n - 55{,}922$.",
+        "$\\Delta m = 26 \\cdot 1{,}0073 + 30 \\cdot 1{,}0087 - 55{,}922$.",
       ],
-      solutionExplanation: `$$\\Delta m = 26 \\cdot 1{,}0073 + 30 \\cdot 1{,}0087 - 55{,}9349$$
-$$= 26{,}1898 + 30{,}2610 - 55{,}9349 = 0{,}5159 \\text{ u}$$
-$$E_{\\text{vaz}} = 0{,}5159 \\cdot 931{,}5 = 480{,}6 \\text{ MeV}$$
-$$E_{\\text{vaz}}/A = 480{,}6 / 56 \\approx 8{,}58 \\text{ MeV/nukleon}$$
+      solutionExplanation: `$$\\Delta m = 26 \\cdot 1{,}0073 + 30 \\cdot 1{,}0087 - 55{,}922$$
+$$= 26{,}1898 + 30{,}2610 - 55{,}922 = 0{,}5288 \\text{ u}$$
+$$E_{\\text{vaz}} = 0{,}5288 \\cdot 931{,}5 = 492{,}6 \\text{ MeV}$$
+$$E_{\\text{vaz}}/A = 492{,}6 / 56 \\approx 8{,}80 \\text{ MeV/nukleon}$$
 Zelezo-56 ma jednu z nejvyssich vazebnych energii na nukleon — patri mezi nejstabilnejsi jadra.`,
       difficulty: "hard" as const,
     },
