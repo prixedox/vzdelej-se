@@ -17,6 +17,8 @@ import { InteractivePendulum } from "./interactive-pendulum";
 import { InteractiveSpringOscillator } from "./interactive-spring-oscillator";
 import { InteractiveOrbit } from "./interactive-orbit";
 import { InteractivePVDiagram } from "./interactive-pv-diagram";
+import { InteractiveElectricField } from "./interactive-electric-field";
+import { InteractiveCircuit } from "./interactive-circuit";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
 export function VisualBlock({
@@ -90,6 +92,12 @@ export function VisualBlock({
       break;
     case "interactive-pv-diagram":
       content = <InteractivePVDiagram {...(props as any)} />;
+      break;
+    case "interactive-electric-field":
+      content = <InteractiveElectricField {...(props as any)} />;
+      break;
+    case "interactive-circuit":
+      content = <InteractiveCircuit {...(props as any)} />;
       break;
     default:
       return null;

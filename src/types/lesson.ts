@@ -18,7 +18,9 @@ export type VisualType =
   | "interactive-pendulum"
   | "interactive-spring-oscillator"
   | "interactive-orbit"
-  | "interactive-pv-diagram";
+  | "interactive-pv-diagram"
+  | "interactive-electric-field"
+  | "interactive-circuit";
 
 export interface VisualBlock {
   type: VisualType;
