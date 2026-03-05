@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vzdělej.se
+
+Czech interactive educational platform for **math** and **physics**. Lessons use a Brilliant.org-inspired pedagogy: every screen is interactive, questions come before theory, and students learn by exploring.
+
+## Features
+
+- **35 interactive lessons** across 21 math and 14 physics topics
+- **6 lesson flavors** — Discovery, Visual-First, Story/Scenario, Prediction→Test, Mystery/Puzzle, Challenge Chain — so each lesson feels different
+- **31 interactive visual components** — function graphs, unit circle, triangle explorer, probability simulator, derivative visualizer, physics simulations (pendulum, collisions, orbits, circuits, waves, optics...)
+- **Interleaved learning** — flat step-based lessons alternate between explain, multiple-choice, text-input, drag-to-sort, explore (interactive visual), and reveal steps
+- **Client-side only** — no database, no auth, no server calls. All content is static TypeScript, answer validation runs in the browser
+- **Full KaTeX support** — inline and block LaTeX rendering with Czech math conventions (decimal comma, `tg` instead of `tan`, `⟨a; b⟩` intervals)
+
+## Tech Stack
+
+- **Next.js 16** with App Router and Turbopack
+- **React 19** + TypeScript (strict mode)
+- **Tailwind CSS 4** + shadcn/ui (New York style)
+- **Motion** (Framer Motion) for animations and drag-to-reorder
+- **KaTeX** for math rendering
+- **Zod** for schema validation
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Commands
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev        # Dev server (Turbopack)
+pnpm build      # Production build
+pnpm lint       # ESLint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+src/
+├── app/                        # Next.js App Router
+│   ├── (app)/                  # Main app pages (topics, lessons)
+│   └── (marketing)/            # Public pages (home, terms)
+├── components/
+│   ├── ui/                     # shadcn/ui primitives
+│   ├── layout/                 # Sidebar, top bar, mobile nav
+│   └── lesson/
+│       ├── slides/             # Slide components (v1 + v2)
+│       └── visuals/            # 31 interactive visual components
+├── lib/
+│   ├── lessons/                # Static lesson content (TS objects)
+│   │   ├── math/               # 21 math topic lessons
+│   │   ├── physics/            # 14 physics topic lessons
+│   │   └── data.ts             # Lesson registry
+│   ├── lesson/                 # Loader, answer evaluator, slide builder
+│   └── topics/                 # Topic tree definitions
+└── types/                      # TypeScript types (lesson, slide, topic)
+```
 
-To learn more about Next.js, take a look at the following resources:
+## How Lessons Work
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Content is stored as TypeScript objects in `src/lib/lessons/`
+2. Each lesson is a flat array of **steps** (explain, MC, text-input, explore, reveal, sort-order)
+3. Steps map 1:1 to slides — the `LessonShell` builds slides and manages state
+4. Question steps block forward navigation until answered
+5. Answer validation is client-side only (`answer-evaluator.ts`)
+6. No progress persistence — everything is in-session
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Subjects
 
-## Deploy on Vercel
+### Math (21 topics)
+Algebra (lineární rovnice, kvadratické, soustavy, nerovnice, výrazové úpravy, posloupnosti) · Funkce (lineární, kvadratická, exponenciální, logaritmická, goniometrické, absolutní hodnota) · Geometrie (trojúhelníky, kružnice, analytická geometrie, stereometrie) · Kombinatorika (základy, pravděpodobnost) · Analýza (limity, derivace, integrály)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Physics (14 topics)
+Mechanika (kinematika, dynamika, energie a práce, hybnost a impulz, gravitace) · Termodynamika (teplota a teplo, ideální plyn, zákony termodynamiky) · Elektřina a magnetismus (elektrické pole, obvody, magnetické pole) · Vlnění a optika (mechanické vlnění, optika) · Moderní fyzika (kvantová a jaderná fyzika)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Interactive Visuals
+
+| Category | Components |
+|----------|-----------|
+| Math | function-graph, unit-circle, triangle, probability, derivative, balance-scale, number-line |
+| Mechanics | motion, trajectory, velocity-graph, roller-coaster, inclined-plane, collision, pendulum, spring-oscillator, orbit |
+| Thermo | pv-diagram |
+| E&M | electric-field, circuit |
+| Waves | wave (traveling/standing/interference), optics |
+| Modern | atom |
+
+## License
+
+Private project.
