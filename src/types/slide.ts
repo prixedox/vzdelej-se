@@ -2,6 +2,8 @@ import type {
   LessonSection,
   WalkthroughStep,
   PracticeProblem,
+  KnowledgeCheck,
+  ParameterExploration,
 } from "./lesson";
 
 // ── Base ──
@@ -61,6 +63,16 @@ export interface CompletePromptSlide extends SlideBase {
   type: "complete-prompt";
 }
 
+export interface KnowledgeCheckSlide extends SlideBase {
+  type: "knowledge-check";
+  knowledgeCheck: KnowledgeCheck;
+}
+
+export interface ExplorationSlide extends SlideBase {
+  type: "exploration";
+  exploration: ParameterExploration;
+}
+
 export type Slide =
   | SectionTitleSlide
   | ConceptSectionSlide
@@ -69,4 +81,6 @@ export type Slide =
   | WalkthroughResultSlide
   | PracticeProblemSlide
   | SummarySlide
-  | CompletePromptSlide;
+  | CompletePromptSlide
+  | KnowledgeCheckSlide
+  | ExplorationSlide;

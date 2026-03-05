@@ -26,7 +26,40 @@ export function buildSlides(content: LessonContent): Slide[] {
       sectionNumber: i + 1,
       totalSections: content.conceptExplanation.sections.length,
     });
+
+    if (section.knowledgeCheck) {
+      slides.push({
+        id: `s-${id++}`,
+        type: "knowledge-check",
+        sectionLabel: "Teorie",
+        sectionIndex: 0,
+        knowledgeCheck: section.knowledgeCheck,
+      });
+    }
   });
+
+  // ── Explorations (between theory and walkthrough) ──
+  if (content.explorations && content.explorations.length > 0) {
+    slides.push({
+      id: `s-${id++}`,
+      type: "section-title",
+      sectionLabel: "Průzkum",
+      sectionIndex: 0,
+      title: "Prozkoumejte",
+      subtitle: "Interaktivní experimenty",
+      icon: "lightbulb",
+    });
+
+    content.explorations.forEach((exploration) => {
+      slides.push({
+        id: `s-${id++}`,
+        type: "exploration",
+        sectionLabel: "Průzkum",
+        sectionIndex: 0,
+        exploration,
+      });
+    });
+  }
 
   // ── Ukázka ──
   slides.push({

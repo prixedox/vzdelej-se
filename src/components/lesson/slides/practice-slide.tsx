@@ -2,8 +2,10 @@
 
 import { motion } from "motion/react";
 import { PracticeProblemCard } from "../practice-problem";
+import { MultipleChoiceProblemCard } from "../multiple-choice-problem";
 import { ConfettiBurst } from "../confetti-burst";
 import type { PracticeProblemSlide } from "@/types/slide";
+import type { TextInputProblem, MultipleChoiceProblem } from "@/types/lesson";
 
 interface PracticeSlideProps {
   slide: PracticeProblemSlide;
@@ -21,6 +23,8 @@ export function PracticeSlide({
   onAnswer,
   answered,
 }: PracticeSlideProps) {
+  const isMultipleChoice = slide.problem.type === "multiple-choice";
+
   return (
     <div className="py-4">
       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
@@ -34,15 +38,27 @@ export function PracticeSlide({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <PracticeProblemCard
-          problem={slide.problem}
-          index={slide.problemIndex}
-          onAnswer={(isCorrect, hintsUsed, timeSpentMs) => {
-            onAnswer(slide.problemIndex, isCorrect, hintsUsed, timeSpentMs);
-          }}
-          initialSubmitted={answered ? true : false}
-          initialCorrect={answered?.isCorrect ?? false}
-        />
+        {isMultipleChoice ? (
+          <MultipleChoiceProblemCard
+            problem={slide.problem as MultipleChoiceProblem}
+            index={slide.problemIndex}
+            onAnswer={(isCorrect, hintsUsed, timeSpentMs) => {
+              onAnswer(slide.problemIndex, isCorrect, hintsUsed, timeSpentMs);
+            }}
+            initialSubmitted={answered ? true : false}
+            initialCorrect={answered?.isCorrect ?? false}
+          />
+        ) : (
+          <PracticeProblemCard
+            problem={slide.problem as TextInputProblem}
+            index={slide.problemIndex}
+            onAnswer={(isCorrect, hintsUsed, timeSpentMs) => {
+              onAnswer(slide.problemIndex, isCorrect, hintsUsed, timeSpentMs);
+            }}
+            initialSubmitted={answered ? true : false}
+            initialCorrect={answered?.isCorrect ?? false}
+          />
+        )}
       </motion.div>
 
       {answered?.isCorrect && <ConfettiBurst />}

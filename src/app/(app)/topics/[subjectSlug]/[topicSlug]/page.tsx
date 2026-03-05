@@ -8,8 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { subjectTrees, findTopic } from "@/lib/topics";
 import { DIFFICULTIES } from "@/lib/utils/constants";
-import { ArrowLeft, PlayCircle, Loader2 } from "lucide-react";
-import { PaywallGate } from "@/components/shared/paywall-gate";
+import { ArrowLeft, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function TopicPage() {
@@ -22,9 +21,6 @@ export default function TopicPage() {
   const topic = tree ? findTopic(tree, topicSlug) : null;
 
   const [selectedDifficulty, setSelectedDifficulty] = useState("beginner");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showPaywall, setShowPaywall] = useState(false);
 
   if (!tree || !topic) {
     return (
@@ -37,43 +33,10 @@ export default function TopicPage() {
     );
   }
 
-  async function startLesson() {
-    setLoading(true);
-    setError("");
-
-    try {
-      // First, find the topic in DB by slug
-      const topicRes = await fetch(
-        `/api/lessons/generate`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            topicSlug,
-            subjectSlug,
-            difficulty: selectedDifficulty,
-            variant: 1,
-          }),
-        }
-      );
-
-      if (topicRes.status === 429) {
-        setShowPaywall(true);
-        setLoading(false);
-        return;
-      }
-
-      if (!topicRes.ok) {
-        const data = await topicRes.json();
-        throw new Error(data.error || "Chyba při generování lekce");
-      }
-
-      const data = await topicRes.json();
-      router.push(`/lessons/${data.lessonCacheId}?progressId=${data.progressId}`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Nepodařilo se spustit lekci");
-      setLoading(false);
-    }
+  function startLesson() {
+    router.push(
+      `/lessons/${topicSlug}?difficulty=${selectedDifficulty}&subject=${subjectSlug}`
+    );
   }
 
   return (
@@ -122,32 +85,14 @@ export default function TopicPage() {
         </CardContent>
       </Card>
 
-      {error && (
-        <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg mb-4">
-          {error}
-        </div>
-      )}
-
       <Button
         onClick={startLesson}
-        disabled={loading}
         size="lg"
         className="w-full gap-2"
       >
-        {loading ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Generování lekce...
-          </>
-        ) : (
-          <>
-            <PlayCircle className="h-5 w-5" />
-            Spustit lekci
-          </>
-        )}
+        <PlayCircle className="h-5 w-5" />
+        Spustit lekci
       </Button>
-
-      <PaywallGate open={showPaywall} onOpenChange={setShowPaywall} />
     </div>
   );
 }

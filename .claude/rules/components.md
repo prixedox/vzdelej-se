@@ -8,10 +8,9 @@ Style: "new-york". Use `cn()` from `@/lib/utils` for class merging.
 
 ## Layout (`src/components/layout/`)
 
-- `sidebar.tsx` — Fixed left sidebar (hidden on mobile), nav items: Dashboard, Topics, Profile, Subscription
+- `sidebar.tsx` — Fixed left sidebar (hidden on mobile), nav: Home, Topics
 - `mobile-sidebar.tsx` — Sheet-based sidebar for mobile
-- `top-bar.tsx` — Sticky header with menu trigger, StreakCounter, XPBar
-- `footer.tsx` — Site footer
+- `top-bar.tsx` — Sticky header with mobile menu trigger
 
 Master layout in `src/app/(app)/layout.tsx`: Sidebar + TopBar + main content area.
 
@@ -19,7 +18,7 @@ Master layout in `src/app/(app)/layout.tsx`: Sidebar + TopBar + main content are
 
 **Core flow:** LessonShell → SlideDeck → SlideRenderer → specific slide components
 
-- `lesson-shell.tsx` — Root container, manages answer state, sends answers to API, shows completion
+- `lesson-shell.tsx` — Root container, manages answer state locally, shows completion
 - `slide-deck.tsx` — Slide navigation (keyboard arrows + buttons), prevents advancing without answering
 - `slide-renderer.tsx` — Routes slide type to correct component
 - `math-display.tsx` — KaTeX rendering. `MathDisplay` for single expressions, `MathText` for markdown+LaTeX. Supports callout blocks: `> [!tip]`, `> [!info]`, `> [!warning]`, `> [!key]`
@@ -46,5 +45,4 @@ Visual props are `Record<string, unknown>` — each component casts to its own t
 
 - Animations use `motion` package (framer-motion), imported as `motion/react`
 - Keyboard navigation in SlideDeck skips when focus is on input/textarea
-- Interactive visuals can be large files (20-35KB) — they contain full physics simulations
 - All text in components is Czech

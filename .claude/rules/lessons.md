@@ -1,21 +1,33 @@
 # Lesson System
 
-Lessons are static, pre-built content stored in the `lessonCache` table. Content was authored with Claude assistance during development — there is no runtime AI generation.
+Lessons are static TS objects stored in `src/lib/lessons/data.ts`. No database, no API calls.
 
-## Content Delivery Flow
+## Content Flow
 
-1. `POST /api/lessons/generate` with `{ topicId/topicSlug, subjectSlug, difficulty, variant }`
-2. Auth check → daily limit check → lookup `lessonCache` by `(topicId, difficulty, variant)`
-3. Create/update `userLessonProgress` → increment daily usage → return content
+1. User picks topic + difficulty on topic page
+2. Navigates to `/lessons/${topicSlug}?difficulty=${difficulty}&subject=${subjectSlug}`
+3. Lesson page imports content from `src/lib/lessons/data.ts`
+4. `LessonShell` builds slides, manages answer state locally
+5. On completion: shows score (no persistence)
 
 ## Key Files
 
-- API route: `src/app/api/lessons/generate/route.ts`
-- Types: `src/types/lesson.ts` (extended with visual support), `src/types/slide.ts`
+- Lesson data: `src/lib/lessons/data.ts` — `Record<string, LessonContent>` keyed by `${topicSlug}-${difficulty}`
 - Slide builder: `src/lib/lesson/build-slides.ts`
-- Lesson loader: `src/lib/lesson/lesson-loader.ts`
 - Answer evaluator: `src/lib/lesson/answer-evaluator.ts`
-- Zod schema: `src/lib/ai/schemas/lesson.ts` (kept in ai/ for seed script compatibility)
+- Types: `src/types/lesson.ts`, `src/types/slide.ts`
+- Lesson page: `src/app/(app)/lessons/[lessonId]/page.tsx`
+- Topic page: `src/app/(app)/topics/[subjectSlug]/[topicSlug]/page.tsx`
+
+## Adding New Lessons
+
+Add content to `src/lib/lessons/data.ts`:
+```ts
+import { registerLesson } from "@/lib/lessons/data";
+registerLesson("topic-slug", "beginner", { conceptExplanation: ..., ... });
+```
+
+Or directly add to the `lessons` record object.
 
 ## Lesson Content Structure (LessonContent)
 
@@ -32,7 +44,7 @@ Section Title "Teorie" → Concept sections → Section Title "Ukázka" → Walk
 
 ## Answer Validation (checkAnswer)
 
-Client-side only. Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance. No server-side re-validation (trusts client `isCorrect`).
+Client-side only. Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance.
 
 ## Czech Math Conventions
 
@@ -45,4 +57,4 @@ Client-side only. Normalizes both strings (trim, lowercase, Czech comma→dot, s
 
 - Visual props are `Record<string, unknown>` — type safety only at component level
 - Practice problems must have exactly 3 hints
-- Lesson content is JSONB in `lessonCache` — validated by Zod schema
+- No persistence — answers/progress are lost on page reload

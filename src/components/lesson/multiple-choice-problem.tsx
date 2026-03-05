@@ -2,15 +2,11 @@
 
 import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MathText } from "./math-display";
 import { HintReveal } from "./hint-reveal";
 import { AnswerFeedback } from "./answer-feedback";
-import { checkAnswer } from "@/lib/lesson/answer-evaluator";
-import type { TextInputProblem } from "@/types/lesson";
-import { Send } from "lucide-react";
+import type { MultipleChoiceProblem as MCProblemType } from "@/types/lesson";
 import { cn } from "@/lib/utils";
 
 const difficultyLabels = {
@@ -19,46 +15,35 @@ const difficultyLabels = {
   hard: { label: "Těžký", color: "bg-red-100 text-red-800" },
 };
 
-export function PracticeProblemCard({
+export function MultipleChoiceProblemCard({
   problem,
   index,
   onAnswer,
   initialSubmitted = false,
   initialCorrect = false,
 }: {
-  problem: TextInputProblem;
+  problem: MCProblemType;
   index: number;
   onAnswer: (isCorrect: boolean, hintsUsed: number, timeSpentMs: number) => void;
   initialSubmitted?: boolean;
   initialCorrect?: boolean;
 }) {
-  const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(initialSubmitted);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState(initialCorrect);
   const [hintsUsed, setHintsUsed] = useState(0);
   const startTime = useRef(Date.now());
 
-  function handleSubmit() {
-    if (!answer.trim() || submitted) return;
+  function handleSelect(choiceIdx: number) {
+    if (submitted) return;
 
-    const correct = checkAnswer({
-      userAnswer: answer,
-      expectedAnswer: problem.expectedAnswer,
-      acceptableAnswers: problem.acceptableAnswers,
-      numericTolerance: problem.numericTolerance,
-    });
-
+    const correct = problem.choices[choiceIdx].isCorrect;
+    setSelectedIndex(choiceIdx);
     setIsCorrect(correct);
     setSubmitted(true);
 
     const timeSpent = Date.now() - startTime.current;
     onAnswer(correct, hintsUsed, timeSpent);
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
   }
 
   const diffInfo = difficultyLabels[problem.difficulty];
@@ -89,22 +74,34 @@ export function PracticeProblemCard({
           />
         )}
 
-        <div className="flex gap-2">
-          <Input
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Zadejte odpověď..."
-            disabled={submitted}
-            className="flex-1"
-          />
-          <Button
-            onClick={handleSubmit}
-            disabled={!answer.trim() || submitted}
-            size="icon"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+        <div className="flex flex-col gap-2">
+          {problem.choices.map((choice, idx) => {
+            let variant = "border-border bg-background hover:bg-muted/50";
+            if (submitted) {
+              if (choice.isCorrect) {
+                variant = "border-green-400 bg-green-50 text-green-900";
+              } else if (idx === selectedIndex && !choice.isCorrect) {
+                variant = "border-red-400 bg-red-50 text-red-900";
+              } else {
+                variant = "border-border bg-background opacity-60";
+              }
+            }
+
+            return (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                disabled={submitted}
+                className={cn(
+                  "w-full text-left px-4 py-3 rounded-lg border transition-colors",
+                  variant,
+                  !submitted && "cursor-pointer"
+                )}
+              >
+                <MathText content={choice.label} />
+              </button>
+            );
+          })}
         </div>
 
         <AnswerFeedback

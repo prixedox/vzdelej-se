@@ -8,6 +8,8 @@ import { WalkthroughStepSlide } from "./slides/walkthrough-step-slide";
 import { WalkthroughResultSlide } from "./slides/walkthrough-result-slide";
 import { PracticeSlide } from "./slides/practice-slide";
 import { SummarySlide } from "./slides/summary-slide";
+import { KnowledgeCheckSlide } from "./slides/knowledge-check-slide";
+import { ExplorationSlide } from "./slides/exploration-slide";
 import { Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -25,12 +27,14 @@ interface SlideRendererProps {
     number,
     { isCorrect: boolean; hintsUsed: number; timeSpentMs: number }
   >;
+  onWalkthroughAttempt?: (slideId: string) => void;
 }
 
 export function SlideRenderer({
   slide,
   onAnswer,
   answeredProblems,
+  onWalkthroughAttempt,
 }: SlideRendererProps) {
   switch (slide.type) {
     case "section-title":
@@ -39,11 +43,22 @@ export function SlideRenderer({
     case "concept-section":
       return <ConceptSlide slide={slide} />;
 
+    case "knowledge-check":
+      return <KnowledgeCheckSlide slide={slide} />;
+
+    case "exploration":
+      return <ExplorationSlide slide={slide} />;
+
     case "walkthrough-intro":
       return <WalkthroughIntroSlide slide={slide} />;
 
     case "walkthrough-step":
-      return <WalkthroughStepSlide slide={slide} />;
+      return (
+        <WalkthroughStepSlide
+          slide={slide}
+          onWalkthroughAttempt={onWalkthroughAttempt}
+        />
+      );
 
     case "walkthrough-result":
       return <WalkthroughResultSlide slide={slide} />;
@@ -97,7 +112,7 @@ export function SlideRenderer({
             transition={{ delay: 0.4 }}
           >
             <Button asChild>
-              <Link href="/dashboard">Zpět na přehled</Link>
+              <Link href="/topics">Zpět na témata</Link>
             </Button>
           </motion.div>
         </div>

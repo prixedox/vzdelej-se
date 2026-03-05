@@ -43,16 +43,29 @@ export function SlideDeck({
 }: SlideDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [walkthroughAttempted, setWalkthroughAttempted] = useState<Set<string>>(
+    new Set()
+  );
 
   const currentSlide = slides[currentIndex];
+
+  const handleWalkthroughAttempt = useCallback((slideId: string) => {
+    setWalkthroughAttempted((prev) => new Set(prev).add(slideId));
+  }, []);
 
   const canGoNext = useMemo(() => {
     if (currentIndex >= slides.length - 1) return false;
     if (currentSlide.type === "practice-problem") {
       return answeredProblems.has(currentSlide.problemIndex);
     }
+    if (
+      currentSlide.type === "walkthrough-step" &&
+      currentSlide.step.challenge
+    ) {
+      return walkthroughAttempted.has(currentSlide.id);
+    }
     return true;
-  }, [currentIndex, currentSlide, answeredProblems, slides.length]);
+  }, [currentIndex, currentSlide, answeredProblems, slides.length, walkthroughAttempted]);
 
   const canGoPrev = currentIndex > 0;
   const isLastSlide = currentIndex === slides.length - 1;
@@ -140,6 +153,7 @@ export function SlideDeck({
               slide={currentSlide}
               onAnswer={onAnswer}
               answeredProblems={answeredProblems}
+              onWalkthroughAttempt={handleWalkthroughAttempt}
             />
           </motion.div>
         </AnimatePresence>
@@ -152,8 +166,11 @@ export function SlideDeck({
         onPrev={goPrev}
         isLastSlide={isLastSlide}
         isPracticeBlocked={
-          currentSlide.type === "practice-problem" &&
-          !answeredProblems.has(currentSlide.problemIndex)
+          (currentSlide.type === "practice-problem" &&
+            !answeredProblems.has(currentSlide.problemIndex)) ||
+          (currentSlide.type === "walkthrough-step" &&
+            !!currentSlide.step.challenge &&
+            !walkthroughAttempted.has(currentSlide.id))
         }
       />
     </div>

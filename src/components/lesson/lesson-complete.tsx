@@ -2,14 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Flame, ArrowRight } from "lucide-react";
+import { Trophy, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface LessonCompleteProps {
-  xpEarned: number;
-  totalXP: number;
-  level: number;
-  streak: number;
   score: number;
   totalProblems: number;
   correctAnswers: number;
@@ -17,8 +13,6 @@ interface LessonCompleteProps {
 }
 
 export function LessonComplete({
-  xpEarned,
-  streak,
   score,
   totalProblems,
   correctAnswers,
@@ -42,24 +36,12 @@ export function LessonComplete({
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Card>
-          <CardContent className="pt-4 text-center">
-            <Star className="h-6 w-6 text-yellow-500 mx-auto mb-1" />
-            <p className="text-2xl font-bold text-yellow-600">+{xpEarned}</p>
-            <p className="text-xs text-muted-foreground">XP získáno</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 text-center">
-            <Flame className="h-6 w-6 text-orange-500 mx-auto mb-1" />
-            <p className="text-2xl font-bold text-orange-600">{streak}</p>
-            <p className="text-xs text-muted-foreground">
-              {streak === 1 ? "den v řadě" : "dní v řadě"}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardContent className="pt-4 text-center">
+          <p className="text-4xl font-bold text-primary">{percentage} %</p>
+          <p className="text-sm text-muted-foreground mt-1">Úspěšnost</p>
+        </CardContent>
+      </Card>
 
       <div className="flex flex-col gap-2">
         <Button asChild>
@@ -67,9 +49,6 @@ export function LessonComplete({
             Další lekce
             <ArrowRight className="h-4 w-4" />
           </Link>
-        </Button>
-        <Button variant="outline" asChild>
-          <Link href="/dashboard">Přehled</Link>
         </Button>
       </div>
     </div>

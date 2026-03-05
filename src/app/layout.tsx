@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "katex/dist/katex.min.css";
@@ -17,12 +16,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vzdělej.se — Interaktivní vzdělávání s AI",
+    default: "Vzdělej.se — Interaktivní vzdělávání",
     template: "%s | Vzdělej.se",
   },
   description:
-    "Interaktivní vzdělávací platforma poháněná umělou inteligencí. Matematika a fyzika pro každého.",
-  keywords: ["vzdělávání", "matematika", "fyzika", "AI", "učení", "interaktivní"],
+    "Interaktivní vzdělávací platforma. Matematika a fyzika pro každého.",
+  keywords: ["vzdělávání", "matematika", "fyzika", "učení", "interaktivní"],
 };
 
 export default function RootLayout({
@@ -35,10 +34,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}
       >
-        <SessionProvider>
-          {children}
-          <Toaster />
-        </SessionProvider>
+        {children}
+        <Toaster />
       </body>
     </html>
   );

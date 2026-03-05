@@ -4,21 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Footer } from "@/components/layout/footer";
 import {
   ArrowRight,
-  Brain,
   Zap,
   Target,
   BookOpen,
-  Star,
-  Check,
 } from "lucide-react";
 
 const features = [
-  {
-    icon: Brain,
-    title: "AI generované lekce",
-    description:
-      "Každá lekce je vytvořena umělou inteligencí — vysvětlení, příklady a procvičení na míru.",
-  },
   {
     icon: Zap,
     title: "Interaktivní učení",
@@ -37,57 +28,6 @@ const features = [
     description:
       "35+ témat z matematiky a fyziky. Algebra, funkce, geometrie, mechanika, elektřina a další.",
   },
-  {
-    icon: Star,
-    title: "Gamifikace",
-    description:
-      "Získávejte XP, udržujte si sérii a sledujte svůj pokrok. Učení, které baví.",
-  },
-];
-
-const plans = [
-  {
-    name: "Zdarma",
-    price: "0",
-    interval: "",
-    features: [
-      "3 lekce denně",
-      "Všechna témata",
-      "Sledování pokroku",
-      "XP a úrovně",
-    ],
-    cta: "Začít zdarma",
-    href: "/register",
-    popular: false,
-  },
-  {
-    name: "Premium měsíční",
-    price: "199",
-    interval: "/ měsíc",
-    features: [
-      "Neomezené lekce",
-      "Všechna témata",
-      "Všechny obtížnosti",
-      "Prioritní generování",
-    ],
-    cta: "Vyzkoušet Premium",
-    href: "/register",
-    popular: false,
-  },
-  {
-    name: "Premium roční",
-    price: "1 490",
-    interval: "/ rok",
-    features: [
-      "Vše z měsíčního",
-      "7 dní zdarma",
-      "Ušetříte 38 %",
-      "Prioritní podpora",
-    ],
-    cta: "Nejlepší nabídka",
-    href: "/register",
-    popular: true,
-  },
 ];
 
 export default function LandingPage() {
@@ -99,17 +39,9 @@ export default function LandingPage() {
           <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Vzdělej.se
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/pricing">
-              <Button variant="ghost" size="sm">Ceník</Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="ghost" size="sm">Přihlásit se</Button>
-            </Link>
-            <Link href="/register">
-              <Button size="sm">Registrace</Button>
-            </Link>
-          </div>
+          <Link href="/topics">
+            <Button size="sm">Začít se učit</Button>
+          </Link>
         </div>
       </header>
 
@@ -119,26 +51,19 @@ export default function LandingPage() {
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
             Učte se matematiku a fyziku{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              s umělou inteligencí
+              interaktivně
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Interaktivní lekce generované AI. Teorie, vzorové příklady a
-            procvičení s okamžitou zpětnou vazbou. Začněte zdarma.
+            Interaktivní lekce s teorií, vzorovými příklady a procvičením
+            s okamžitou zpětnou vazbou.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <Button size="lg" className="gap-2 text-base">
-                Začít se učit zdarma
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/pricing">
-              <Button size="lg" variant="outline" className="text-base">
-                Zobrazit ceník
-              </Button>
-            </Link>
-          </div>
+          <Link href="/topics">
+            <Button size="lg" className="gap-2 text-base">
+              Začít se učit
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -148,7 +73,7 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-center mb-12">
             Proč Vzdělej.se?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {features.map((feature) => (
               <Card key={feature.title}>
                 <CardContent className="pt-6">
@@ -166,60 +91,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-20" id="cenik">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">Ceník</h2>
-          <p className="text-center text-muted-foreground mb-12">
-            Začněte zdarma, upgradujte kdykoliv.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {plans.map((plan) => (
-              <Card
-                key={plan.name}
-                className={
-                  plan.popular ? "border-primary shadow-lg ring-1 ring-primary" : ""
-                }
-              >
-                <CardContent className="pt-6">
-                  {plan.popular && (
-                    <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full mb-4 inline-block">
-                      Nejlepší nabídka
-                    </span>
-                  )}
-                  <h3 className="font-semibold text-lg">{plan.name}</h3>
-                  <div className="mt-2 mb-4">
-                    <span className="text-3xl font-bold">{plan.price} Kč</span>
-                    <span className="text-muted-foreground">
-                      {plan.interval}
-                    </span>
-                  </div>
-                  <ul className="space-y-2 mb-6">
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        <Check className="h-4 w-4 text-green-600 shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href={plan.href}>
-                    <Button
-                      className="w-full"
-                      variant={plan.popular ? "default" : "outline"}
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
         <div className="container mx-auto px-4 text-center">
@@ -227,15 +98,15 @@ export default function LandingPage() {
             Připraveni začít?
           </h2>
           <p className="text-blue-100 mb-8 text-lg">
-            Zaregistrujte se a začněte se učit ještě dnes. Prvních 3 lekcí denně zdarma.
+            Vyberte si téma a začněte se učit.
           </p>
-          <Link href="/register">
+          <Link href="/topics">
             <Button
               size="lg"
               variant="secondary"
               className="gap-2 text-base"
             >
-              Vytvořit účet zdarma
+              Prohlédnout témata
               <ArrowRight className="h-5 w-5" />
             </Button>
           </Link>
