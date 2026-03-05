@@ -22,6 +22,11 @@ import { InteractiveCircuit } from "./interactive-circuit";
 import { InteractiveWave } from "./interactive-wave";
 import { InteractiveOptics } from "./interactive-optics";
 import { InteractiveAtom } from "./interactive-atom";
+import { InteractiveFunctionGraph } from "./interactive-function-graph";
+import { InteractiveUnitCircle } from "./interactive-unit-circle";
+import { InteractiveTriangle } from "./interactive-triangle";
+import { InteractiveProbability } from "./interactive-probability";
+import { InteractiveDerivative } from "./interactive-derivative";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
 export function VisualBlock({
@@ -110,6 +115,21 @@ export function VisualBlock({
       break;
     case "interactive-atom":
       content = <InteractiveAtom {...(props as any)} />;
+      break;
+    case "interactive-function-graph":
+      content = <InteractiveFunctionGraph {...(props as any)} />;
+      break;
+    case "interactive-unit-circle":
+      content = <InteractiveUnitCircle {...(props as any)} />;
+      break;
+    case "interactive-triangle":
+      content = <InteractiveTriangle {...(props as any)} />;
+      break;
+    case "interactive-probability":
+      content = <InteractiveProbability {...(props as any)} />;
+      break;
+    case "interactive-derivative":
+      content = <InteractiveDerivative {...(props as any)} />;
       break;
     default:
       return null;

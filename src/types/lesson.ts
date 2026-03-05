@@ -23,7 +23,12 @@ export type VisualType =
   | "interactive-circuit"
   | "interactive-wave"
   | "interactive-optics"
-  | "interactive-atom";
+  | "interactive-atom"
+  | "interactive-function-graph"
+  | "interactive-unit-circle"
+  | "interactive-triangle"
+  | "interactive-probability"
+  | "interactive-derivative";
 
 export interface VisualBlock {
   type: VisualType;

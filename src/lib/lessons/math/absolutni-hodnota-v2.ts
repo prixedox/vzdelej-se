@@ -1,124 +1,205 @@
 import type { LessonV2 } from "@/types/lesson-v2";
 
 export const absolutniHodnotaV2Beginner: LessonV2 = {
-  title: "Funkce s absolutní hodnotou",
+  title: "Absolutní hodnota",
   steps: [
     {
       type: "multiple-choice",
-      question: "Kolik je $|-7|$?",
+      question:
+        "V Praze je $-5\\,°\\text{C}$, v Brně $5\\,°\\text{C}$. Které město je dál od nuly na teploměru?",
       choices: [
-        { label: "$-7$", isCorrect: false, feedback: "Absolutní hodnota je vždy nezáporná." },
-        { label: "$7$", isCorrect: true, feedback: "Správně! Absolutní hodnota udává vzdálenost od nuly." },
-        { label: "$0$", isCorrect: false, feedback: "$|-7|$ je vzdálenost $-7$ od nuly, tedy $7$." },
+        {
+          label: "Praha ($-5\\,°\\text{C}$)",
+          isCorrect: false,
+          feedback:
+            "Obě teploty jsou přesně 5 stupňů od nuly — jedna pod, druhá nad.",
+        },
+        {
+          label: "Brno ($5\\,°\\text{C}$)",
+          isCorrect: false,
+          feedback:
+            "Obě teploty jsou přesně 5 stupňů od nuly — jedna pod, druhá nad.",
+        },
+        {
+          label: "Obě stejně daleko",
+          isCorrect: true,
+          feedback:
+            "Přesně! $|-5| = |5| = 5$. Absolutní hodnota měří **vzdálenost od nuly** bez ohledu na směr.",
+        },
       ],
-      explanation: "$|x|$ je **vzdálenost** čísla $x$ od nuly na číselné ose. Vždy nezáporná.",
+      explanation:
+        "Absolutní hodnota $|x|$ = vzdálenost čísla $x$ od nuly. Nezáleží na znaménku: $|-5| = |5| = 5$.",
     },
     {
       type: "explain",
-      body: "**Absolutní hodnota**:\n\n$$|x| = \\begin{cases} x & \\text{pro } x \\geq 0 \\\\ -x & \\text{pro } x < 0 \\end{cases}$$\n\nPříklady: $|5| = 5$, $|-3| = 3$, $|0| = 0$.",
+      body: "**Absolutní hodnota** $|x|$ je vzdálenost od nuly na číselné ose — jako vzdálenost na mapě, která je vždy kladná.\n\n$$|x| = \\begin{cases} x & \\text{pro } x \\geq 0 \\\\ -x & \\text{pro } x < 0 \\end{cases}$$",
       callout: "Definice",
     },
     {
-      type: "text-input",
-      question: "Kolik je $|3 - 8|$?",
-      expectedAnswer: "5",
-      explanation: "$3 - 8 = -5$, tedy $|-5| = 5$.",
-    },
-    {
-      type: "explain",
-      body: "Graf funkce $f(x) = |x|$ vypadá jako **písmeno V** s vrcholem v počátku.\n\n- Pro $x \\geq 0$: $f(x) = x$ (přímka se sklonem $1$)\n- Pro $x < 0$: $f(x) = -x$ (přímka se sklonem $-1$)\n\nGraf $|x - a|$ posouvá vrchol do bodu $[a; 0]$.",
-    },
-    {
-      type: "multiple-choice",
-      question: "Kde má funkce $f(x) = |x - 3|$ svůj vrchol (minimum)?",
-      choices: [
-        { label: "V bodě $[0; 3]$", isCorrect: false, feedback: "$f(0) = |0 - 3| = 3$, ale to není minimum." },
-        { label: "V bodě $[3; 0]$", isCorrect: true, feedback: "Ano! $f(3) = |3 - 3| = 0$ — to je minimum." },
-        { label: "V bodě $[-3; 0]$", isCorrect: false, feedback: "$f(-3) = |-3 - 3| = 6 \\neq 0$." },
-      ],
-      explanation: "$|x - a| = 0$ právě když $x = a$. Vrchol V je v bodě $[a; 0]$.",
-    },
-    {
-      type: "explain",
-      body: "**Rovnice s absolutní hodnotou**: $|x| = a$ (kde $a \\geq 0$) má dvě řešení:\n\n$$x = a \\quad \\text{nebo} \\quad x = -a$$\n\nPříklad: $|x| = 5 \\Rightarrow x = 5$ nebo $x = -5$.",
-      callout: "Rovnice",
-    },
-    {
-      type: "text-input",
-      question: "Vyřešte $|x - 2| = 4$. Jaké je **větší** řešení?",
-      expectedAnswer: "6",
-      acceptableAnswers: ["x=6", "x = 6"],
-      wrongAnswerFeedback: {
-        "-2": "To je menší řešení. Ptáme se na větší.",
+      type: "explore",
+      prompt:
+        "Graf funkce $f(x) = |x|$ má tvar písmene V. Posuňte parametr $a$, abyste viděli, jak se mění $f(x) = |x - a|$ — kam se posune vrchol V-tvaru?",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "absolute-value",
+          defaultParams: { a: 0, b: 1, c: 0 },
+          xRange: [-8, 8],
+          yRange: [-2, 10],
+          showGrid: true,
+        },
       },
-      explanation: "$x - 2 = 4 \\Rightarrow x = 6$ nebo $x - 2 = -4 \\Rightarrow x = -2$.",
-      hints: ["Rozepište na dva případy: $x - 2 = 4$ a $x - 2 = -4$."],
+      followUpQuestion:
+        "Vrchol se posouvá vodorovně: $|x - a|$ má minimum (nulu) v bodě $x = a$. Představte si: $|x - 3|$ měří vzdálenost od trojky na číselné ose.",
     },
     {
       type: "text-input",
-      question: "A jaké je **menší** řešení rovnice $|x - 2| = 4$?",
-      expectedAnswer: "-2",
-      acceptableAnswers: ["x=-2", "x = -2"],
-      explanation: "$x - 2 = -4 \\Rightarrow x = -2$.",
+      question:
+        "Na teploměru je $-7\\,°\\text{C}$. Jaká je vzdálenost od nuly? (Kolik je $|-7|$?)",
+      expectedAnswer: "7",
+      explanation: "$|-7| = 7$. Záporné znaménko se odstraní.",
     },
     {
-      type: "multiple-choice",
-      question: "Kolik řešení má rovnice $|x| = -3$?",
-      choices: [
-        { label: "Dvě: $x = 3$ a $x = -3$", isCorrect: false, feedback: "Absolutní hodnota nemůže být záporná!" },
-        { label: "Žádné", isCorrect: true, feedback: "Správně! $|x| \\geq 0$ vždy, takže $|x| = -3$ nemá řešení." },
-        { label: "Jedno: $x = -3$", isCorrect: false, feedback: "$|-3| = 3 \\neq -3$." },
-      ],
-      explanation: "Absolutní hodnota je vždy $\\geq 0$. Rovnice $|x| = a$ pro $a < 0$ nemá řešení.",
+      type: "explore",
+      prompt:
+        "Zapněte zobrazení kořenů a podívejte se na graf $f(x) = |x - 3| - 2$. Kde graf protíná osu $x$? To jsou řešení rovnice $|x - 3| = 2$.",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "absolute-value",
+          defaultParams: { a: 3, b: 1, c: -2 },
+          xRange: [-2, 8],
+          yRange: [-3, 6],
+          showGrid: true,
+          showRoots: true,
+        },
+      },
+      followUpQuestion:
+        "Kořeny jsou v $x = 1$ a $x = 5$. Rovnice $|x - 3| = 2$ má dvě řešení: $x = 3 + 2 = 5$ a $x = 3 - 2 = 1$.",
     },
     {
       type: "explain",
-      body: "**Nerovnice s absolutní hodnotou**:\n\n- $|x| < a$ $\\Leftrightarrow$ $-a < x < a$ (interval kolem nuly)\n- $|x| > a$ $\\Leftrightarrow$ $x < -a$ nebo $x > a$ (dvě polopřímky)\n\nPříklad: $|x| < 3$ $\\Rightarrow$ $x \\in (-3; 3)$.",
-      callout: "Nerovnice",
-    },
-    {
-      type: "multiple-choice",
-      question: "Vyřešte $|x - 1| \\leq 5$.",
-      choices: [
-        { label: "$x \\in \\langle -4; 6 \\rangle$", isCorrect: true, feedback: "$-5 \\leq x - 1 \\leq 5$ → $-4 \\leq x \\leq 6$ ✓" },
-        { label: "$x \\in (-5; 5)$", isCorrect: false, feedback: "Nezapomeňte na posuv: střed je v $x = 1$, ne v $0$." },
-        { label: "$x \\in \\langle -6; 4 \\rangle$", isCorrect: false, feedback: "Pozor na znaménka: $-5 + 1 = -4$, ne $-6$." },
-      ],
-      explanation: "$|x - 1| \\leq 5$ → $-5 \\leq x - 1 \\leq 5$ → $-4 \\leq x \\leq 6$.",
-    },
-    {
-      type: "sort-order",
-      question: "Seřaďte kroky řešení $|2x + 1| = 7$:",
-      items: [
-        "Rozepíšeme: $2x + 1 = 7$ nebo $2x + 1 = -7$",
-        "Případ 1: $2x = 6$, tedy $x = 3$",
-        "Případ 2: $2x = -8$, tedy $x = -4$",
-        "Řešení: $x = 3$ nebo $x = -4$",
-      ],
-      explanation: "Vždy rozepíšeme na dva případy (kladný a záporný obsah absolutní hodnoty).",
+      body: "Rovnice $|x - a| = b$ (pro $b \\geq 0$) má dvě řešení: $x = a + b$ a $x = a - b$. Geometricky: hledáme body, které jsou od $a$ vzdálené přesně $b$.",
     },
     {
       type: "text-input",
-      question: "Vyřešte $|3x - 6| = 12$. Zapište oba kořeny (menší první, středník).",
-      expectedAnswer: "-2; 6",
-      acceptableAnswers: ["-2;6", "-2 ; 6", "-2, 6"],
-      explanation: "$3x - 6 = 12 \\Rightarrow x = 6$. $3x - 6 = -12 \\Rightarrow x = -2$.",
-      hints: ["Dva případy: $3x - 6 = 12$ a $3x - 6 = -12$."],
+      question:
+        "Vyřešte $|x - 3| = 2$. Jaké je **větší** řešení?",
+      expectedAnswer: "5",
+      acceptableAnswers: ["5", "x=5", "x = 5"],
+      wrongAnswerFeedback: {
+        "1": "To je menší řešení. Ptáme se na větší: $3 + 2 = 5$.",
+      },
+      explanation:
+        "$x - 3 = 2 \\Rightarrow x = 5$ nebo $x - 3 = -2 \\Rightarrow x = 1$.",
+      hints: ["Dva případy: $x - 3 = 2$ a $x - 3 = -2$."],
+    },
+    {
+      type: "multiple-choice",
+      question:
+        "Dlužíte kamarádovi 200 Kč (saldo $-200$) a na účtu máte 200 Kč (saldo $+200$). V obou případech je $|\\text{saldo}| = 200$. Kolik řešení má rovnice $|x| = -3$?",
+      choices: [
+        {
+          label: "Dvě: $x = 3$ a $x = -3$",
+          isCorrect: false,
+          feedback:
+            "Absolutní hodnota nemůže být záporná! $|3| = 3 \\neq -3$.",
+        },
+        {
+          label: "Žádné",
+          isCorrect: true,
+          feedback:
+            "Vzdálenost nemůže být záporná. $|x| \\geq 0$ vždy, takže $|x| = -3$ nemá řešení.",
+        },
+        {
+          label: "Jedno: $x = 0$",
+          isCorrect: false,
+          feedback: "$|0| = 0 \\neq -3$.",
+        },
+      ],
+      explanation:
+        "Absolutní hodnota je vždy $\\geq 0$. Jakákoli rovnice $|\\ldots| = $ záporné číslo nemá řešení.",
     },
     {
       type: "reveal",
-      question: "Jak vypadá graf $f(x) = |x^2 - 4|$?",
-      revealedContent: "Graf $x^2 - 4$ je parabola s kořeny $x = -2$ a $x = 2$. Mezi kořeny je záporná.\n\nAbsolutní hodnota **překlopí zápornou část nahoru** — vznikne tvar s dvěma lokálními minimy v $x = \\pm 2$ (hodnota 0) a lokálním maximem v $x = 0$ (hodnota 4).",
+      question:
+        "Jak řešíme **nerovnice** s absolutní hodnotou, třeba $|x| < 4$?",
+      revealedContent:
+        "Nerovnice $|x| < a$ ($a > 0$) znamená: vzdálenost od nuly je **menší** než $a$.\n\n$$|x| < a \\iff -a < x < a$$\n\nPříklad: $|x| < 4$ → $x \\in (-4; 4)$.\n\nNaopak $|x| > a$ → $x < -a$ nebo $x > a$ (daleko od nuly).\n\nPrakticky: teplota v lednici se drží v rozmezí $|T - 4| < 2$, tedy mezi $2\\,°\\text{C}$ a $6\\,°\\text{C}$.",
+    },
+    {
+      type: "text-input",
+      question:
+        "Zapište řešení nerovnice $|x| < 4$ jako interval. (Použijte závorky a středník, např. $(-a; a)$.)",
+      expectedAnswer: "(-4; 4)",
+      acceptableAnswers: ["(-4;4)", "(-4; 4)", "(-4 ; 4)"],
+      explanation:
+        "$|x| < 4$ → $-4 < x < 4$, tedy $x \\in (-4; 4)$.",
+      hints: ["$|x| < a$ znamená $-a < x < a$."],
+    },
+    {
+      type: "explore",
+      prompt:
+        "Porovnejte grafy $f(x) = |x|$ (černá) a $g(x) = |x - 2|$ (červená). O kolik je červený graf posunutý a jakým směrem?",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "absolute-value",
+          defaultParams: { a: 0, b: 1, c: 0 },
+          xRange: [-6, 8],
+          yRange: [-2, 8],
+          showGrid: true,
+          compareFunction: { functionType: "absolute-value", params: { a: 2, b: 1, c: 0 } },
+        },
+      },
+      followUpQuestion:
+        "Graf $|x - 2|$ je posunutý o 2 doprava. Obecně: $|x - a|$ posune vrchol do bodu $[a; 0]$.",
+    },
+    {
+      type: "text-input",
+      question:
+        "Vyřešte $|2x + 1| = 7$. Zapište obě řešení (menší první, oddělte středníkem).",
+      expectedAnswer: "-4; 3",
+      acceptableAnswers: ["-4;3", "-4 ; 3", "-4, 3"],
+      explanation:
+        "$2x + 1 = 7 \\Rightarrow x = 3$. $2x + 1 = -7 \\Rightarrow x = -4$.",
+      hints: ["Rozepište: $2x + 1 = 7$ nebo $2x + 1 = -7$."],
+    },
+    {
+      type: "multiple-choice",
+      question:
+        "Termostat udržuje teplotu v místnosti tak, aby $|T - 22| \\leq 2$ (°C). V jakém rozmezí se teplota pohybuje?",
+      choices: [
+        {
+          label: "$20\\,°\\text{C}$ až $24\\,°\\text{C}$",
+          isCorrect: true,
+          feedback:
+            "$|T - 22| \\leq 2$ → $20 \\leq T \\leq 24$. Teplota je maximálně 2 stupně od ideálu.",
+        },
+        {
+          label: "$18\\,°\\text{C}$ až $26\\,°\\text{C}$",
+          isCorrect: false,
+          feedback: "To by odpovídalo $|T - 22| \\leq 4$.",
+        },
+        {
+          label: "$22\\,°\\text{C}$ až $24\\,°\\text{C}$",
+          isCorrect: false,
+          feedback:
+            "Teplota může klesnout i pod 22 °C — až na 20 °C.",
+        },
+      ],
+      explanation:
+        "$|T - 22| \\leq 2$ → $-2 \\leq T - 22 \\leq 2$ → $20 \\leq T \\leq 24$.",
     },
   ],
   summary: {
     keyTakeaways: [
-      "$|x|$ je vzdálenost od nuly; vždy $\\geq 0$.",
+      "$|x|$ je vzdálenost od nuly — jako na teploměru nebo mapě. Vždy $\\geq 0$.",
       "Graf $|x|$ je V-tvar. $|x - a|$ posune vrchol do $[a; 0]$.",
-      "$|f(x)| = a$ → dva případy: $f(x) = a$ nebo $f(x) = -a$.",
-      "$|x| < a$ → $(-a; a)$; $|x| > a$ → $x < -a$ nebo $x > a$.",
-      "Absolutní hodnota v grafu překlopí zápornou část nahoru.",
+      "$|f(x)| = a$ → dva případy: $f(x) = a$ nebo $f(x) = -a$. Pro $a < 0$ nemá řešení.",
+      "$|x| < a$ → $x \\in (-a; a)$; $|x| > a$ → $x < -a$ nebo $x > a$.",
+      "V praxi: tolerance výroby, teplotní rozmezí, vzdálenost od cíle.",
     ],
   },
-  nextTopicSuggestion: "trojuhelniky",
+  nextTopicSuggestion: "nerovnice",
 };

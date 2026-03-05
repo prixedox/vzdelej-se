@@ -4,121 +4,206 @@ export const kvadratickaFunkceV2Beginner: LessonV2 = {
   title: "Kvadratická funkce",
   steps: [
     {
-      type: "multiple-choice",
-      question: "Míč hozený vzhůru letí po dráze, kterou popisuje $y = -x^2 + 4x$. Jaká je maximální výška?",
-      choices: [
-        { label: "$2$", isCorrect: false, feedback: "To je $x$-souřadnice vrcholu, ne výška." },
-        { label: "$4$", isCorrect: true, feedback: "Správně! Vrchol paraboly je v $[2; 4]$." },
-        { label: "$8$", isCorrect: false, feedback: "Zkus dosadit $x = 2$: $-4 + 8 = 4$." },
-      ],
-      explanation: "Vrchol je v $x_v = -\\frac{b}{2a} = -\\frac{4}{-2} = 2$. Pak $y_v = -4 + 8 = 4$.",
-    },
-    {
-      type: "explain",
-      body: "**Kvadratická funkce** má tvar:\n\n$$f(x) = ax^2 + bx + c, \\quad a \\neq 0$$\n\nGraf je **parabola**:\n- $a > 0$: otevřená nahoru (tvar U)\n- $a < 0$: otevřená dolů (tvar ∩)",
-      callout: "Definice",
-    },
-    {
-      type: "multiple-choice",
-      question: "Parabola $f(x) = -2x^2 + 3$ je otevřená:",
-      choices: [
-        { label: "Nahoru", isCorrect: false, feedback: "$a = -2 < 0$, takže dolů." },
-        { label: "Dolů", isCorrect: true, feedback: "Ano! Záporné $a$ = parabola otevřená dolů." },
-      ],
-      explanation: "Znaménko $a$ určuje orientaci: $a < 0$ → parabola otevřená dolů → má maximum.",
-    },
-    {
-      type: "explain",
-      body: "**Vrchol paraboly** $V = [x_v; y_v]$:\n\n$$x_v = -\\frac{b}{2a}, \\quad y_v = f(x_v)$$\n\nVrchol je nejnižší bod ($a > 0$) nebo nejvyšší bod ($a < 0$) paraboly.",
-      callout: "Vrchol",
-    },
-    {
-      type: "text-input",
-      question: "Najděte $x$-souřadnici vrcholu paraboly $f(x) = x^2 - 6x + 5$.",
-      expectedAnswer: "3",
-      acceptableAnswers: ["x=3", "xv=3"],
-      explanation: "$x_v = -\\frac{-6}{2 \\cdot 1} = \\frac{6}{2} = 3$.",
-      hints: ["$x_v = -\\frac{b}{2a}$ s $a = 1$, $b = -6$."],
-    },
-    {
-      type: "text-input",
-      question: "A jaká je $y$-souřadnice vrcholu ($y_v$)?",
-      expectedAnswer: "-4",
-      acceptableAnswers: ["yv=-4", "y=-4"],
-      explanation: "$y_v = f(3) = 9 - 18 + 5 = -4$. Vrchol: $V = [3; -4]$.",
-    },
-    {
-      type: "explain",
-      body: "**Průsečíky s osou $x$** (kořeny) najdeme řešením $ax^2 + bx + c = 0$.\n\nPočet kořenů závisí na diskriminantu $D = b^2 - 4ac$:\n- $D > 0$: dva průsečíky\n- $D = 0$: jeden (parabola se dotýká osy)\n- $D < 0$: žádný (parabola osu neprotíná)",
-    },
-    {
-      type: "text-input",
-      question: "Kolik průsečíků s osou $x$ má $f(x) = x^2 - 6x + 5$?\n\n(Spočítejte $D$.)",
-      expectedAnswer: "2",
-      wrongAnswerFeedback: {
-        "16": "To je hodnota $D$. Ptáme se na počet průsečíků.",
+      type: "explore",
+      prompt:
+        "Pohybujte parametrem $a$ v rovnici $f(x) = ax^2$. Sledujte, co se děje s tvarem paraboly, když $a$ roste, klesá, nebo se mění znaménko.",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "quadratic",
+          defaultParams: { a: 1, b: 0, c: 0 },
+          xRange: [-6, 6],
+          yRange: [-8, 10],
+          showGrid: true,
+        },
       },
-      explanation: "$D = 36 - 20 = 16 > 0$ → dva průsečíky. Kořeny: $x = \\frac{6 \\pm 4}{2}$, tedy $x_1 = 1$, $x_2 = 5$.",
-    },
-    {
-      type: "sort-order",
-      question: "Seřaďte kroky pro načrtnutí grafu $f(x) = x^2 - 4x + 3$:",
-      items: [
-        "Vrchol: $x_v = 2$, $y_v = -1$, tedy $V = [2; -1]$",
-        "Průsečík s osou $y$: $f(0) = 3$, bod $[0; 3]$",
-        "Kořeny: $D = 4$, $x_1 = 1$, $x_2 = 3$",
-        "Nakreslíme parabolu otevřenou nahoru ($a = 1 > 0$)",
-      ],
-      explanation: "Postup: vrchol → průsečík s $y$ → kořeny → orientace a náčrt.",
-    },
-    {
-      type: "reveal",
-      question: "Co je to **vrcholový tvar** kvadratické funkce?",
-      revealedContent: "$$f(x) = a(x - x_v)^2 + y_v$$\n\nPříklad: $f(x) = (x - 2)^2 - 1$ má vrchol $[2; -1]$.\n\nVrcholový tvar přímo ukazuje posuny: $x_v$ doprava, $y_v$ nahoru.",
+      followUpQuestion:
+        "Všimli jste si? Kladné $a$ otevírá parabolu nahoru, záporné dolů. Čím větší $|a|$, tím užší tvar.",
     },
     {
       type: "multiple-choice",
-      question: "Funkce $f(x) = (x + 1)^2 - 4$ má vrchol:",
+      question:
+        "Na základě toho, co jste viděli: jak vypadá parabola $f(x) = -3x^2$?",
       choices: [
-        { label: "$[1; -4]$", isCorrect: false, feedback: "Pozor: $(x + 1)^2 = (x - (-1))^2$, takže $x_v = -1$." },
-        { label: "$[-1; -4]$", isCorrect: true, feedback: "$x_v = -1$, $y_v = -4$ ✓" },
-        { label: "$[-1; 4]$", isCorrect: false, feedback: "$y_v = -4$, ne $4$." },
+        {
+          label: "Úzká, otevřená nahoru",
+          isCorrect: false,
+          feedback: "Záporné $a$ otevírá parabolu dolů, ne nahoru.",
+        },
+        {
+          label: "Úzká, otevřená dolů",
+          isCorrect: true,
+          feedback:
+            "$a = -3 < 0$ → dolů, $|a| = 3 > 1$ → užší než $x^2$.",
+        },
+        {
+          label: "Široká, otevřená dolů",
+          isCorrect: false,
+          feedback: "$|a| = 3$ je velké číslo → parabola je úzká, ne široká.",
+        },
       ],
-      explanation: "Z tvaru $a(x - x_v)^2 + y_v$: $x_v = -1$, $y_v = -4$.",
+      explanation:
+        "Znaménko $a$ určuje směr otevření, velikost $|a|$ určuje šířku paraboly.",
+    },
+    {
+      type: "explore",
+      prompt:
+        "Teď měňte parametr $c$ (nechte $a = 1$, $b = 0$). Jak se posouvá parabola při změně $c$?",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "quadratic",
+          defaultParams: { a: 1, b: 0, c: 0 },
+          xRange: [-6, 6],
+          yRange: [-8, 10],
+          showGrid: true,
+          showVertex: true,
+        },
+      },
+      followUpQuestion:
+        "Parametr $c$ posouvá parabolu svisle — je to průsečík s osou $y$ (hodnota $f(0)$).",
+    },
+    {
+      type: "explain",
+      body: "Kvadratická funkce $f(x) = ax^2 + bx + c$ má graf — **parabolu**. Její tvar závisí na třech parametrech: $a$ (otevření), $b$ (vodorovný posun), $c$ (svislý posun).",
     },
     {
       type: "text-input",
-      question: "Jaký je průsečík funkce $f(x) = 2x^2 + 4x - 6$ s osou $y$?",
+      question:
+        "Parabola $f(x) = 2x^2 + 4x - 6$ protíná osu $y$. V jakém bodě? (Zadejte $y$-ovou souřadnici.)",
       expectedAnswer: "-6",
-      acceptableAnswers: ["y=-6", "-6"],
-      explanation: "Průsečík s osou $y$: $f(0) = c = -6$. Bod: $[0; -6]$.",
+      acceptableAnswers: ["-6", "y=-6"],
+      explanation:
+        "Průsečík s osou $y$: dosadíme $x = 0$ → $f(0) = c = -6$.",
+      hints: ["Co je $f(0)$?"],
     },
     {
-      type: "multiple-choice",
-      question: "Jak se změní graf $f(x) = x^2$, když zapíšeme $g(x) = x^2 + 3$?",
-      choices: [
-        { label: "Posune se o 3 doleva", isCorrect: false, feedback: "Posuv doleva by byl $(x + 3)^2$." },
-        { label: "Posune se o 3 nahoru", isCorrect: true, feedback: "Přičtení konstanty posouvá graf svisle." },
-        { label: "Roztáhne se 3krát", isCorrect: false, feedback: "Roztažení by bylo $3x^2$." },
-      ],
-      explanation: "$f(x) + c$ posouvá graf o $c$ nahoru. $f(x - c)$ posouvá o $c$ doprava.",
+      type: "explore",
+      prompt:
+        "Zapněte zobrazení **vrcholu** a měňte $b$ (při $a = 1$, $c = 0$). Sledujte, jak se vrchol posouvá.",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "quadratic",
+          defaultParams: { a: 1, b: -4, c: 0 },
+          xRange: [-6, 6],
+          yRange: [-8, 10],
+          showGrid: true,
+          showVertex: true,
+        },
+      },
+      followUpQuestion:
+        "Vrchol se pohybuje po parabole. Jeho $x$-ová souřadnice je $x_v = -\\frac{b}{2a}$.",
+    },
+    {
+      type: "explain",
+      body: "**Vrchol paraboly** $V = [x_v; y_v]$ najdeme takto:\n\n$$x_v = -\\frac{b}{2a}, \\quad y_v = f(x_v)$$",
+      callout: "Vzorec",
     },
     {
       type: "text-input",
-      question: "Funkce $f(x) = x^2 - 8x + 12$. Jaké jsou její kořeny? (menší první, oddělte středníkem)",
-      expectedAnswer: "2; 6",
-      acceptableAnswers: ["2;6", "2 ; 6", "2, 6"],
-      explanation: "$D = 64 - 48 = 16$. $x = \\frac{8 \\pm 4}{2}$: $x_1 = 2$, $x_2 = 6$. Rozklad: $(x-2)(x-6)$.",
-      hints: ["$D = b^2 - 4ac = 64 - 48$."],
+      question:
+        "Najděte $x$-souřadnici vrcholu paraboly $f(x) = x^2 - 6x + 5$.",
+      expectedAnswer: "3",
+      acceptableAnswers: ["3", "x=3", "xv=3"],
+      explanation:
+        "$x_v = -\\frac{-6}{2 \\cdot 1} = 3$.",
+      hints: ["$x_v = -\\frac{b}{2a}$, kde $a = 1$, $b = -6$."],
+    },
+    {
+      type: "explore",
+      prompt:
+        "Zapněte **kořeny** (průsečíky s osou $x$). Nastavte $a = 1$, $b = -2$, $c = -3$ a ověřte, kde parabola protíná osu $x$.",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "quadratic",
+          defaultParams: { a: 1, b: -2, c: -3 },
+          xRange: [-5, 7],
+          yRange: [-6, 8],
+          showGrid: true,
+          showVertex: true,
+          showRoots: true,
+        },
+      },
+      followUpQuestion:
+        "Kořeny vidíte v bodech $x = -1$ a $x = 3$. Počet kořenů závisí na diskriminantu $D = b^2 - 4ac$.",
+    },
+    {
+      type: "multiple-choice",
+      question:
+        "Diskriminant $D = b^2 - 4ac$ funkce $f(x) = x^2 + 2x + 5$ je $D = 4 - 20 = -16$. Co to znamená pro graf?",
+      choices: [
+        {
+          label: "Parabola protíná osu $x$ ve dvou bodech",
+          isCorrect: false,
+          feedback: "To by platilo pro $D > 0$.",
+        },
+        {
+          label: "Parabola se dotýká osy $x$ v jednom bodě",
+          isCorrect: false,
+          feedback: "To by platilo pro $D = 0$.",
+        },
+        {
+          label: "Parabola neprotíná osu $x$",
+          isCorrect: true,
+          feedback:
+            "Ano! $D < 0$ → žádné reálné kořeny, parabola je celá nad osou $x$.",
+        },
+      ],
+      explanation:
+        "$D > 0$: dva kořeny. $D = 0$: jeden kořen (dotyk). $D < 0$: žádný kořen.",
+    },
+    {
+      type: "text-input",
+      question:
+        "Kolik kořenů má $f(x) = x^2 - 8x + 16$? (Spočítejte $D$.)",
+      expectedAnswer: "1",
+      wrongAnswerFeedback: {
+        "0": "To je hodnota $D$, ne počet kořenů. $D = 0$ znamená právě jeden kořen.",
+        "2": "$D = 64 - 64 = 0$, tedy jeden kořen (dotyk), ne dva.",
+      },
+      explanation:
+        "$D = 64 - 64 = 0$ → právě jeden kořen: $x = \\frac{8}{2} = 4$. Parabola se dotýká osy $x$.",
+      hints: ["$D = b^2 - 4ac = (-8)^2 - 4 \\cdot 1 \\cdot 16$."],
+    },
+    {
+      type: "explore",
+      prompt:
+        "Porovnejte $f(x) = x^2$ (černá) a $g(x) = (x - 2)^2 - 1$ (červená). Jak se liší pozice vrcholu?",
+      visual: {
+        type: "interactive-function-graph",
+        props: {
+          functionType: "quadratic",
+          defaultParams: { a: 1, b: -4, c: 3 },
+          xRange: [-4, 8],
+          yRange: [-4, 10],
+          showGrid: true,
+          showVertex: true,
+          compareFunction: { functionType: "quadratic", params: { a: 1, b: 0, c: 0 } },
+        },
+      },
+      followUpQuestion:
+        "Vrcholový tvar $f(x) = a(x - x_v)^2 + y_v$ přímo ukazuje posuny: $x_v$ doprava, $y_v$ nahoru.",
+    },
+    {
+      type: "text-input",
+      question:
+        "Jaké jsou kořeny $f(x) = x^2 - 4x - 5$? (Menší první, oddělte středníkem.)",
+      expectedAnswer: "-1; 5",
+      acceptableAnswers: ["-1;5", "-1 ; 5", "-1, 5"],
+      explanation:
+        "$D = 16 + 20 = 36$. $x = \\frac{4 \\pm 6}{2}$: $x_1 = -1$, $x_2 = 5$.",
+      hints: ["$D = b^2 - 4ac = 16 - 4 \\cdot 1 \\cdot (-5)$."],
     },
   ],
   summary: {
     keyTakeaways: [
-      "Kvadratická funkce: $f(x) = ax^2 + bx + c$, graf je parabola.",
-      "$a > 0$: parabola nahoru (minimum), $a < 0$: dolů (maximum).",
+      "Parametr $a$ určuje směr otevření a šířku paraboly.",
       "Vrchol: $x_v = -\\frac{b}{2a}$, $y_v = f(x_v)$.",
-      "Kořeny: $D = b^2 - 4ac$ určuje počet průsečíků s osou $x$.",
-      "Vrcholový tvar: $f(x) = a(x - x_v)^2 + y_v$.",
+      "Diskriminant $D = b^2 - 4ac$ rozhoduje o počtu kořenů.",
+      "Průsečík s osou $y$ je hodnota $c$ (dosadíme $x = 0$).",
+      "Vrcholový tvar $a(x - x_v)^2 + y_v$ ukazuje posuny grafu.",
     ],
   },
   nextTopicSuggestion: "exponencialni-funkce",
