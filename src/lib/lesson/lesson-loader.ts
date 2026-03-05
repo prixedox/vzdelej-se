@@ -1,31 +1,18 @@
-import { db } from "@/lib/db";
-import { lessonCache } from "@/lib/db/tables";
-import { eq, and } from "drizzle-orm";
+import { getLesson as getLessonData } from "@/lib/lessons/data";
 import type { LessonContent } from "@/types/lesson";
+import type { LessonV2 } from "@/types/lesson-v2";
 
-export async function getLesson(params: {
-  topicId: string;
-  difficulty: string;
-  variant?: number;
-}): Promise<{ lessonCacheId: string; content: LessonContent }> {
-  const { topicId, difficulty, variant = 1 } = params;
+export function getLesson(
+  topicSlug: string,
+  difficulty: string
+): LessonContent | LessonV2 {
+  const content = getLessonData(topicSlug, difficulty);
 
-  const cached = await db.query.lessonCache.findFirst({
-    where: and(
-      eq(lessonCache.topicId, topicId),
-      eq(lessonCache.difficulty, difficulty),
-      eq(lessonCache.variant, variant)
-    ),
-  });
-
-  if (!cached) {
+  if (!content) {
     throw new Error(
-      `Lesson not found for topic ${topicId}, difficulty ${difficulty}, variant ${variant}`
+      `Lesson not found: ${topicSlug} (${difficulty})`
     );
   }
 
-  return {
-    lessonCacheId: cached.id,
-    content: cached.content as LessonContent,
-  };
+  return content;
 }

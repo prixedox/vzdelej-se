@@ -1,0 +1,136 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { MathText } from "../math-display";
+import { VisualBlock } from "../visuals/visual-block";
+import { HintReveal } from "../hint-reveal";
+import { checkAnswer } from "@/lib/lesson/answer-evaluator";
+import { Send, Check, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { TextInputSlideV2 } from "@/types/slide-v2";
+
+interface TextInputSlideV2Props {
+  slide: TextInputSlideV2;
+  onAnswer: (stepIndex: number, isCorrect: boolean, attempts: number) => void;
+  answered?: { isCorrect: boolean; attempts: number };
+}
+
+export function TextInputSlideV2({
+  slide,
+  onAnswer,
+  answered,
+}: TextInputSlideV2Props) {
+  const { step } = slide;
+  const [answer, setAnswer] = useState("");
+  const [submitted, setSubmitted] = useState(!!answered);
+  const [isCorrect, setIsCorrect] = useState(answered?.isCorrect ?? false);
+  const [attempts, setAttempts] = useState(answered?.attempts ?? 0);
+  const [wrongFeedback, setWrongFeedback] = useState<string | null>(null);
+
+  function handleSubmit() {
+    if (!answer.trim() || submitted) return;
+
+    const correct = checkAnswer({
+      userAnswer: answer,
+      expectedAnswer: step.expectedAnswer,
+      acceptableAnswers: step.acceptableAnswers ?? [],
+      numericTolerance: step.numericTolerance,
+    });
+
+    const newAttempts = attempts + 1;
+    setAttempts(newAttempts);
+    setIsCorrect(correct);
+    setSubmitted(true);
+
+    if (!correct && step.wrongAnswerFeedback) {
+      const normalized = answer.trim().toLowerCase();
+      const specific = step.wrongAnswerFeedback[normalized];
+      setWrongFeedback(specific ?? null);
+    }
+
+    onAnswer(slide.stepIndex, correct, newAttempts);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter") handleSubmit();
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="py-6 space-y-4"
+    >
+      <MathText content={step.question} className="text-base font-medium" />
+
+      {step.visual && (
+        <div className="w-full">
+          <VisualBlock visual={step.visual} animated />
+        </div>
+      )}
+
+      {!submitted && step.hints && step.hints.length > 0 && (
+        <HintReveal hints={step.hints} onHintUsed={() => {}} />
+      )}
+
+      <div className="flex gap-2">
+        <Input
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Zadejte odpověď..."
+          disabled={submitted}
+          className="flex-1"
+        />
+        <Button
+          onClick={handleSubmit}
+          disabled={!answer.trim() || submitted}
+          size="icon"
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {submitted && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className={cn(
+            "rounded-lg p-4 border",
+            isCorrect
+              ? "bg-green-50 border-green-200"
+              : "bg-red-50 border-red-200"
+          )}
+        >
+          <div className="flex items-center gap-2 mb-2">
+            {isCorrect ? (
+              <>
+                <Check className="h-5 w-5 text-green-600" />
+                <span className="font-semibold text-green-800">Správně!</span>
+              </>
+            ) : (
+              <>
+                <X className="h-5 w-5 text-red-600" />
+                <span className="font-semibold text-red-800">Špatně</span>
+              </>
+            )}
+          </div>
+          {wrongFeedback && !isCorrect && (
+            <p className="text-sm text-red-700 mb-2">{wrongFeedback}</p>
+          )}
+          <MathText
+            content={step.explanation}
+            className={cn(
+              "text-sm",
+              isCorrect ? "text-green-700" : "text-red-700"
+            )}
+          />
+        </motion.div>
+      )}
+    </motion.div>
+  );
+}
