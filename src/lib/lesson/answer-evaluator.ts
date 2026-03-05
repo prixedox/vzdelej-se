@@ -1,5 +1,5 @@
-// Client-side answer checking for MVP
-// No AI evaluation — exact match + numeric tolerance
+// Client-side answer checking
+// Exact match + numeric tolerance, no AI evaluation
 
 export function checkAnswer(params: {
   userAnswer: string;

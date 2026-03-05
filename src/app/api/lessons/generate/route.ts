@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth/config";
-import { getOrGenerateLesson } from "@/lib/ai/lesson-generator";
+import { getLesson } from "@/lib/lesson/lesson-loader";
 import { checkDailyLimit, incrementDailyUsage } from "@/lib/rate-limit";
 import { db } from "@/lib/db";
 import { userLessonProgress, topics } from "@/lib/db/tables";
@@ -60,8 +60,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Generate or fetch from cache
-    const { lessonCacheId, content } = await getOrGenerateLesson({
+    // Fetch lesson from cache
+    const { lessonCacheId, content } = await getLesson({
       topicId: resolvedTopicId,
       difficulty,
       variant,
@@ -117,10 +117,10 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Lesson generation failed:", error);
+    console.error("Lesson fetch failed:", error);
     return NextResponse.json(
-      { error: "Lesson generation failed. Please try again." },
-      { status: 500 }
+      { error: "Lesson not found for this topic and difficulty." },
+      { status: 404 }
     );
   }
 }

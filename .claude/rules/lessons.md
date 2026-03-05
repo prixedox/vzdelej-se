@@ -1,23 +1,21 @@
 # Lesson System
 
-## Generation Flow
+Lessons are static, pre-built content stored in the `lessonCache` table. Content was authored with Claude assistance during development — there is no runtime AI generation.
+
+## Content Delivery Flow
 
 1. `POST /api/lessons/generate` with `{ topicId/topicSlug, subjectSlug, difficulty, variant }`
-2. Auth check → daily limit check → `getOrGenerateLesson()` in `src/lib/ai/lesson-generator.ts`
-3. Cache lookup by `(topicId, difficulty, variant)` in `lessonCache` table
-4. If miss: call Claude API → parse JSON → validate Zod → store in cache
-5. Create/update `userLessonProgress` → increment daily usage → return content
+2. Auth check → daily limit check → lookup `lessonCache` by `(topicId, difficulty, variant)`
+3. Create/update `userLessonProgress` → increment daily usage → return content
 
 ## Key Files
 
 - API route: `src/app/api/lessons/generate/route.ts`
-- Generator: `src/lib/ai/lesson-generator.ts`
-- System prompt: `src/lib/ai/prompts/system.ts`
-- Lesson template: `src/lib/ai/prompts/lesson-template.ts`
-- Zod schema: `src/lib/ai/schemas/lesson.ts`
 - Types: `src/types/lesson.ts` (extended with visual support), `src/types/slide.ts`
 - Slide builder: `src/lib/lesson/build-slides.ts`
-- Answer evaluator: `src/lib/ai/answer-evaluator.ts`
+- Lesson loader: `src/lib/lesson/lesson-loader.ts`
+- Answer evaluator: `src/lib/lesson/answer-evaluator.ts`
+- Zod schema: `src/lib/ai/schemas/lesson.ts` (kept in ai/ for seed script compatibility)
 
 ## Lesson Content Structure (LessonContent)
 
@@ -36,7 +34,7 @@ Section Title "Teorie" → Concept sections → Section Title "Ukázka" → Walk
 
 Client-side only. Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance. No server-side re-validation (trusts client `isCorrect`).
 
-## Czech Math Conventions (in AI prompts)
+## Czech Math Conventions
 
 - Decimal comma: 3,14 not 3.14
 - Functions: tg (not tan), cotg, ln, log
@@ -45,8 +43,6 @@ Client-side only. Normalizes both strings (trim, lowercase, Czech comma→dot, s
 
 ## Gotchas
 
-- Cache has no invalidation — changing prompts won't regenerate existing cached lessons
-- `promptVersion` field exists in cache but isn't used for cache busting
 - Visual props are `Record<string, unknown>` — type safety only at component level
 - Practice problems must have exactly 3 hints
-- Model is hardcoded: `claude-sonnet-4-5-20250929`
+- Lesson content is JSONB in `lessonCache` — validated by Zod schema

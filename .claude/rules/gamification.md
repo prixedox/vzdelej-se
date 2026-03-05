@@ -29,7 +29,7 @@ NOT a traditional rate limiter — DB-backed daily quota.
 - Premium (active|trialing) and admin: unlimited
 - Resets on new day (compares dailyLessonsResetDate to today's YYYY-MM-DD)
 - `checkDailyLimit(userId)` → `{ allowed, used, limit, remaining }`
-- `incrementDailyUsage(userId)` — called after lesson generation
+- `incrementDailyUsage(userId)` — called after lesson delivery
 
 ## Gamification Components
 

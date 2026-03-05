@@ -26,7 +26,7 @@ Only leaf nodes (`isLeaf: true` in DB) are actual lesson topics. Parent nodes ar
 
 Seeded via `pnpm seed:topics`. Each topic has: slug (unique per subject), name (Czech), parentId (self-join), order, isLeaf, difficulty, aiContext.
 
-The `aiContext` field provides extra context to the AI prompt during lesson generation (e.g., specific concepts to cover).
+The `aiContext` field stores additional topic context (e.g., specific concepts to cover) used when authoring lesson content.
 
 ## Routing
 

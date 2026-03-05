@@ -1,6 +1,6 @@
 # Vzdělej.se
 
-Czech AI-powered educational platform (math & physics). Generates interactive lessons via Claude API with gamification, Stripe subscriptions, and progress tracking.
+Czech educational platform for math & physics. Static interactive lessons with gamification, Stripe subscriptions, and progress tracking. Lesson content is pre-built (authored with Claude assistance during development), not generated at runtime.
 
 ## Commands
 
@@ -38,10 +38,10 @@ pnpm seed:lessons     # Pre-generate lesson cache
 ```
 src/app/          → Next.js App Router: (app)/ protected, (auth)/ login, (marketing)/ public, api/
 src/components/   → ui/ (shadcn), layout/, lesson/ (slides + 26 visual types), dashboard/, gamification/
-src/lib/          → db/ (Drizzle schema), auth/ (NextAuth 3-file split), ai/ (Claude prompts + generation), stripe/, rate-limit/
+src/lib/          → db/ (Drizzle schema), auth/ (NextAuth 3-file split), lesson/ (loader + answer eval + slides), ai/ (prompts & schemas for seed script only), stripe/, rate-limit/
 src/types/        → lesson.ts, slide.ts, topic.ts, user.ts
 ```
 
 ## Stack
 
-Next.js 16 · React 19 · TypeScript · PostgreSQL (Neon) · Drizzle ORM · NextAuth.js 5 · Anthropic SDK · Tailwind CSS 4 · shadcn/ui · Stripe · Upstash Redis · KaTeX · Zod · Motion
+Next.js 16 · React 19 · TypeScript · PostgreSQL (Neon) · Drizzle ORM · NextAuth.js 5 · Tailwind CSS 4 · shadcn/ui · Stripe · Upstash Redis · KaTeX · Zod · Motion

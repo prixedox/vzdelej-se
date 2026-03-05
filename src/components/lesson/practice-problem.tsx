@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { MathText } from "./math-display";
 import { HintReveal } from "./hint-reveal";
 import { AnswerFeedback } from "./answer-feedback";
-import { checkAnswer } from "@/lib/ai/answer-evaluator";
+import { checkAnswer } from "@/lib/lesson/answer-evaluator";
 import type { PracticeProblem as PracticeProblemType } from "@/types/lesson";
 import { Send } from "lucide-react";
 import { cn } from "@/lib/utils";

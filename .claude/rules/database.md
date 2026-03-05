@@ -18,7 +18,7 @@
 **topics** — id (UUID), slug, name (Czech), description, subject (math|physics), parentId (self-join), order, isLeaf, difficulty, icon, aiContext
 - Unique index: (slug, subject)
 
-**lessonCache** — id, topicId, difficulty, variant, content (JSONB), model, promptVersion, generatedAt, generationTimeMs, tokenCount
+**lessonCache** — id, topicId, difficulty, variant, content (JSONB), model, promptVersion, generatedAt, tokenCount
 - Unique index: (topicId, difficulty, variant)
 
 **userLessonProgress** — id, userId, lessonCacheId, topicId, status (not_started|in_progress|completed), score (0-1), xpEarned, totalProblems, correctAnswers, hintsUsed, startedAt, completedAt
