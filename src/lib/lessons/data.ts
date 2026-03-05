@@ -36,81 +36,81 @@ import {
 } from "./physics/kinematika";
 
 import { kinematikaV2Beginner } from "./physics/kinematika-v2";
+import { dynamikaV2Beginner } from "./physics/dynamika-v2";
+import { energieAPraceV2Beginner } from "./physics/energie-a-prace-v2";
+import { hybnostAImpulzV2Beginner } from "./physics/hybnost-a-impulz-v2";
+import { gravitaceV2Beginner } from "./physics/gravitace-v2";
+import { teplotaATeploV2Beginner } from "./physics/teplota-a-teplo-v2";
+import { idealniPlynV2Beginner } from "./physics/idealni-plyn-v2";
+import { zakonyTermodynamikyV2Beginner } from "./physics/zakony-termodynamiky-v2";
+import { elektrickePoleV2Beginner } from "./physics/elektricke-pole-v2";
+import { elektrickeObvodyV2Beginner } from "./physics/elektricke-obvody-v2";
+import { magnetickePoleV2Beginner } from "./physics/magneticke-pole-v2";
+import { mechanickeVlneniV2Beginner } from "./physics/mechanicke-vlneni-v2";
+import { optikaV2Beginner } from "./physics/optika-v2";
+import { kvantovaFyzikaV2Beginner } from "./physics/kvantova-fyzika-v2";
 
 import {
-  dynamikaBeginner,
   dynamikaIntermediate,
   dynamikaAdvanced,
 } from "./physics/dynamika";
 
 import {
-  energieAPraceBeginner,
   energieAPraceIntermediate,
   energieAPraceAdvanced,
 } from "./physics/energie-a-prace";
 
 import {
-  hybnostAImpulzBeginner,
   hybnostAImpulzIntermediate,
   hybnostAImpulzAdvanced,
 } from "./physics/hybnost-a-impulz";
 
 import {
-  gravitaceBeginner,
   gravitaceIntermediate,
   gravitaceAdvanced,
 } from "./physics/gravitace";
 
 import {
-  teplotaATeploBeginner,
   teplotaATeploIntermediate,
   teplotaATeploAdvanced,
 } from "./physics/teplota-a-teplo";
 
 import {
-  idealniPlynBeginner,
   idealniPlynIntermediate,
   idealniPlynAdvanced,
 } from "./physics/idealni-plyn";
 
 import {
-  zakonyTermodynamikyBeginner,
   zakonyTermodynamikyIntermediate,
   zakonyTermodynamikyAdvanced,
 } from "./physics/zakony-termodynamiky";
 
 import {
-  elektrickePoleBeginner,
   elektrickePoleIntermediate,
   elektrickePoleAdvanced,
 } from "./physics/elektricke-pole";
 
 import {
-  elektrickeObvodyBeginner,
   elektrickeObvodyIntermediate,
   elektrickeObvodyAdvanced,
 } from "./physics/elektricke-obvody";
 
 import {
-  magnetickePoleBeginner,
   magnetickePoleIntermediate,
   magnetickePoleAdvanced,
 } from "./physics/magneticke-pole";
 
 import {
-  mechanickeVlneniBeginner,
   mechanickeVlneniIntermediate,
   mechanickeVlneniAdvanced,
 } from "./physics/mechanicke-vlneni";
 
 import {
-  optikaBeginner,
   optikaIntermediate,
   optikaAdvanced,
 } from "./physics/optika";
 
 import {
-  kvantovaFyzikaBeginner,
   kvantovaFyzikaIntermediate,
   kvantovaFyzikaAdvanced,
 } from "./physics/kvantova-fyzika";
@@ -148,59 +148,59 @@ const lessons: Record<string, LessonContent | LessonV2> = {
   "kinematika-intermediate": kinematikaIntermediate,
   "kinematika-advanced": kinematikaAdvanced,
 
-  "dynamika-beginner": dynamikaBeginner,
+  "dynamika-beginner": dynamikaV2Beginner,
   "dynamika-intermediate": dynamikaIntermediate,
   "dynamika-advanced": dynamikaAdvanced,
 
-  "energie-a-prace-beginner": energieAPraceBeginner,
+  "energie-a-prace-beginner": energieAPraceV2Beginner,
   "energie-a-prace-intermediate": energieAPraceIntermediate,
   "energie-a-prace-advanced": energieAPraceAdvanced,
 
-  "hybnost-a-impulz-beginner": hybnostAImpulzBeginner,
+  "hybnost-a-impulz-beginner": hybnostAImpulzV2Beginner,
   "hybnost-a-impulz-intermediate": hybnostAImpulzIntermediate,
   "hybnost-a-impulz-advanced": hybnostAImpulzAdvanced,
 
-  "gravitace-beginner": gravitaceBeginner,
+  "gravitace-beginner": gravitaceV2Beginner,
   "gravitace-intermediate": gravitaceIntermediate,
   "gravitace-advanced": gravitaceAdvanced,
 
-  // Physics — Thermodynamics
-  "teplota-a-teplo-beginner": teplotaATeploBeginner,
+  // Physics — Thermodynamics (v2)
+  "teplota-a-teplo-beginner": teplotaATeploV2Beginner,
   "teplota-a-teplo-intermediate": teplotaATeploIntermediate,
   "teplota-a-teplo-advanced": teplotaATeploAdvanced,
 
-  "idealni-plyn-beginner": idealniPlynBeginner,
+  "idealni-plyn-beginner": idealniPlynV2Beginner,
   "idealni-plyn-intermediate": idealniPlynIntermediate,
   "idealni-plyn-advanced": idealniPlynAdvanced,
 
-  "zakony-termodynamiky-beginner": zakonyTermodynamikyBeginner,
+  "zakony-termodynamiky-beginner": zakonyTermodynamikyV2Beginner,
   "zakony-termodynamiky-intermediate": zakonyTermodynamikyIntermediate,
   "zakony-termodynamiky-advanced": zakonyTermodynamikyAdvanced,
 
-  // Physics — Electricity & Magnetism
-  "elektricke-pole-beginner": elektrickePoleBeginner,
+  // Physics — Electricity & Magnetism (v2)
+  "elektricke-pole-beginner": elektrickePoleV2Beginner,
   "elektricke-pole-intermediate": elektrickePoleIntermediate,
   "elektricke-pole-advanced": elektrickePoleAdvanced,
 
-  "elektricke-obvody-beginner": elektrickeObvodyBeginner,
+  "elektricke-obvody-beginner": elektrickeObvodyV2Beginner,
   "elektricke-obvody-intermediate": elektrickeObvodyIntermediate,
   "elektricke-obvody-advanced": elektrickeObvodyAdvanced,
 
-  "magneticke-pole-beginner": magnetickePoleBeginner,
+  "magneticke-pole-beginner": magnetickePoleV2Beginner,
   "magneticke-pole-intermediate": magnetickePoleIntermediate,
   "magneticke-pole-advanced": magnetickePoleAdvanced,
 
-  // Physics — Waves & Optics
-  "mechanicke-vlneni-beginner": mechanickeVlneniBeginner,
+  // Physics — Waves & Optics (v2)
+  "mechanicke-vlneni-beginner": mechanickeVlneniV2Beginner,
   "mechanicke-vlneni-intermediate": mechanickeVlneniIntermediate,
   "mechanicke-vlneni-advanced": mechanickeVlneniAdvanced,
 
-  "optika-beginner": optikaBeginner,
+  "optika-beginner": optikaV2Beginner,
   "optika-intermediate": optikaIntermediate,
   "optika-advanced": optikaAdvanced,
 
-  // Physics — Modern Physics
-  "kvantova-fyzika-beginner": kvantovaFyzikaBeginner,
+  // Physics — Modern Physics (v2)
+  "kvantova-fyzika-beginner": kvantovaFyzikaV2Beginner,
   "kvantova-fyzika-intermediate": kvantovaFyzikaIntermediate,
   "kvantova-fyzika-advanced": kvantovaFyzikaAdvanced,
 };
