@@ -1,33 +1,35 @@
+---
+paths:
+  - "src/lib/topics/**"
+  - "src/components/topic/**"
+  - "src/types/topic.ts"
+  - "src/app/(app)/topics/**"
+---
+
 # Topics & Subjects
 
-## Key Files
+Static topic trees defined in TypeScript. No database.
 
-- Index: `src/lib/topics/index.ts` — exports `subjectTrees`, `subjects`, `getLeafTopics()`, `findTopic()`
-- Math tree: `src/lib/topics/math-tree.ts` (21 leaf topics)
-- Physics tree: `src/lib/topics/physics-tree.ts` (14 leaf topics)
-- Types: `src/types/topic.ts`
+## Files
+
+- `src/lib/topics/index.ts` — exports `subjectTrees`, `subjects`, `getLeafTopics()`, `findTopic()`
+- `src/lib/topics/math-tree.ts` — 21 leaf topics: Algebra (6), Funkce (5), Geometrie (4), Kombinatorika (2), Analýza (3)
+- `src/lib/topics/physics-tree.ts` — 14 leaf topics: Mechanika (5), Termodynamika (3), E&M (3), Vlnění a optika (2), Moderní fyzika (1)
 
 ## Structure
-
-Hierarchical tree: Subject → Category → Topic (leaf)
 
 ```typescript
 TopicNode { slug, name, description?, icon?, aiContext?, children?: TopicNode[] }
 ```
 
-Only leaf nodes (`isLeaf: true` in DB) are actual lesson topics. Parent nodes are categories.
+Hierarchical: Subject → Category → Topic (leaf). Only leaf nodes (no `children`) link to lessons.
 
-## Subjects
+## Adding a New Topic
 
-- **math** — Algebra (6), Funkce, Geometrie, Kombinatorika, Analýza
-- **physics** — Mechanika (5), Termodynamika (3), Elektřina a magnetismus (3+), Vlnění a optika, Moderní fyzika
-
-## DB Topics Table
-
-Seeded via `pnpm seed:topics`. Each topic has: slug (unique per subject), name (Czech), parentId (self-join), order, isLeaf, difficulty, aiContext.
-
-The `aiContext` field stores additional topic context (e.g., specific concepts to cover) used when authoring lesson content.
+1. Add `TopicNode` to `math-tree.ts` or `physics-tree.ts` under the right category
+2. `slug` must match the lesson key prefix in `src/lib/lessons/data.ts`
+3. Create the lesson file in `src/lib/lessons/`
 
 ## Routing
 
-`/topics` → subject cards → `/topics/[subjectSlug]` → topic tree → `/topics/[subjectSlug]/[topicSlug]` → lesson picker
+`/topics` → subject cards → `/topics/[subjectSlug]` → topic tree → `/topics/[subjectSlug]/[topicSlug]` → difficulty picker → lesson

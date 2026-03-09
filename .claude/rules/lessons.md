@@ -1,60 +1,57 @@
+---
+paths:
+  - "src/lib/lesson/**"
+  - "src/lib/lessons/**"
+  - "src/types/lesson*.ts"
+  - "src/types/slide*.ts"
+---
+
 # Lesson System
 
-Lessons are static TS objects stored in `src/lib/lessons/data.ts`. No database, no API calls.
+Lessons are static TS objects in `src/lib/lessons/data.ts`. No database, no API calls.
 
 ## Content Flow
 
-1. User picks topic + difficulty on topic page
-2. Navigates to `/lessons/${topicSlug}?difficulty=${difficulty}&subject=${subjectSlug}`
-3. Lesson page imports content from `src/lib/lessons/data.ts`
-4. `LessonShell` builds slides, manages answer state locally
-5. On completion: shows score (no persistence)
+1. User picks topic + difficulty → navigates to `/lessons/${topicSlug}?difficulty=${difficulty}&subject=${subjectSlug}`
+2. Lesson page calls `getLesson()` from `data.ts`
+3. `LessonShell` builds slides, manages answer state locally
+4. On completion: shows score (no persistence)
 
 ## Key Files
 
-- Lesson data: `src/lib/lessons/data.ts` — `Record<string, LessonContent>` keyed by `${topicSlug}-${difficulty}`
-- Slide builder: `src/lib/lesson/build-slides.ts`
-- Answer evaluator: `src/lib/lesson/answer-evaluator.ts`
-- Types: `src/types/lesson.ts`, `src/types/slide.ts`
-- Lesson page: `src/app/(app)/lessons/[lessonId]/page.tsx`
-- Topic page: `src/app/(app)/topics/[subjectSlug]/[topicSlug]/page.tsx`
+- Registry: `src/lib/lessons/data.ts` — keyed by `${topicSlug}-${difficulty}`
+- Builders: `src/lib/lesson/build-slides.ts` (V1), `build-slides-v2.ts` (V2)
+- Evaluator: `src/lib/lesson/answer-evaluator.ts` — client-side, never throws
+- Types: `src/types/lesson.ts` + `slide.ts` (V1), `lesson-v2.ts` + `slide-v2.ts` (V2)
 
-## Adding New Lessons
+## Adding a New Lesson (V2)
 
-Add content to `src/lib/lessons/data.ts`:
 ```ts
-import { registerLesson } from "@/lib/lessons/data";
-registerLesson("topic-slug", "beginner", { conceptExplanation: ..., ... });
+// 1. Create src/lib/lessons/math/topic-slug-v2.ts
+import type { LessonV2 } from "@/types/lesson-v2";
+export const topicSlugV2Beginner: LessonV2 = { title: "...", steps: [...], summary: { keyTakeaways: [...] } };
+
+// 2. Register in src/lib/lessons/data.ts
+import { topicSlugV2Beginner } from "./math/topic-slug-v2";
+registerLessonV2("topic-slug", "beginner", topicSlugV2Beginner);
 ```
 
-Or directly add to the `lessons` record object.
+Slug must match the topic slug in `src/lib/topics/`.
 
-## Lesson Content Structure (LessonContent)
+## V2 Step Types
 
-```
-conceptExplanation: { title, sections[]: { heading, body (markdown+LaTeX), visual?, examples[] } }
-walkthroughProblem: { problemStatement, steps[]: { instruction, math?, explanation, visual? }, finalAnswer }
-practiceProblems[]: { id, problemStatement, expectedAnswer, acceptableAnswers[], numericTolerance?, hints[3], solutionExplanation, difficulty }
-summary: { keyTakeaways[], nextTopicSuggestion? }
-```
+`explain` (2-3 sentences + optional visual) · `multiple-choice` (per-choice feedback) · `text-input` (free text, optional wrong-answer feedback) · `explore` (interactive visual + prompt) · `reveal` (click-to-show) · `sort-order` (drag to reorder)
 
-## Slide Sequence (built by buildSlides())
+## V1 Structure (legacy)
 
-Section Title "Teorie" → Concept sections → Section Title "Ukázka" → Walkthrough intro → Steps → Result → Section Title "Procvičení" → Practice problems → Section Title "Shrnutí" → Summary → Complete prompt
+`conceptExplanation` → `walkthroughProblem` → `practiceProblems` (exactly 3 hints each) → `summary`
 
-## Answer Validation (checkAnswer)
+## Answer Evaluation
 
-Client-side only. Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance.
-
-## Czech Math Conventions
-
-- Decimal comma: 3,14 not 3.14
-- Functions: tg (not tan), cotg, ln, log
-- Intervals: ⟨a; b⟩ closed, (a; b) open
-- LaTeX: `$...$` inline, `$$...$$` block
+Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance (`|user - expected| <= tolerance`).
 
 ## Gotchas
 
-- Visual props are `Record<string, unknown>` — type safety only at component level
-- Practice problems must have exactly 3 hints
-- No persistence — answers/progress are lost on page reload
+- V1 practice problems must have exactly 3 hints
+- No persistence — answers/progress lost on page reload
+- File naming: `{topic-slug}-v2.ts` for V2, `{topic-slug}.ts` for V1
