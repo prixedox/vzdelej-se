@@ -2,11 +2,6 @@ import type { LessonContent } from "@/types/lesson";
 import type { LessonV2 } from "@/types/lesson-v2";
 
 // ── Math imports ──
-import {
-  linearniRovniceIntermediate,
-  linearniRovniceAdvanced,
-} from "./math/linearni-rovnice";
-
 import { linearniRovniceV2Beginner } from "./math/linearni-rovnice-v2";
 import { kvadratickeRovniceV2Beginner } from "./math/kvadraticke-rovnice-v2";
 import { soustavyRovnicV2Beginner } from "./math/soustavy-rovnic-v2";
@@ -30,11 +25,6 @@ import { derivaceV2Beginner } from "./math/derivace-v2";
 import { integralyV2Beginner } from "./math/integraly-v2";
 
 // ── Physics imports ──
-import {
-  kinematikaIntermediate,
-  kinematikaAdvanced,
-} from "./physics/kinematika";
-
 import { kinematikaV2Beginner } from "./physics/kinematika-v2";
 import { dynamikaV2Beginner } from "./physics/dynamika-v2";
 import { energieAPraceV2Beginner } from "./physics/energie-a-prace-v2";
@@ -50,170 +40,64 @@ import { mechanickeVlneniV2Beginner } from "./physics/mechanicke-vlneni-v2";
 import { optikaV2Beginner } from "./physics/optika-v2";
 import { kvantovaFyzikaV2Beginner } from "./physics/kvantova-fyzika-v2";
 
-import {
-  dynamikaIntermediate,
-  dynamikaAdvanced,
-} from "./physics/dynamika";
-
-import {
-  energieAPraceIntermediate,
-  energieAPraceAdvanced,
-} from "./physics/energie-a-prace";
-
-import {
-  hybnostAImpulzIntermediate,
-  hybnostAImpulzAdvanced,
-} from "./physics/hybnost-a-impulz";
-
-import {
-  gravitaceIntermediate,
-  gravitaceAdvanced,
-} from "./physics/gravitace";
-
-import {
-  teplotaATeploIntermediate,
-  teplotaATeploAdvanced,
-} from "./physics/teplota-a-teplo";
-
-import {
-  idealniPlynIntermediate,
-  idealniPlynAdvanced,
-} from "./physics/idealni-plyn";
-
-import {
-  zakonyTermodynamikyIntermediate,
-  zakonyTermodynamikyAdvanced,
-} from "./physics/zakony-termodynamiky";
-
-import {
-  elektrickePoleIntermediate,
-  elektrickePoleAdvanced,
-} from "./physics/elektricke-pole";
-
-import {
-  elektrickeObvodyIntermediate,
-  elektrickeObvodyAdvanced,
-} from "./physics/elektricke-obvody";
-
-import {
-  magnetickePoleIntermediate,
-  magnetickePoleAdvanced,
-} from "./physics/magneticke-pole";
-
-import {
-  mechanickeVlneniIntermediate,
-  mechanickeVlneniAdvanced,
-} from "./physics/mechanicke-vlneni";
-
-import {
-  optikaIntermediate,
-  optikaAdvanced,
-} from "./physics/optika";
-
-import {
-  kvantovaFyzikaIntermediate,
-  kvantovaFyzikaAdvanced,
-} from "./physics/kvantova-fyzika";
-
-// Lesson content keyed by "${topicSlug}-${difficulty}"
+// Lesson content keyed by topicSlug — one lesson per topic
 const lessons: Record<string, LessonContent | LessonV2> = {
-  // Math (v2)
-  "linearni-rovnice-beginner": linearniRovniceV2Beginner,
-  "kvadraticke-rovnice-beginner": kvadratickeRovniceV2Beginner,
-  "soustavy-rovnic-beginner": soustavyRovnicV2Beginner,
-  "nerovnice-beginner": nerovniceV2Beginner,
-  "vyrazove-upravy-beginner": vyrazoveUpravyV2Beginner,
-  "posloupnosti-beginner": posloupnostiV2Beginner,
-  "linearni-funkce-beginner": linearniFunkceV2Beginner,
-  "kvadraticka-funkce-beginner": kvadratickaFunkceV2Beginner,
-  "exponencialni-funkce-beginner": exponencialniFunkceV2Beginner,
-  "logaritmicka-funkce-beginner": logaritmickaFunkceV2Beginner,
-  "goniometricke-funkce-beginner": goniometrickeFunkceV2Beginner,
-  "absolutni-hodnota-beginner": absolutniHodnotaV2Beginner,
-  "trojuhelniky-beginner": trojuhelnikyV2Beginner,
-  "kruznice-a-kruhy-beginner": kruznicaAKruhyV2Beginner,
-  "analyticka-geometrie-beginner": analytickaGeometrieV2Beginner,
-  "stereometrie-beginner": stereometrieV2Beginner,
-  "kombinatorika-zaklady-beginner": kombinatorikaZakladyV2Beginner,
-  "pravdepodobnost-beginner": pravdepodobnostV2Beginner,
-  "limity-beginner": limityV2Beginner,
-  "derivace-beginner": derivaceV2Beginner,
-  "integraly-beginner": integralyV2Beginner,
-  // Math (v1)
-  "linearni-rovnice-intermediate": linearniRovniceIntermediate,
-  "linearni-rovnice-advanced": linearniRovniceAdvanced,
+  // Math
+  "linearni-rovnice": linearniRovniceV2Beginner,
+  "kvadraticke-rovnice": kvadratickeRovniceV2Beginner,
+  "soustavy-rovnic": soustavyRovnicV2Beginner,
+  "nerovnice": nerovniceV2Beginner,
+  "vyrazove-upravy": vyrazoveUpravyV2Beginner,
+  "posloupnosti": posloupnostiV2Beginner,
+  "linearni-funkce": linearniFunkceV2Beginner,
+  "kvadraticka-funkce": kvadratickaFunkceV2Beginner,
+  "exponencialni-funkce": exponencialniFunkceV2Beginner,
+  "logaritmicka-funkce": logaritmickaFunkceV2Beginner,
+  "goniometricke-funkce": goniometrickeFunkceV2Beginner,
+  "absolutni-hodnota": absolutniHodnotaV2Beginner,
+  "trojuhelniky": trojuhelnikyV2Beginner,
+  "kruznice-a-kruhy": kruznicaAKruhyV2Beginner,
+  "analyticka-geometrie": analytickaGeometrieV2Beginner,
+  "stereometrie": stereometrieV2Beginner,
+  "kombinatorika-zaklady": kombinatorikaZakladyV2Beginner,
+  "pravdepodobnost": pravdepodobnostV2Beginner,
+  "limity": limityV2Beginner,
+  "derivace": derivaceV2Beginner,
+  "integraly": integralyV2Beginner,
 
-  // Physics — Mechanics (v2)
-  "kinematika-beginner": kinematikaV2Beginner,
-  "kinematika-intermediate": kinematikaIntermediate,
-  "kinematika-advanced": kinematikaAdvanced,
+  // Physics — Mechanics
+  "kinematika": kinematikaV2Beginner,
+  "dynamika": dynamikaV2Beginner,
+  "energie-a-prace": energieAPraceV2Beginner,
+  "hybnost-a-impulz": hybnostAImpulzV2Beginner,
+  "gravitace": gravitaceV2Beginner,
 
-  "dynamika-beginner": dynamikaV2Beginner,
-  "dynamika-intermediate": dynamikaIntermediate,
-  "dynamika-advanced": dynamikaAdvanced,
+  // Physics — Thermodynamics
+  "teplota-a-teplo": teplotaATeploV2Beginner,
+  "idealni-plyn": idealniPlynV2Beginner,
+  "zakony-termodynamiky": zakonyTermodynamikyV2Beginner,
 
-  "energie-a-prace-beginner": energieAPraceV2Beginner,
-  "energie-a-prace-intermediate": energieAPraceIntermediate,
-  "energie-a-prace-advanced": energieAPraceAdvanced,
+  // Physics — Electricity & Magnetism
+  "elektricke-pole": elektrickePoleV2Beginner,
+  "elektricke-obvody": elektrickeObvodyV2Beginner,
+  "magneticke-pole": magnetickePoleV2Beginner,
 
-  "hybnost-a-impulz-beginner": hybnostAImpulzV2Beginner,
-  "hybnost-a-impulz-intermediate": hybnostAImpulzIntermediate,
-  "hybnost-a-impulz-advanced": hybnostAImpulzAdvanced,
+  // Physics — Waves & Optics
+  "mechanicke-vlneni": mechanickeVlneniV2Beginner,
+  "optika": optikaV2Beginner,
 
-  "gravitace-beginner": gravitaceV2Beginner,
-  "gravitace-intermediate": gravitaceIntermediate,
-  "gravitace-advanced": gravitaceAdvanced,
-
-  // Physics — Thermodynamics (v2)
-  "teplota-a-teplo-beginner": teplotaATeploV2Beginner,
-  "teplota-a-teplo-intermediate": teplotaATeploIntermediate,
-  "teplota-a-teplo-advanced": teplotaATeploAdvanced,
-
-  "idealni-plyn-beginner": idealniPlynV2Beginner,
-  "idealni-plyn-intermediate": idealniPlynIntermediate,
-  "idealni-plyn-advanced": idealniPlynAdvanced,
-
-  "zakony-termodynamiky-beginner": zakonyTermodynamikyV2Beginner,
-  "zakony-termodynamiky-intermediate": zakonyTermodynamikyIntermediate,
-  "zakony-termodynamiky-advanced": zakonyTermodynamikyAdvanced,
-
-  // Physics — Electricity & Magnetism (v2)
-  "elektricke-pole-beginner": elektrickePoleV2Beginner,
-  "elektricke-pole-intermediate": elektrickePoleIntermediate,
-  "elektricke-pole-advanced": elektrickePoleAdvanced,
-
-  "elektricke-obvody-beginner": elektrickeObvodyV2Beginner,
-  "elektricke-obvody-intermediate": elektrickeObvodyIntermediate,
-  "elektricke-obvody-advanced": elektrickeObvodyAdvanced,
-
-  "magneticke-pole-beginner": magnetickePoleV2Beginner,
-  "magneticke-pole-intermediate": magnetickePoleIntermediate,
-  "magneticke-pole-advanced": magnetickePoleAdvanced,
-
-  // Physics — Waves & Optics (v2)
-  "mechanicke-vlneni-beginner": mechanickeVlneniV2Beginner,
-  "mechanicke-vlneni-intermediate": mechanickeVlneniIntermediate,
-  "mechanicke-vlneni-advanced": mechanickeVlneniAdvanced,
-
-  "optika-beginner": optikaV2Beginner,
-  "optika-intermediate": optikaIntermediate,
-  "optika-advanced": optikaAdvanced,
-
-  // Physics — Modern Physics (v2)
-  "kvantova-fyzika-beginner": kvantovaFyzikaV2Beginner,
-  "kvantova-fyzika-intermediate": kvantovaFyzikaIntermediate,
-  "kvantova-fyzika-advanced": kvantovaFyzikaAdvanced,
+  // Physics — Modern Physics
+  "kvantova-fyzika": kvantovaFyzikaV2Beginner,
 };
 
 export function getLesson(
-  topicSlug: string,
-  difficulty: string
+  topicSlug: string
 ): LessonContent | LessonV2 | null {
-  return lessons[`${topicSlug}-${difficulty}`] ?? null;
+  return lessons[topicSlug] ?? null;
 }
 
-export function hasLesson(topicSlug: string, difficulty: string): boolean {
-  return `${topicSlug}-${difficulty}` in lessons;
+export function hasLesson(topicSlug: string): boolean {
+  return topicSlug in lessons;
 }
 
 export { lessons };

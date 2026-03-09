@@ -32,4 +32,4 @@ Hierarchical: Subject → Category → Topic (leaf). Only leaf nodes (no `childr
 
 ## Routing
 
-`/topics` → subject cards → `/topics/[subjectSlug]` → topic tree → `/topics/[subjectSlug]/[topicSlug]` → difficulty picker → lesson
+`/topics` → subject cards → `/topics/[subjectSlug]` → topic tree → `/topics/[subjectSlug]/[topicSlug]` → start lesson

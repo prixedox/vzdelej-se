@@ -15,7 +15,7 @@ Next.js App Router pages.
 | `/topics` | Subject cards grid |
 | `/topics/[subjectSlug]` | Topic tree |
 | `/topics/[subjectSlug]/[topicSlug]` | Difficulty picker |
-| `/lessons/[lessonId]?difficulty=&subject=` | Lesson player |
+| `/lessons/[lessonId]?subject=` | Lesson player |
 
 ## Rules
 

@@ -16,7 +16,7 @@ physics/{slug}.ts
 
 1. Create `src/lib/lessons/{math|physics}/{topic-slug}-v2.ts`
 2. Export a `LessonV2` typed object
-3. Import and register in `data.ts`: `registerLessonV2("topic-slug", "beginner", obj)`
+3. Import in `data.ts` and add to the `lessons` record: `"topic-slug": myLesson`
 4. Slug must match the topic slug in `src/lib/topics/`
 
 ## Content Rules

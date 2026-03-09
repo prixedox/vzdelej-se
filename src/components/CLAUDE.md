@@ -7,7 +7,7 @@ React components organized by domain.
 | `ui/` | shadcn/ui primitives — never edit manually, use `pnpm dlx shadcn@latest add <name>` |
 | `layout/` | App shell: sidebar (desktop), mobile-sidebar (sheet), top-bar, footer |
 | `lesson/` | Lesson player: shell → slide deck → slide renderer → slides + visuals |
-| `topic/` | Topic browsing: topic-card, difficulty-badge |
+| `topic/` | Topic browsing: topic-card |
 
 ## Design Rules
 

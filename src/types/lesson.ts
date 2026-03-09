@@ -142,4 +142,3 @@ export interface LessonContent {
 }
 
 export type LessonStatus = "not_started" | "in_progress" | "completed";
-export type Difficulty = "beginner" | "intermediate" | "advanced";
