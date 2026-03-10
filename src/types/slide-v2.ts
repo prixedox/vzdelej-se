@@ -5,6 +5,7 @@ import type {
   ExploreStep,
   RevealStep,
   SortOrderStep,
+  PredictionStep,
 } from "./lesson-v2";
 
 // ── Base ──
@@ -46,6 +47,11 @@ export interface SortOrderSlideV2 extends SlideV2Base {
   step: SortOrderStep;
 }
 
+export interface PredictionSlideV2 extends SlideV2Base {
+  type: "prediction-v2";
+  step: PredictionStep;
+}
+
 // ── Terminal slides ──
 
 export interface SummarySlideV2 extends SlideV2Base {
@@ -65,5 +71,6 @@ export type SlideV2 =
   | ExploreSlideV2
   | RevealSlideV2
   | SortOrderSlideV2
+  | PredictionSlideV2
   | SummarySlideV2
   | CompleteSlideV2;

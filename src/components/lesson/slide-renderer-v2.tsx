@@ -7,6 +7,7 @@ import { ExploreSlideV2 } from "./slides/explore-slide-v2";
 import { RevealSlideV2 } from "./slides/reveal-slide-v2";
 import { SortOrderSlideV2 } from "./slides/sort-order-slide-v2";
 import { SummarySlideV2 } from "./slides/summary-slide-v2";
+import { PredictionSlideV2 } from "./slides/prediction-slide-v2";
 import { motion } from "motion/react";
 import { Trophy } from "lucide-react";
 import Link from "next/link";
@@ -64,6 +65,15 @@ export function SlideRendererV2({
     case "sort-order-v2":
       return (
         <SortOrderSlideV2
+          slide={slide}
+          onAnswer={onAnswer}
+          answered={answeredSteps.get(slide.stepIndex)}
+        />
+      );
+
+    case "prediction-v2":
+      return (
+        <PredictionSlideV2
           slide={slide}
           onAnswer={onAnswer}
           answered={answeredSteps.get(slide.stepIndex)}

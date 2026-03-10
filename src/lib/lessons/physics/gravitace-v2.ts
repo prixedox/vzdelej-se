@@ -2,7 +2,24 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const gravitaceV2Beginner: LessonV2 = {
   title: "Gravitace",
+  narrative:
+    "Podle legendy Newton seděl pod jabloní a spadlo mu jablko na hlavu. Ale jeho geniální otázka nebyla 'Proč padá jablko?', nýbrž 'Padá stejnou silou i Měsíc?' Uvědomil si, že tatáž síla drží Měsíc na oběžné dráze — a formuloval zákon, který spojil nebeskou a pozemskou mechaniku.",
   steps: [
+    // 0 — Prediction
+    {
+      type: "prediction",
+      scenario:
+        "Astronaut na Mezinárodní vesmírné stanici (ISS) ve výšce $400\\,\\text{km}$ nad Zemí pustí pero. ISS obíhá Zemi rychlostí $7{,}7\\,\\text{km/s}$.",
+      question: "Co se stane s perem?",
+      options: [
+        { label: "Spadne k podlaze stanice — gravitace stále působí", isCorrect: false },
+        { label: "Zůstane vznášet se — ISS i pero padají stejně rychle", isCorrect: true },
+        { label: "Odletí pryč — ve vesmíru není gravitace", isCorrect: false },
+      ],
+      reveal:
+        "Ve výšce $400\\,\\text{km}$ je gravitační zrychlení stále asi $8{,}7\\,\\text{m/s}^2$ (jen o $11\\,\\%$ méně než na povrchu!). ISS i pero **padají volným pádem** kolem Země — ale pohybují se tak rychle, že stále 'míjejí' povrch. Proto se pero vznáší — ne kvůli absenci gravitace, ale kvůli **stavu beztíže** (volný pád).",
+    },
+
     // 1 — Hook MC
     {
       type: "multiple-choice",
@@ -35,8 +52,10 @@ export const gravitaceV2Beginner: LessonV2 = {
     // 2 — Explain: Newtonův gravitační zákon
     {
       type: "explain",
-      body: "**Newtonův gravitační zákon** popisuje přitahování dvou hmotných těles:\n\n$$F_g = G \\frac{m_1 \\cdot m_2}{r^2}$$\n\nkde $G = 6{,}674 \\cdot 10^{-11}\\,\\text{N}\\cdot\\text{m}^2/\\text{kg}^2$ je gravitační konstanta, $m_1$, $m_2$ jsou hmotnosti a $r$ je vzdálenost středů těles.",
+      body: "**Newtonův gravitační zákon** popisuje přitahování dvou hmotných těles:\n\n$$F_g = \\color{#27ae60}{G} \\frac{\\color{#2980b9}{m_1} \\cdot \\color{#2980b9}{m_2}}{\\color{#e74c3c}{r}^2}$$\n\nkde $\\color{#27ae60}{G} = 6{,}674 \\cdot 10^{-11}\\,\\text{N}\\cdot\\text{m}^2/\\text{kg}^2$ je gravitační konstanta, $\\color{#2980b9}{m_1}$, $\\color{#2980b9}{m_2}$ jsou hmotnosti a $\\color{#e74c3c}{r}$ je vzdálenost středů těles.",
       callout: "Gravitační zákon",
+      misconception:
+        "Častý omyl: 'Ve vesmíru není gravitace.' Ve skutečnosti gravitace působí všude — astronauti na ISS jsou ve stavu beztíže, protože volně padají spolu se stanicí kolem Země, ne proto, že by na ně nepůsobila gravitační síla.",
     },
 
     // 3 — MC: závislost na vzdálenosti

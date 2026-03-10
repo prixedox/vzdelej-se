@@ -2,12 +2,29 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const kvadratickeRovniceV2Beginner: LessonV2 = {
   title: "Kvadratické rovnice – základy",
+  narrative:
+    "Proč matematici vymysleli logaritmy? Protože potřebovali řešit rovnice s mocninami. Ale ještě předtím museli zvládnout rovnice s $\\color{#e74c3c}{x^2}$ — a ty mají překvapivou vlastnost: mohou mít dvě, jedno, nebo žádné řešení.",
   steps: [
-    // 1 — Hook
+    // 1 — Prediction: how many solutions
+    {
+      type: "prediction",
+      scenario:
+        "Máme rovnici $\\color{#e74c3c}{x}^2 = 9$. Víme, že $3^2 = 9$.",
+      question: "Kolik řešení má tato rovnice?",
+      options: [
+        { label: "Jedno: $x = 3$", isCorrect: false },
+        { label: "Dvě: $x = 3$ a $x = -3$", isCorrect: true },
+        { label: "Žádné", isCorrect: false },
+      ],
+      reveal:
+        "Rovnice má **dvě** řešení! Jak $\\color{#e74c3c}{3}^2 = 9$, tak $\\color{#e74c3c}{(-3)}^2 = 9$. Druhá mocnina \"schová\" znaménko — proto mají kvadratické rovnice často dva kořeny.",
+    },
+
+    // 2 — Hook
     {
       type: "multiple-choice",
       question:
-        "Číslo $x$ splňuje $x^2 = 9$. Kolik má tato rovnice řešení?",
+        "Číslo $\\color{#e74c3c}{x}$ splňuje $\\color{#e74c3c}{x}^2 = 9$. Kolik má tato rovnice řešení?",
       choices: [
         {
           label: "Jedno: $x = 3$",
@@ -29,11 +46,13 @@ export const kvadratickeRovniceV2Beginner: LessonV2 = {
         "Rovnice $x^2 = 9$ má dvě řešení, protože jak $3^2 = 9$, tak $(-3)^2 = 9$. To je typická vlastnost kvadratických rovnic.",
     },
 
-    // 2 — Explain: what is a quadratic equation
+    // 3 — Explain: what is a quadratic equation (with misconception)
     {
       type: "explain",
-      body: "**Kvadratická rovnice** je rovnice, ve které se neznámá vyskytuje ve **druhé mocnině**. Obecný tvar:\n\n$$ax^2 + bx + c = 0$$\n\nkde $a \\neq 0$. Koeficienty $a$, $b$, $c$ jsou reálná čísla.",
+      body: "**Kvadratická rovnice** je rovnice, ve které se neznámá vyskytuje ve **druhé mocnině**. Obecný tvar:\n\n$$\\color{#2980b9}{a}\\color{#e74c3c}{x}^2 + \\color{#2980b9}{b}\\color{#e74c3c}{x} + \\color{#27ae60}{c} = 0$$\n\nkde $\\color{#2980b9}{a} \\neq 0$. Koeficienty $\\color{#2980b9}{a}$, $\\color{#2980b9}{b}$, $\\color{#27ae60}{c}$ jsou reálná čísla.",
       callout: "Definice",
+      misconception:
+        "Častý omyl: \"Každá rovnice s $x^2$ má dvě řešení.\" Ne vždy — záleží na diskriminantu. Rovnice $x^2 + 1 = 0$ nemá žádné reálné řešení!",
     },
 
     // 3 — MC: identify quadratic
@@ -106,7 +125,40 @@ export const kvadratickeRovniceV2Beginner: LessonV2 = {
       callout: "Vzorec",
     },
 
-    // 7 — Sort order: solving steps
+    // 7 — Animated solve: x^2 - 6x + 5 = 0
+    {
+      type: "explain",
+      body: "Podívejme se na řešení rovnice $\\color{#e74c3c}{x}^2 - 6\\color{#e74c3c}{x} + 5 = 0$ krok po kroku:",
+      visual: {
+        type: "animated-equation-solver",
+        props: {
+          steps: [
+            {
+              latex: "\\color{#e74c3c}{x}^2 - 6\\color{#e74c3c}{x} + 5 = 0",
+              label: "Zadání",
+            },
+            {
+              latex: "\\color{#2980b9}{a} = 1,\\; \\color{#2980b9}{b} = -6,\\; \\color{#27ae60}{c} = 5",
+              label: "Koeficienty",
+            },
+            {
+              latex: "D = (-6)^2 - 4 \\cdot 1 \\cdot 5 = 36 - 20 = \\color{#e67e22}{16}",
+              label: "Diskriminant",
+            },
+            {
+              latex: "\\color{#e74c3c}{x} = \\frac{6 \\pm \\sqrt{\\color{#e67e22}{16}}}{2} = \\frac{6 \\pm 4}{2}",
+              label: "Vzorec",
+            },
+            {
+              latex: "\\color{#e74c3c}{x_1} = \\frac{6 + 4}{2} = \\color{#27ae60}{5}, \\quad \\color{#e74c3c}{x_2} = \\frac{6 - 4}{2} = \\color{#27ae60}{1}",
+              label: "Kořeny ✓",
+            },
+          ],
+        },
+      },
+    },
+
+    // 8 — Sort order: solving steps
     {
       type: "sort-order",
       question:

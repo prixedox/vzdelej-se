@@ -1,8 +1,8 @@
 # Vzdělej.se — Feature Plan
 
-## Priority 1: Quick Wins (Low Effort, High Impact)
+## Priority 1: Quick Wins (Low Effort, High Impact) — DONE
 
-### Color-Coded Variable Tracking
+### Color-Coded Variable Tracking — DONE
 Track the same variable with the same color across all equation steps.
 ```latex
 \color{#e74c3c}{x} + 5 = 12  →  \color{#e74c3c}{x} = 12 - 5  →  \color{#e74c3c}{x} = 7
@@ -10,39 +10,40 @@ Track the same variable with the same color across all equation steps.
 - KaTeX already supports `\color{}` — define a convention in lesson content
 - Consistent colors: variables = red, coefficients = blue, constants = green
 - Huge clarity win for algebra where students lose track of manipulations
+- **Implemented:** Color constants in `src/lib/lesson/math-colors.ts`, applied to 8 lessons
 
-### Misconception-First Lesson Intros
+### Misconception-First Lesson Intros — DONE
 Start lessons from the most common wrong answer, not the correct one.
 - "Most students think heavier objects fall faster. Let's test it."
 - Present misconception → show why it fails → build correct understanding
 - Research: 218 studies, large effect sizes for conceptual change
-- Add optional `misconception` field to V2 explain steps
+- **Implemented:** Optional `misconception` field on ExplainStep, rendered as amber callout with AlertTriangle icon. Applied to 8 lessons.
 
-### Prediction-First Slides
+### Prediction-First Slides — DONE
 Before revealing a concept, ask students to predict the outcome.
 - Show scenario → student picks from visual options or draws prediction
 - Then reveal real answer with animation
 - Research: 2x better retention than explain-then-practice
-- New V2 step type: `prediction` — visual options → animated reveal
+- **Implemented:** New `prediction` step type end-to-end (types → builder → slide component → renderer → deck blocking). Purple-themed UI with animated reveal. Applied to 8 lessons.
 
-### Narrative Framing
+### Narrative Framing — DONE
 Wrap each topic in 2-3 sentences of story context before theory.
 - Physics: "Galileo drops two balls from Pisa tower — which hits first?"
 - Math: "A baker needs to split dough equally — how?"
 - History: "Why did mathematicians invent logarithms?"
-- Add optional `narrative` field to lesson intro or first explain step
+- **Implemented:** Optional `narrative` field on LessonV2, auto-injected as first explain slide with "Příběh" badge. Applied to 8 lessons.
 
 ---
 
-## Priority 2: Medium Effort, High Impact
+## Priority 2: Medium Effort, High Impact — PARTIALLY DONE
 
-### Animated Equation Steps
+### Animated Equation Steps — DONE
 Animate transformations between equation steps instead of static display.
 - Terms slide from one side to the other
 - Canceling terms fade out with a flash
 - Variables stay color-coded throughout
 - KaTeX renders each step, Motion animates between them
-- New visual type: `animated-equation-solver`
+- **Implemented:** New `animated-equation-solver` visual type. Step-by-step reveal with "Další krok" button, numbered steps, color-coded variables. Used in linear equations and quadratic equations lessons.
 
 ### Split-Screen Comparison
 Two simulations side by side — identical except one variable.
@@ -65,13 +66,12 @@ Hover over any term in an equation → highlight it everywhere it appears.
 - Makes dense equations navigable
 - Enhancement to `MathText` component — wrap terms in interactive spans
 
-### Spaced Retrieval Practice
+### Spaced Retrieval Practice — PARTIALLY DONE (infrastructure)
 Surface problems from past lessons in future ones.
 - "Rychlé opakování" slide at the start of a new lesson with 1-2 past problems
 - Spacing interval increases each time student answers correctly
 - Research: d=0.54 effect size (significant for long-term retention)
-- New V2 step type: `review` — pulls from previously completed content
-- Requires lightweight localStorage tracking of completed lessons + scores
+- **Implemented:** localStorage progress tracking with spaced interval computation (`progress-store.ts`). Review topic selection with growing intervals (1d → 3d → 7d → 14d → 30d). Actual review slide injection still TODO.
 
 ---
 
@@ -111,37 +111,38 @@ Adjust problem difficulty in real-time based on student performance.
 
 ---
 
-## Gamification (Meaningful, Not Cosmetic)
+## Gamification (Meaningful, Not Cosmetic) — PARTIALLY DONE
 
 ### Mastery Gates
 - Can't advance to next topic until demonstrating understanding
 - Threshold: e.g., 3/4 correct on practice problems
 - Already block unanswered questions — extend to mastery percentage
 
-### Challenge Tiers
+### Challenge Tiers — DONE
 - Bronze / Silver / Gold per topic based on accuracy
 - Bronze: complete lesson. Silver: 80%+ correct. Gold: 100% + under time
-- Visual badges on topic cards showing achieved tier
+- **Implemented:** Tier computation in `progress-store.ts`, badge display on topic cards, tier shown on lesson complete screen.
 
 ### "Aha" Moment Celebration
 - When student changes wrong prediction to correct answer, special animation
 - Track prediction→correction rate as a learning metric
 - More meaningful than generic confetti
 
-### Streak System
+### Streak System — DONE (infrastructure)
 - Consecutive correct answers unlock harder bonus problems
 - Streak counter visible during practice
 - Breaking streak is okay — shows "good attempt" not failure
+- **Implemented:** Streak tracking in `progress-store.ts`. UI integration TODO.
 
 ---
 
-## Visual & UX Enhancements
+## Visual & UX Enhancements — PARTIALLY DONE
 
-### Micro-Interactions
-- Smooth transitions between slides (not hard cut)
-- Button press → subtle scale animation
-- Correct answer → green pulse on input border
-- Wrong answer → gentle shake + red flash
+### Micro-Interactions — DONE
+- Smooth transitions between slides (not hard cut) — **spring-based slide transitions with scale**
+- Button press → subtle scale animation — **whileTap on nav buttons**
+- Correct answer → green pulse on input border — **ring-2 ring-green-200 on correct**
+- Wrong answer → gentle shake + red flash — **keyframe shake [0, 6, -4, 2, 0] on wrong**
 
 ### Click-to-Reveal Term Definitions
 - Click any math term → tooltip with Czech definition
@@ -154,10 +155,11 @@ Adjust problem difficulty in real-time based on student performance.
 - Change one → others update in sync
 - Most effective for function/graph topics
 
-### Dark Mode Polish
+### Dark Mode Polish — PARTIALLY DONE
 - Ensure all interactive visuals respect dark mode
 - Canvas components need explicit dark-aware color palettes
 - KaTeX rendering should use CSS custom properties for colors
+- **Implemented:** Dark mode variants added to MC slide, text-input slide, explain slide (misconception callout), prediction slide feedback areas.
 
 ---
 

@@ -27,6 +27,7 @@ import { InteractiveUnitCircle } from "./interactive-unit-circle";
 import { InteractiveTriangle } from "./interactive-triangle";
 import { InteractiveProbability } from "./interactive-probability";
 import { InteractiveDerivative } from "./interactive-derivative";
+import { AnimatedEquationSolver } from "./animated-equation-solver";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
 export function VisualBlock({
@@ -130,6 +131,9 @@ export function VisualBlock({
       break;
     case "interactive-derivative":
       content = <InteractiveDerivative {...(props as any)} />;
+      break;
+    case "animated-equation-solver":
+      content = <AnimatedEquationSolver {...(props as any)} />;
       break;
     default:
       return null;

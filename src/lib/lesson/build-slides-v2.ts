@@ -8,38 +8,60 @@ const stepTypeToSlideType = {
   explore: "explore-v2",
   reveal: "reveal-v2",
   "sort-order": "sort-order-v2",
+  prediction: "prediction-v2",
 } as const;
 
 export function buildSlidesV2(lesson: LessonV2): SlideV2[] {
-  const totalSteps = lesson.steps.length + 2; // +summary +complete
-  const slides: SlideV2[] = [];
+  // If narrative exists, prepend an explain step for it
+  const narrativeStep: SlideV2[] = lesson.narrative
+    ? [
+        {
+          id: "v2-narrative",
+          stepIndex: -1,
+          totalSteps: 0, // recalculated below
+          type: "explain-v2" as const,
+          step: {
+            type: "explain" as const,
+            body: lesson.narrative,
+            callout: "Příběh",
+          },
+        },
+      ]
+    : [];
 
-  lesson.steps.forEach((step, i) => {
-    slides.push({
-      id: `v2-${i}`,
-      stepIndex: i,
-      totalSteps,
-      type: stepTypeToSlideType[step.type],
-      step,
-    } as SlideV2);
+  const stepSlides: SlideV2[] = lesson.steps.map((step, i) => ({
+    id: `v2-${i}`,
+    stepIndex: i,
+    totalSteps: 0, // recalculated below
+    type: stepTypeToSlideType[step.type],
+    step,
+  }) as SlideV2);
+
+  const allContentSlides = [...narrativeStep, ...stepSlides];
+  const totalSteps = allContentSlides.length + 2; // +summary +complete
+
+  // Fix totalSteps and stepIndex on all slides
+  allContentSlides.forEach((slide, i) => {
+    slide.stepIndex = i;
+    slide.totalSteps = totalSteps;
   });
 
-  const summaryIndex = lesson.steps.length;
-  slides.push({
+  const summaryIndex = allContentSlides.length;
+  allContentSlides.push({
     id: `v2-${summaryIndex}`,
     stepIndex: summaryIndex,
     totalSteps,
     type: "summary-v2",
     keyTakeaways: lesson.summary.keyTakeaways,
     nextTopicSuggestion: lesson.nextTopicSuggestion,
-  });
+  } as SlideV2);
 
-  slides.push({
+  allContentSlides.push({
     id: `v2-${summaryIndex + 1}`,
     stepIndex: summaryIndex + 1,
     totalSteps,
     type: "complete-v2",
-  });
+  } as SlideV2);
 
-  return slides;
+  return allContentSlides;
 }

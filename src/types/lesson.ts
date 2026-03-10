@@ -28,7 +28,8 @@ export type VisualType =
   | "interactive-unit-circle"
   | "interactive-triangle"
   | "interactive-probability"
-  | "interactive-derivative";
+  | "interactive-derivative"
+  | "animated-equation-solver";
 
 export interface VisualBlock {
   type: VisualType;

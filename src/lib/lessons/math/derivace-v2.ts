@@ -2,7 +2,24 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const derivaceV2Beginner: LessonV2 = {
   title: "Derivace",
+  narrative:
+    "Jak rychle roste populace bakterií? Jak prudce klesá teplota kávy? Jak se mění rychlost padajícího parašutisty? Všechny tyto otázky spojuje jedno: potřebujeme měřit rychlost změny v konkrétním okamžiku. Právě k tomu slouží derivace — nástroj, který nezávisle na sobě vynalezli Newton i Leibniz v 17. století.",
   steps: [
+    // 0 — Prediction
+    {
+      type: "prediction",
+      scenario:
+        "Funkce $f(x) = x^2$ má v bodě $x = 3$ hodnotu $f(3) = 9$. Nakreslíte tečnu ke grafu v tomto bodě.",
+      question: "Jaký bude sklon (směrnice) této tečny?",
+      options: [
+        { label: "$3$ — stejný jako souřadnice $x$", isCorrect: false },
+        { label: "$6$ — dvojnásobek souřadnice $x$", isCorrect: true },
+        { label: "$9$ — stejný jako hodnota funkce", isCorrect: false },
+      ],
+      reveal:
+        "Sklon tečny je derivace $f'(x) = 2x$. V bodě $x = 3$ je sklon $f'(3) = 2 \\cdot 3 = 6$. Derivace $x^2$ je $2x$ — sklon roste lineárně s $x$, ne jako funkce sama.",
+    },
+
     {
       type: "multiple-choice",
       question: "Auto jede po draze $s(t) = 3t^2$ (v metrech). Jaka je jeho rychlost v case $t = 2\\,\\text{s}$?",
@@ -34,8 +51,10 @@ export const derivaceV2Beginner: LessonV2 = {
     },
     {
       type: "explain",
-      body: "**Derivace** $f'(x)$ je definovana jako limita:\n\n$$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$\n\nTo je presne ten proces, ktery jste prave videli -- sklon secny se s $h \\to 0$ blizi ke sklonu tecny.",
+      body: "**Derivace** $f'(x)$ je definovana jako limita:\n\n$$f'(\\color{#e74c3c}{x}) = \\lim_{\\color{#2980b9}{h} \\to 0} \\frac{f(\\color{#e74c3c}{x}+\\color{#2980b9}{h}) - f(\\color{#e74c3c}{x})}{\\color{#2980b9}{h}}$$\n\nTo je presne ten proces, ktery jste prave videli -- sklon secny se s $\\color{#2980b9}{h} \\to 0$ blizi ke sklonu tecny.",
       callout: "Definice",
+      misconception:
+        "Studenti si casto myslí, ze derivace je totéz co rozdíl $f(x+1) - f(x)$. Ve skutecnosti derivace je **limitní** hodnota podílu, kde se $h$ blízí k nule — nejde o konecný rozdíl, ale o okamzitou rychlost zmeny.",
     },
     {
       type: "explore",
@@ -60,7 +79,7 @@ export const derivaceV2Beginner: LessonV2 = {
     },
     {
       type: "explain",
-      body: "**Tabulka zakladnich derivaci**:\n\n| $f(x)$ | $f'(x)$ |\n|---|---|\n| $c$ (konstanta) | $0$ |\n| $x^n$ | $nx^{n-1}$ |\n| $\\sin x$ | $\\cos x$ |\n| $\\cos x$ | $-\\sin x$ |\n| $e^x$ | $e^x$ |\n| $\\ln x$ | $\\frac{1}{x}$ |\n\nDerivace souctu = soucet derivaci. Konstantu vytkneme: $(cf)' = c \\cdot f'$.",
+      body: "**Tabulka zakladnich derivaci**:\n\n| $f(x)$ | $f'(x)$ |\n|---|---|\n| $c$ (konstanta) | $0$ |\n| $\\color{#e74c3c}{x}^{\\color{#2980b9}{n}}$ | $\\color{#2980b9}{n}\\color{#e74c3c}{x}^{\\color{#2980b9}{n}-1}$ |\n| $\\sin x$ | $\\cos x$ |\n| $\\cos x$ | $-\\sin x$ |\n| $e^x$ | $e^x$ |\n| $\\ln x$ | $\\frac{1}{x}$ |\n\nDerivace souctu = soucet derivaci. Konstantu vytkneme: $(cf)' = c \\cdot f'$.",
       callout: "Zakladni derivace",
     },
     {

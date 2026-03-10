@@ -1,9 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
+import { getTopicProgress } from "@/lib/lesson/progress-store";
+import { cn } from "@/lib/utils";
 import type { TopicNode } from "@/types/topic";
+
+const TIER_CONFIG = {
+  bronze: { label: "Bronze", color: "bg-amber-600 text-white", icon: "B" },
+  silver: { label: "Silver", color: "bg-gray-400 text-white", icon: "S" },
+  gold: { label: "Gold", color: "bg-yellow-400 text-yellow-900", icon: "G" },
+} as const;
 
 export function TopicCard({
   topic,
@@ -14,15 +23,33 @@ export function TopicCard({
   href: string;
   childCount?: number;
 }) {
+  const [tier] = useState<"bronze" | "silver" | "gold" | null>(() => {
+    if (typeof window === "undefined") return null;
+    return getTopicProgress(topic.slug)?.tier ?? null;
+  });
+
   return (
     <Link href={href}>
       <Card className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group">
         <CardContent className="pt-5 pb-4">
           <div className="flex items-start justify-between">
             <div className="space-y-1.5">
-              {topic.icon && (
-                <span className="text-2xl">{topic.icon}</span>
-              )}
+              <div className="flex items-center gap-2">
+                {topic.icon && (
+                  <span className="text-2xl">{topic.icon}</span>
+                )}
+                {tier && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center h-5 w-5 rounded-full text-[10px] font-bold shrink-0",
+                      TIER_CONFIG[tier].color
+                    )}
+                    title={TIER_CONFIG[tier].label}
+                  >
+                    {TIER_CONFIG[tier].icon}
+                  </span>
+                )}
+              </div>
               <h3 className="font-semibold text-base group-hover:text-primary transition-colors">
                 {topic.name}
               </h3>

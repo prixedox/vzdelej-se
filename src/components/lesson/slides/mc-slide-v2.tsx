@@ -65,9 +65,9 @@ export function McSlideV2({ slide, onAnswer, answered }: McSlideV2Props) {
           let variant = "border-border bg-background hover:bg-muted/50";
           if (selected) {
             if (choice.isCorrect) {
-              variant = "border-green-400 bg-green-50 text-green-900";
+              variant = "border-green-400 bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-200";
             } else if (idx === selectedIndex && !choice.isCorrect) {
-              variant = "border-red-400 bg-red-50 text-red-900";
+              variant = "border-red-400 bg-red-50 text-red-900 dark:bg-red-950 dark:text-red-200";
             } else {
               variant = "border-border bg-background opacity-60";
             }
@@ -110,13 +110,14 @@ export function McSlideV2({ slide, onAnswer, answered }: McSlideV2Props) {
 
       {selected && (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1, x: isCorrect ? 0 : [0, 6, -4, 2, 0] }}
+          transition={{ duration: isCorrect ? 0.3 : 0.4 }}
           className={cn(
             "rounded-lg p-3 text-sm border",
             isCorrect
-              ? "bg-green-50 border-green-200 text-green-800"
-              : "bg-red-50 border-red-200 text-red-800"
+              ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-950 dark:border-green-800 dark:text-green-200"
+              : "bg-red-50 border-red-200 text-red-800 dark:bg-red-950 dark:border-red-800 dark:text-red-200"
           )}
         >
           <MathText content={step.explanation} />

@@ -2,7 +2,8 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, ArrowRight } from "lucide-react";
+import { Trophy, Star, ArrowRight, Flame } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface LessonCompleteProps {
@@ -10,13 +11,21 @@ interface LessonCompleteProps {
   totalProblems: number;
   correctAnswers: number;
   isPerfect: boolean;
+  tier?: "bronze" | "silver" | "gold" | null;
 }
+
+const TIER_LABELS: Record<string, { label: string; color: string }> = {
+  bronze: { label: "Bronze", color: "text-amber-600" },
+  silver: { label: "Silver", color: "text-gray-500" },
+  gold: { label: "Gold", color: "text-yellow-500" },
+};
 
 export function LessonComplete({
   score,
   totalProblems,
   correctAnswers,
   isPerfect,
+  tier,
 }: LessonCompleteProps) {
   const percentage = Math.round(score * 100);
 
@@ -40,6 +49,12 @@ export function LessonComplete({
         <CardContent className="pt-4 text-center">
           <p className="text-4xl font-bold text-primary">{percentage} %</p>
           <p className="text-sm text-muted-foreground mt-1">Úspěšnost</p>
+          {tier && TIER_LABELS[tier] && (
+            <p className={cn("text-sm font-semibold mt-2", TIER_LABELS[tier].color)}>
+              <Flame className="inline h-4 w-4 mr-1" />
+              {TIER_LABELS[tier].label}
+            </p>
+          )}
         </CardContent>
       </Card>
 

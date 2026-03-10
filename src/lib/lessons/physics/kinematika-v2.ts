@@ -2,12 +2,29 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const kinematikaV2Beginner: LessonV2 = {
   title: "Kinematika – popis pohybu",
+  narrative:
+    "Galileo Galilei stál na šikmé věži v Pise a pustil dvě koule — těžkou a lehkou. Která dopadla první? Většina lidí tipovala špatně. Pojďme zjistit, jak se tělesa skutečně pohybují.",
   steps: [
-    // 1 — Hook: intuitive question
+    // 1 — Prediction: falling objects
+    {
+      type: "prediction",
+      scenario:
+        "Ze střechy pustíme současně těžkou ocelovou kouli ($5\\,\\text{kg}$) a lehký tenisový míček ($0{,}06\\,\\text{kg}$). Obě padají volným pádem (bez odporu vzduchu).",
+      question: "Které těleso dopadne na zem první?",
+      options: [
+        { label: "Těžká ocelová koule — padá rychleji", isCorrect: false },
+        { label: "Dopadnou současně", isCorrect: true },
+        { label: "Tenisový míček — je lehčí, má menší setrvačnost", isCorrect: false },
+      ],
+      reveal:
+        "Bez odporu vzduchu dopadnou **současně**! Gravitační zrychlení $\\color{#27ae60}{g \\approx 9{,}81\\,\\text{m/s}^2}$ je stejné pro všechna tělesa. Hmotnost neovlivňuje rychlost volného pádu — to dokázal Galileo už v 17. století.",
+    },
+
+    // 2 — Hook: intuitive question
     {
       type: "multiple-choice",
       question:
-        "Auto jede rychlostí $90\\,\\text{km/h}$. Kolik kilometrů ujede za 2 hodiny?",
+        "Auto jede rychlostí $\\color{#2980b9}{90}\\,\\text{km/h}$. Kolik kilometrů ujede za $\\color{#27ae60}{2}$ hodiny?",
       choices: [
         {
           label: "$45\\,\\text{km}$",
@@ -29,11 +46,13 @@ export const kinematikaV2Beginner: LessonV2 = {
         "Dráha = rychlost × čas: $s = v \\cdot t = 90 \\cdot 2 = 180\\,\\text{km}$. Toto je základní vzorec kinematiky.",
     },
 
-    // 2 — Explain: what is kinematics
+    // 3 — Explain: what is kinematics (with misconception)
     {
       type: "explain",
       body: "**Kinematika** popisuje pohyb těles — kde se nacházejí, jak rychle se pohybují a jak se mění jejich rychlost. Nezajímá se o příčiny pohybu (to je dynamika).",
       callout: "Definice",
+      misconception:
+        "Většina studentů si myslí, že těžší předměty padají rychleji. Ve skutečnosti (bez odporu vzduchu) padají všechna tělesa stejně rychle — Galileo to dokázal experimentem.",
     },
 
     // 3 — Explain: trajectory and displacement

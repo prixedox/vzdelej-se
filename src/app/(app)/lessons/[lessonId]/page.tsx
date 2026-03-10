@@ -32,7 +32,7 @@ export default function LessonPage() {
 
   return (
     <div>
-      <LessonShell content={content} />
+      <LessonShell content={content} topicSlug={topicSlug} />
     </div>
   );
 }

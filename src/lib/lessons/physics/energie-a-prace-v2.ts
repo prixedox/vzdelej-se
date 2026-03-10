@@ -2,7 +2,24 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const energieAPraceV2Beginner: LessonV2 = {
   title: "Energie a práce",
+  narrative:
+    "Představte si, že tlačíte auto, které má prázdnou nádrž. Zpocení a unavení se ptáte: kam zmizela moje energie? Fyzici potřebovali přesný jazyk pro popis toho, co se děje, když síla působí na těleso — a tak vznikl pojem mechanická práce.",
   steps: [
+    // 0 — Prediction
+    {
+      type: "prediction",
+      scenario:
+        "Dva identické míčky pustíte z klidu: míček A z výšky $10\\,\\text{m}$, míček B z výšky $20\\,\\text{m}$. Oba dopadají na měkkou podložku (bez odrazu).",
+      question: "Jaký bude poměr rychlostí míčků těsně před dopadem?",
+      options: [
+        { label: "Míček B bude mít dvojnásobnou rychlost", isCorrect: false },
+        { label: "Míček B bude mít $\\sqrt{2}$-krát větší rychlost", isCorrect: true },
+        { label: "Oba dopadnou stejnou rychlostí", isCorrect: false },
+      ],
+      reveal:
+        "Rychlost dopadu je $v = \\sqrt{2gh}$. Pro dvojnásobnou výšku tedy **neroste dvojnásobně**, ale jen $\\sqrt{2} \\approx 1{,}41$-krát. To plyne přímo ze zákona zachování energie: $mgh = \\frac{1}{2}mv^2$.",
+    },
+
     // 1 — Hook MC
     {
       type: "multiple-choice",
@@ -32,8 +49,10 @@ export const energieAPraceV2Beginner: LessonV2 = {
     // 2 — Explain: mechanická práce
     {
       type: "explain",
-      body: "**Mechanická práce** $W$ se koná, když síla působí na těleso a to se přemístí ve směru síly:\n\n$$W = F \\cdot s \\cdot \\cos\\alpha$$\n\nkde $\\alpha$ je úhel mezi směrem síly a směrem pohybu. Jednotka: **joule** ($\\text{J} = \\text{N} \\cdot \\text{m}$).",
+      body: "**Mechanická práce** $W$ se koná, když síla působí na těleso a to se přemístí ve směru síly:\n\n$$W = \\color{#2980b9}{F} \\cdot \\color{#e74c3c}{s} \\cdot \\cos\\alpha$$\n\nkde $\\alpha$ je úhel mezi směrem síly a směrem pohybu. Jednotka: **joule** ($\\text{J} = \\text{N} \\cdot \\text{m}$).",
       callout: "Definice práce",
+      misconception:
+        "Studenti si často myslí, že když nesete těžký kufr po rovné chodbě, konáte práci proti tíze. Ve skutečnosti svislá tíhová síla je kolmá na vodorovný pohyb ($\\cos 90° = 0$), takže tíha nekoná žádnou práci.",
     },
 
     // 3 — MC: práce a úhel
@@ -77,7 +96,7 @@ export const energieAPraceV2Beginner: LessonV2 = {
     // 5 — Explain: kinetická energie
     {
       type: "explain",
-      body: "**Kinetická energie** je energie pohybu:\n\n$$E_k = \\frac{1}{2} m v^2$$\n\nZávisí na hmotnosti a **druhé mocnině** rychlosti. Dvojnásobná rychlost znamená čtyřnásobnou kinetickou energii!",
+      body: "**Kinetická energie** je energie pohybu:\n\n$$E_k = \\color{#27ae60}{\\frac{1}{2}} \\cdot \\color{#2980b9}{m} \\cdot \\color{#e74c3c}{v}^2$$\n\nZávisí na hmotnosti a **druhé mocnině** rychlosti. Dvojnásobná rychlost znamená čtyřnásobnou kinetickou energii!",
       callout: "Kinetická energie",
     },
 

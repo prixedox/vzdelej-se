@@ -7,6 +7,7 @@ export interface ExplainStep {
   body: string; // Markdown + LaTeX, 2-3 sentences
   visual?: VisualBlock;
   callout?: string; // Short callout badge text
+  misconception?: string; // Common wrong belief to challenge first
 }
 
 export interface MultipleChoiceChoice {
@@ -57,18 +58,34 @@ export interface SortOrderStep {
   explanation: string;
 }
 
+export interface PredictionStep {
+  type: "prediction";
+  scenario: string; // Situation description
+  question: string; // "What do you think will happen?"
+  options: PredictionOption[];
+  reveal: string; // Markdown + LaTeX explanation of the correct answer
+  visual?: VisualBlock;
+}
+
+export interface PredictionOption {
+  label: string;
+  isCorrect: boolean;
+}
+
 export type LessonStep =
   | ExplainStep
   | MultipleChoiceStep
   | TextInputStep
   | ExploreStep
   | RevealStep
-  | SortOrderStep;
+  | SortOrderStep
+  | PredictionStep;
 
 // ── Lesson V2 root ──
 
 export interface LessonV2 {
   title: string;
+  narrative?: string; // 2-3 sentence story context before theory
   steps: LessonStep[];
   summary: { keyTakeaways: string[] };
   nextTopicSuggestion?: string;

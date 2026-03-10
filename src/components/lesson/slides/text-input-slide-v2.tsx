@@ -84,7 +84,11 @@ export function TextInputSlideV2({
           onKeyDown={handleKeyDown}
           placeholder="Zadejte odpověď..."
           disabled={submitted}
-          className="flex-1"
+          className={cn(
+            "flex-1 transition-colors",
+            submitted && isCorrect && "border-green-400 ring-2 ring-green-200 dark:ring-green-800",
+            submitted && !isCorrect && "border-red-400 ring-2 ring-red-200 dark:ring-red-800"
+          )}
         />
         <Button
           onClick={handleSubmit}
@@ -97,13 +101,14 @@ export function TextInputSlideV2({
 
       {submitted && (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1, x: isCorrect ? 0 : [0, 6, -4, 2, 0] }}
+          transition={{ duration: isCorrect ? 0.3 : 0.4 }}
           className={cn(
             "rounded-lg p-4 border",
             isCorrect
-              ? "bg-green-50 border-green-200"
-              : "bg-red-50 border-red-200"
+              ? "bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800"
+              : "bg-red-50 border-red-200 dark:bg-red-950 dark:border-red-800"
           )}
         >
           <div className="flex items-center gap-2 mb-2">

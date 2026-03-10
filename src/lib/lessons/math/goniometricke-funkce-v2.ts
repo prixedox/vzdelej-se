@@ -2,7 +2,24 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const goniometrickeFunkceV2Beginner: LessonV2 = {
   title: "Goniometrické funkce",
+  narrative:
+    "Starověcí astronomové potřebovali předpovídat pohyb hvězd a planet po obloze. Zjistili, že stačí znát poměry stran v pravoúhlém trojúhelníku — a tak se zrodily goniometrické funkce. Dnes je najdeme všude: od GPS navigace přes zvukové vlny až po počítačovou grafiku.",
   steps: [
+    // 0 — Prediction
+    {
+      type: "prediction",
+      scenario:
+        "Na jednotkové kružnici se bod otáčí z úhlu $0°$ přes $90°$ až k $180°$. Sledujete jeho y-souřadnici (sinus).",
+      question: "Jak se mění hodnota $\\sin \\alpha$ při přechodu přes $90°$?",
+      options: [
+        { label: "Stále roste až do $180°$", isCorrect: false },
+        { label: "V $90°$ dosáhne maxima a pak klesá", isCorrect: true },
+        { label: "V $90°$ klesne na nulu", isCorrect: false },
+      ],
+      reveal:
+        "Sinus dosáhne maxima $\\sin 90° = 1$ a pak **klesá**. Na jednotkové kružnici je y-souřadnice nejvýš, když je bod na 'severním pólu' ($90°$). Poté se bod posouvá doleva a y-souřadnice klesá zpět k nule ($\\sin 180° = 0$).",
+    },
+
     {
       type: "explore",
       prompt: "Tahejte bod po jednotkove kruznici. Sledujte barevne usecky -- cervena je svisle, modra vodorovna, zelena sahajici k tecne. Co predstavuji?",
@@ -21,8 +38,10 @@ export const goniometrickeFunkceV2Beginner: LessonV2 = {
     },
     {
       type: "explain",
-      body: "Na jednotkove kruznici (polomer 1, stred v pocatku) ma bod pod uhlem $\\alpha$ souradnice $[\\cos \\alpha;\\, \\sin \\alpha]$. Proto: **sinus = y-souradnice**, **kosinus = x-souradnice**.",
+      body: "Na jednotkove kruznici (polomer 1, stred v pocatku) ma bod pod uhlem $\\color{#e74c3c}{\\alpha}$ souradnice $[\\cos \\color{#e74c3c}{\\alpha};\\, \\sin \\color{#e74c3c}{\\alpha}]$. Proto: **sinus = y-souradnice**, **kosinus = x-souradnice**.",
       callout: "Definice",
+      misconception:
+        "Studenti si často myslí, že sinus je 'protilehlá ku přeponě' jen v pravoúhlém trojúhelníku a nefunguje pro úhly větší než $90°$. Ve skutečnosti definice přes jednotkovou kružnici funguje pro jakýkoliv úhel — i záporný nebo větší než $360°$.",
     },
     {
       type: "explore",
@@ -88,7 +107,7 @@ export const goniometrickeFunkceV2Beginner: LessonV2 = {
     {
       type: "reveal",
       question: "Proc plati $\\sin^2 x + \\cos^2 x = 1$ pro kazdy uhel?",
-      revealedContent: "Bod na jednotkove kruznici ma souradnice $(\\cos x,\\, \\sin x)$ a lezi na kruznici $x^2 + y^2 = 1$.\n\nDosadime:\n\n$$\\cos^2 x + \\sin^2 x = 1$$\n\nJe to primo **Pythagorova veta** aplikovana na pravouhly trojuhelnik v jednotkove kruznici.",
+      revealedContent: "Bod na jednotkove kruznici ma souradnice $(\\cos x,\\, \\sin x)$ a lezi na kruznici $x^2 + y^2 = 1$.\n\nDosadime:\n\n$$\\color{#2980b9}{\\cos^2 x} + \\color{#e74c3c}{\\sin^2 x} = \\color{#27ae60}{1}$$\n\nJe to primo **Pythagorova veta** aplikovana na pravouhly trojuhelnik v jednotkove kruznici.",
     },
     {
       type: "multiple-choice",

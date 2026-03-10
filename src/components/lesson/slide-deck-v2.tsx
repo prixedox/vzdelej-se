@@ -16,16 +16,19 @@ interface SlideDeckV2Props {
 
 const variants = {
   enter: (d: number) => ({
-    x: d > 0 ? 300 : -300,
+    x: d > 0 ? 200 : -200,
     opacity: 0,
+    scale: 0.97,
   }),
   center: {
     x: 0,
     opacity: 1,
+    scale: 1,
   },
   exit: (d: number) => ({
-    x: d > 0 ? -300 : 300,
+    x: d > 0 ? -200 : 200,
     opacity: 0,
+    scale: 0.97,
   }),
 };
 
@@ -34,6 +37,7 @@ const BLOCKING_TYPES = new Set([
   "multiple-choice-v2",
   "text-input-v2",
   "sort-order-v2",
+  "prediction-v2",
 ]);
 
 export function SlideDeckV2({ slides, onComplete }: SlideDeckV2Props) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 
@@ -22,16 +23,18 @@ export function SlideNavButtons({
 }: SlideNavButtonsProps) {
   return (
     <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t px-4 py-3 flex items-center justify-between gap-3">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onPrev}
-        disabled={!canGoPrev}
-        className="gap-1.5"
-      >
-        <ChevronLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Zpět</span>
-      </Button>
+      <motion.div whileTap={{ scale: 0.95 }}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onPrev}
+          disabled={!canGoPrev}
+          className="gap-1.5"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Zpět</span>
+        </Button>
+      </motion.div>
 
       {isPracticeBlocked ? (
         <p className="text-xs text-muted-foreground flex items-center gap-1.5">
@@ -41,15 +44,17 @@ export function SlideNavButtons({
       ) : null}
 
       {!isLastSlide && (
-        <Button
-          size="sm"
-          onClick={onNext}
-          disabled={!canGoNext}
-          className="gap-1.5"
-        >
-          <span className="hidden sm:inline">Další</span>
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <motion.div whileTap={{ scale: 0.95 }}>
+          <Button
+            size="sm"
+            onClick={onNext}
+            disabled={!canGoNext}
+            className="gap-1.5"
+          >
+            <span className="hidden sm:inline">Další</span>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </motion.div>
       )}
     </div>
   );

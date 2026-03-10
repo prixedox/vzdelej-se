@@ -2,8 +2,25 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const dynamikaV2Beginner: LessonV2 = {
   title: "Dynamika – síly a pohyb",
+  narrative:
+    "Proč se hokejový puk po odpálení pohybuje dál, i když na něj nikdo netlačí? Aristoteles by řekl, že se musí zastavit. Newton ukázal, že se mýlil — a jeho tři zákony změnily fyziku navždy.",
   steps: [
-    // 1 — Hook MC
+    // 1 — Prediction: book on table
+    {
+      type: "prediction",
+      scenario:
+        "Na stole leží kniha a nepohybuje se. Zamyslete se nad silami, které na ni působí.",
+      question: "Působí na klidně ležící knihu nějaká síla?",
+      options: [
+        { label: "Ne, žádná síla na ni nepůsobí", isCorrect: false },
+        { label: "Ano, ale síly se navzájem vyruší", isCorrect: true },
+        { label: "Ano, a výslednice směřuje dolů", isCorrect: false },
+      ],
+      reveal:
+        "Na knihu působí $\\color{#e74c3c}{\\text{tíhová síla } F_G}$ dolů a $\\color{#2980b9}{\\text{normálová síla } N}$ nahoru. Protože $\\color{#e74c3c}{F_G} = \\color{#2980b9}{N}$, výslednice je nulová a kniha zůstává v klidu.",
+    },
+
+    // 2 — Hook MC
     {
       type: "multiple-choice",
       question:
@@ -31,11 +48,13 @@ export const dynamikaV2Beginner: LessonV2 = {
         "Na knihu působí tíhová síla $F_G$ dolů a normálová síla $N$ nahoru. Protože se kniha nepohybuje, $F_G = N$ a výslednice je nulová.",
     },
 
-    // 2 — Explain: co je síla
+    // 3 — Explain: co je síla (with misconception)
     {
       type: "explain",
-      body: "**Síla** $F$ je vektorová veličina — má velikost i směr. Měříme ji v **newtonech** ($\\text{N}$). Síla mění pohybový stav tělesa: může ho uvést do pohybu, zastavit nebo změnit směr.",
+      body: "**Síla** $\\color{#e74c3c}{F}$ je vektorová veličina — má velikost i směr. Měříme ji v **newtonech** ($\\text{N}$). Síla mění pohybový stav tělesa: může ho uvést do pohybu, zastavit nebo změnit směr.",
       callout: "Definice",
+      misconception:
+        "Běžný omyl: \"Aby se těleso pohybovalo, musí na něj stále působit síla.\" Ve skutečnosti síla mění pohyb — těleso v pohybu pokračuje i bez síly (1. Newtonův zákon).",
     },
 
     // 3 — Explain: 1. Newtonův zákon

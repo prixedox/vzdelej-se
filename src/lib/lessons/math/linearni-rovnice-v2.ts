@@ -2,12 +2,29 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 export const linearniRovniceV2Beginner: LessonV2 = {
   title: "Lineární rovnice – základy",
+  narrative:
+    "Pekař potřebuje rozdělit těsto na stejné díly, ale neví kolik gramů má každý kus. Zná jen celkovou váhu a počet kusů. Jak to spočítá? Přesně k tomu slouží rovnice — najít neznámou hodnotu z toho, co víme.",
   steps: [
-    // 1 — Hook: question first
+    // 1 — Prediction: what happens when we solve
+    {
+      type: "prediction",
+      scenario:
+        "Představte si rovnici $\\color{#e74c3c}{x} + 3 = 7$. Chceme zjistit hodnotu $\\color{#e74c3c}{x}$.",
+      question: "Co myslíte — jakou operaci musíme provést?",
+      options: [
+        { label: "Přičíst 3 k oběma stranám", isCorrect: false },
+        { label: "Odečíst 3 od obou stran", isCorrect: true },
+        { label: "Vydělit obě strany 3", isCorrect: false },
+      ],
+      reveal:
+        "Odečtením 3 od obou stran izolujeme $\\color{#e74c3c}{x}$: $\\color{#e74c3c}{x} + 3 - \\color{#27ae60}{3} = 7 - \\color{#27ae60}{3}$, tedy $\\color{#e74c3c}{x} = 4$. Vždy používáme **opačnou operaci** k tomu, co obaluje neznámou.",
+    },
+
+    // 2 — Hook: question first
     {
       type: "multiple-choice",
       question:
-        "Kolik bonbónů má Petr, když víme, že $x + 3 = 7$?",
+        "Kolik bonbónů má Petr, když víme, že $\\color{#e74c3c}{x} + 3 = 7$?",
       choices: [
         {
           label: "$3$",
@@ -34,17 +51,19 @@ export const linearniRovniceV2Beginner: LessonV2 = {
         "Rovnici $x + 3 = 7$ vyřešíme odečtením 3 od obou stran: $x = 7 - 3 = 4$.",
     },
 
-    // 2 — Explain what an equation is
+    // 3 — Explain what an equation is (with misconception)
     {
       type: "explain",
-      body: "**Rovnice** je matematický zápis, který říká, že dvě strany mají stejnou hodnotu. Značíme ji znakem $=$. Naším cílem je najít **neznámou** (většinou $x$), při které rovnost platí.",
+      body: "**Rovnice** je matematický zápis, který říká, že dvě strany mají stejnou hodnotu. Značíme ji znakem $=$. Naším cílem je najít **neznámou** (většinou $\\color{#e74c3c}{x}$), při které rovnost platí.",
       callout: "Klíčový pojem",
+      misconception:
+        "Mnoho studentů si myslí, že znaménko $=$ znamená \"spočítej výsledek\". Ve skutečnosti říká, že obě strany mají **stejnou hodnotu** — jako váhy v rovnováze.",
     },
 
     // 3 — Explain: balance metaphor
     {
       type: "explain",
-      body: "Rovnici si představ jako **váhy v rovnováze**. Cokoli uděláš na jedné straně, musíš udělat i na druhé, aby váhy zůstaly vyrovnané.",
+      body: "Rovnici si představ jako **váhy v rovnováze**. Cokoli uděláš na jedné straně, musíš udělat i na druhé, aby váhy zůstaly vyrovnané. Sleduj $\\color{#e74c3c}{x}$ — vždy zůstává stejné.",
       visual: {
         type: "balance-scale",
         props: { leftItems: ["x", "3"], rightItems: ["7"] },
@@ -154,11 +173,38 @@ export const linearniRovniceV2Beginner: LessonV2 = {
       explanation: "$4x = 28 \\Rightarrow x = \\frac{28}{4} = 7$.",
     },
 
-    // 11 — Explain: two-step equations
+    // 11 — Explain: two-step equations with animated solver
     {
       type: "explain",
-      body: "Složitější rovnice vyžadují **dva kroky**. Např. $2x + 3 = 11$:\n1. Nejprve odstraníme $+3$: odečteme 3 → $2x = 8$\n2. Pak odstraníme násobení: dělíme 2 → $x = 4$",
+      body: "Složitější rovnice vyžadují **dva kroky**. Sledujte animaci řešení $\\color{#2980b9}{2}\\color{#e74c3c}{x} + \\color{#27ae60}{3} = \\color{#27ae60}{11}$ krok po kroku:",
       callout: "Dva kroky",
+      visual: {
+        type: "animated-equation-solver",
+        props: {
+          steps: [
+            {
+              latex: "\\color{#2980b9}{2}\\color{#e74c3c}{x} + \\color{#27ae60}{3} = \\color{#27ae60}{11}",
+              label: "Zadání",
+            },
+            {
+              latex: "\\color{#2980b9}{2}\\color{#e74c3c}{x} + \\color{#27ae60}{3} - \\color{#27ae60}{3} = \\color{#27ae60}{11} - \\color{#27ae60}{3}",
+              label: "Odečteme 3",
+            },
+            {
+              latex: "\\color{#2980b9}{2}\\color{#e74c3c}{x} = \\color{#27ae60}{8}",
+              label: "Zjednodušíme",
+            },
+            {
+              latex: "\\frac{\\color{#2980b9}{2}\\color{#e74c3c}{x}}{\\color{#2980b9}{2}} = \\frac{\\color{#27ae60}{8}}{\\color{#2980b9}{2}}",
+              label: "Vydělíme 2",
+            },
+            {
+              latex: "\\color{#e74c3c}{x} = \\color{#27ae60}{4}",
+              label: "Výsledek ✓",
+            },
+          ],
+        },
+      },
     },
 
     // 12 — Sort order: correct steps
