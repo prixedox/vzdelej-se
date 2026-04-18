@@ -22,11 +22,14 @@ export function PredictionSlideV2({
 }: PredictionSlideV2Props) {
   const { step } = slide;
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [attempts, setAttempts] = useState(0);
   const [revealed, setRevealed] = useState(!!answered);
   const [locked, setLocked] = useState(!!answered);
 
   function handleSelect(idx: number) {
     if (locked) return;
+    // Count each distinct pick before reveal — matches mc-slide-v2 semantics.
+    if (idx !== selectedIndex) setAttempts((a) => a + 1);
     setSelectedIndex(idx);
   }
 
@@ -35,7 +38,7 @@ export function PredictionSlideV2({
     setLocked(true);
     setRevealed(true);
     const correct = step.options[selectedIndex].isCorrect;
-    onAnswer(slide.stepIndex, correct, 1);
+    onAnswer(slide.stepIndex, correct, Math.max(attempts, 1));
   }
 
   return (
@@ -44,6 +47,7 @@ export function PredictionSlideV2({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="py-6 space-y-4"
+      aria-label="Predikční úloha"
     >
       <Badge
         variant="secondary"
@@ -90,8 +94,10 @@ export function PredictionSlideV2({
               key={idx}
               onClick={() => handleSelect(idx)}
               disabled={locked}
+              aria-label={`Možnost ${idx + 1}: ${option.label}`}
+              aria-pressed={selectedIndex === idx}
               className={cn(
-                "w-full text-left px-4 py-3 rounded-lg border transition-colors",
+                "w-full text-left px-4 py-3 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400",
                 variant,
                 !locked && "cursor-pointer"
               )}
@@ -107,7 +113,8 @@ export function PredictionSlideV2({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={handleReveal}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+          aria-label="Odhalit odpověď"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-400"
         >
           <Eye className="h-4 w-4" />
           Odhalit odpověď

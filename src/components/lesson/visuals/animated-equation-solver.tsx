@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import katex from "katex";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,6 @@ export function AnimatedEquationSolver(props: Record<string, unknown>) {
   const { steps, autoPlay = false, delayMs = 2000 } = props as unknown as AnimatedEquationSolverProps;
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isPlaying || currentStep >= steps.length - 1) return;
@@ -64,7 +63,6 @@ export function AnimatedEquationSolver(props: Record<string, unknown>) {
 
   return (
     <div
-      ref={containerRef}
       className="space-y-3"
       aria-label="Animované řešení rovnice"
     >
@@ -109,7 +107,7 @@ export function AnimatedEquationSolver(props: Record<string, unknown>) {
         {canAdvance && (
           <button
             onClick={handleNext}
-            className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
           >
             Další krok
             <ChevronRight className="h-4 w-4" />
@@ -118,7 +116,7 @@ export function AnimatedEquationSolver(props: Record<string, unknown>) {
         {currentStep > 0 && (
           <button
             onClick={handleReset}
-            className="flex items-center gap-1 rounded-md border px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted transition-colors"
+            className="flex items-center gap-1 rounded-md border px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring"
           >
             <RotateCcw className="h-3 w-3" />
             Znovu

@@ -12,7 +12,7 @@ import type { LessonV2 } from "@/types/lesson-v2";
 
 interface LessonShellProps {
   content: LessonContent | LessonV2;
-  topicSlug?: string;
+  topicSlug: string;
 }
 
 function isV2(content: LessonContent | LessonV2): content is LessonV2 {
@@ -26,13 +26,20 @@ export function LessonShell({ content, topicSlug }: LessonShellProps) {
   return <LessonShellV1 content={content} topicSlug={topicSlug} />;
 }
 
-// ── V1 (unchanged) ──
+// ── V1 ──
 
-function LessonShellV1({ content }: { content: LessonContent; topicSlug?: string }) {
+function LessonShellV1({
+  content,
+  topicSlug,
+}: {
+  content: LessonContent;
+  topicSlug: string;
+}) {
   const [answeredProblems, setAnsweredProblems] = useState<
     Map<number, { isCorrect: boolean; hintsUsed: number; timeSpentMs: number }>
   >(new Map());
   const [completed, setCompleted] = useState(false);
+  const [tier, setTier] = useState<"bronze" | "silver" | "gold" | null>(null);
 
   const slides = useMemo(() => buildSlides(content), [content]);
   const totalProblems = content.practiceProblems.length;
@@ -50,12 +57,23 @@ function LessonShellV1({ content }: { content: LessonContent; topicSlug?: string
 
         if (next.size === totalProblems) {
           setCompleted(true);
+          const correctAnswers = Array.from(next.values()).filter(
+            (a) => a.isCorrect
+          ).length;
+          const score = totalProblems > 0 ? correctAnswers / totalProblems : 1;
+          const result = recordLessonCompletion(topicSlug, {
+            completedAt: Date.now(),
+            score,
+            correctAnswers,
+            totalProblems,
+          });
+          setTier(result.topics[topicSlug]?.tier ?? null);
         }
 
         return next;
       });
     },
-    [totalProblems]
+    [totalProblems, topicSlug]
   );
 
   if (completed) {
@@ -70,6 +88,7 @@ function LessonShellV1({ content }: { content: LessonContent; topicSlug?: string
         totalProblems={totalProblems}
         correctAnswers={correctAnswers}
         isPerfect={correctAnswers === totalProblems}
+        tier={tier}
       />
     );
   }
@@ -87,7 +106,13 @@ function LessonShellV1({ content }: { content: LessonContent; topicSlug?: string
 
 // ── V2 (Brilliant-style) ──
 
-function LessonShellV2({ content, topicSlug }: { content: LessonV2; topicSlug?: string }) {
+function LessonShellV2({
+  content,
+  topicSlug,
+}: {
+  content: LessonV2;
+  topicSlug: string;
+}) {
   const [completed, setCompleted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [tier, setTier] = useState<"bronze" | "silver" | "gold" | null>(null);
@@ -117,16 +142,13 @@ function LessonShellV2({ content, topicSlug }: { content: LessonV2; topicSlug?: 
       setScore({ correct, total });
       setCompleted(true);
 
-      // Record progress in localStorage
-      if (topicSlug) {
-        const result = recordLessonCompletion(topicSlug, {
-          completedAt: Date.now(),
-          score: total > 0 ? correct / total : 1,
-          correctAnswers: correct,
-          totalProblems: total,
-        });
-        setTier(result.topics[topicSlug]?.tier ?? null);
-      }
+      const result = recordLessonCompletion(topicSlug, {
+        completedAt: Date.now(),
+        score: total > 0 ? correct / total : 1,
+        correctAnswers: correct,
+        totalProblems: total,
+      });
+      setTier(result.topics[topicSlug]?.tier ?? null);
     },
     [content.steps, content.narrative, topicSlug]
   );

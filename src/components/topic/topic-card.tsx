@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
@@ -14,6 +14,14 @@ const TIER_CONFIG = {
   gold: { label: "Gold", color: "bg-yellow-400 text-yellow-900", icon: "G" },
 } as const;
 
+// React-blessed pattern for reading external (non-React) state without
+// hydration mismatches: SSR snapshot is always null; client reads after
+// mount, and re-reads when the "storage" event fires (cross-tab updates).
+function subscribe(callback: () => void): () => void {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
 export function TopicCard({
   topic,
   href,
@@ -23,10 +31,11 @@ export function TopicCard({
   href: string;
   childCount?: number;
 }) {
-  const [tier] = useState<"bronze" | "silver" | "gold" | null>(() => {
-    if (typeof window === "undefined") return null;
-    return getTopicProgress(topic.slug)?.tier ?? null;
-  });
+  const tier = useSyncExternalStore<"bronze" | "silver" | "gold" | null>(
+    subscribe,
+    () => getTopicProgress(topic.slug)?.tier ?? null,
+    () => null
+  );
 
   return (
     <Link href={href}>

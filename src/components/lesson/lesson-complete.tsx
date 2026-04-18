@@ -15,9 +15,9 @@ interface LessonCompleteProps {
 }
 
 const TIER_LABELS: Record<string, { label: string; color: string }> = {
-  bronze: { label: "Bronze", color: "text-amber-600" },
-  silver: { label: "Silver", color: "text-gray-500" },
-  gold: { label: "Gold", color: "text-yellow-500" },
+  bronze: { label: "Bronze", color: "text-amber-600 dark:text-amber-400" },
+  silver: { label: "Silver", color: "text-gray-500 dark:text-gray-300" },
+  gold: { label: "Gold", color: "text-yellow-500 dark:text-yellow-400" },
 };
 
 export function LessonComplete({

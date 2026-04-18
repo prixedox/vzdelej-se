@@ -133,7 +133,7 @@ export function VisualBlock({
       content = <InteractiveDerivative {...(props as any)} />;
       break;
     case "animated-equation-solver":
-      content = <AnimatedEquationSolver {...(props as any)} />;
+      content = <AnimatedEquationSolver {...props} />;
       break;
     default:
       return null;

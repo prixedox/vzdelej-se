@@ -42,12 +42,29 @@ function getDefaultProgress(): ProgressData {
   };
 }
 
+function isProgressData(value: unknown): value is ProgressData {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
+    typeof v.topics === "object" &&
+    v.topics !== null &&
+    !Array.isArray(v.topics) &&
+    typeof v.streak === "number" &&
+    typeof v.lastActivityAt === "number"
+  );
+}
+
 export function loadProgress(): ProgressData {
   if (typeof window === "undefined") return getDefaultProgress();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return getDefaultProgress();
-    return JSON.parse(raw) as ProgressData;
+    const parsed: unknown = JSON.parse(raw);
+    // Guard against stale/corrupted shapes (schema drift, manual edits,
+    // valid-JSON-but-wrong-structure like "null"). Without this,
+    // getTopicsForReview / recordLessonCompletion would crash the page.
+    if (!isProgressData(parsed)) return getDefaultProgress();
+    return parsed;
   } catch {
     return getDefaultProgress();
   }
@@ -123,7 +140,11 @@ export function getStreak(): number {
   return loadProgress().streak;
 }
 
-/** Get topics sorted by when they should be reviewed (spaced retrieval) */
+/**
+ * Get topics sorted by when they should be reviewed (spaced retrieval).
+ * Interval grows with each completion (per-retry, not since-first-seen):
+ * 1st completion → due after 1d, 2nd → 3d, 3rd → 7d, 4th → 14d, 5th+ → 30d.
+ */
 export function getTopicsForReview(limit = 3): string[] {
   const progress = loadProgress();
   const now = Date.now();
@@ -131,7 +152,6 @@ export function getTopicsForReview(limit = 3): string[] {
   return Object.entries(progress.topics)
     .filter(([, tp]) => tp.completionCount > 0)
     .map(([slug, tp]) => {
-      // Spacing interval grows with completions: 1d, 3d, 7d, 14d, 30d
       const intervals = [1, 3, 7, 14, 30];
       const intervalDays = intervals[Math.min(tp.completionCount - 1, intervals.length - 1)];
       const intervalMs = intervalDays * 24 * 60 * 60 * 1000;
