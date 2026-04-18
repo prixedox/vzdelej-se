@@ -7,12 +7,14 @@ import { chapter as math__algebraic_expressions__intro } from "./math/algebraic-
 import { chapter as math__analytic_geometry__intro } from "./math/analytic-geometry/intro";
 import { chapter as math__circles__intro } from "./math/circles/intro";
 import { chapter as math__combinatorics__intro } from "./math/combinatorics/intro";
+import { chapter as math__derivatives__applications } from "./math/derivatives/applications";
 import { chapter as math__derivatives__intro } from "./math/derivatives/intro";
 import { chapter as math__exponential_functions__intro } from "./math/exponential-functions/intro";
 import { chapter as math__inequalities__intro } from "./math/inequalities/intro";
 import { chapter as math__integrals__intro } from "./math/integrals/intro";
 import { chapter as math__limits__intro } from "./math/limits/intro";
 import { chapter as math__linear_equations__intro } from "./math/linear-equations/intro";
+import { chapter as math__linear_equations__word_problems } from "./math/linear-equations/word-problems";
 import { chapter as math__linear_functions__intro } from "./math/linear-functions/intro";
 import { chapter as math__logarithmic_functions__intro } from "./math/logarithmic-functions/intro";
 import { chapter as math__probability__intro } from "./math/probability/intro";
@@ -30,6 +32,7 @@ import { chapter as physics__energy_and_work__intro } from "./physics/energy-and
 import { chapter as physics__gravity__intro } from "./physics/gravity/intro";
 import { chapter as physics__ideal_gas__intro } from "./physics/ideal-gas/intro";
 import { chapter as physics__kinematics__intro } from "./physics/kinematics/intro";
+import { chapter as physics__kinematics__projectile_motion } from "./physics/kinematics/projectile-motion";
 import { chapter as physics__magnetic_field__intro } from "./physics/magnetic-field/intro";
 import { chapter as physics__mechanical_waves__intro } from "./physics/mechanical-waves/intro";
 import { chapter as physics__momentum_and_impulse__intro } from "./physics/momentum-and-impulse/intro";
@@ -44,12 +47,14 @@ export const chapters: Readonly<Record<string, ChapterDefinition>> = {
   "analytic-geometry/intro": math__analytic_geometry__intro,
   "circles/intro": math__circles__intro,
   "combinatorics/intro": math__combinatorics__intro,
+  "derivatives/applications": math__derivatives__applications,
   "derivatives/intro": math__derivatives__intro,
   "exponential-functions/intro": math__exponential_functions__intro,
   "inequalities/intro": math__inequalities__intro,
   "integrals/intro": math__integrals__intro,
   "limits/intro": math__limits__intro,
   "linear-equations/intro": math__linear_equations__intro,
+  "linear-equations/word-problems": math__linear_equations__word_problems,
   "linear-functions/intro": math__linear_functions__intro,
   "logarithmic-functions/intro": math__logarithmic_functions__intro,
   "probability/intro": math__probability__intro,
@@ -67,6 +72,7 @@ export const chapters: Readonly<Record<string, ChapterDefinition>> = {
   "gravity/intro": physics__gravity__intro,
   "ideal-gas/intro": physics__ideal_gas__intro,
   "kinematics/intro": physics__kinematics__intro,
+  "kinematics/projectile-motion": physics__kinematics__projectile_motion,
   "magnetic-field/intro": physics__magnetic_field__intro,
   "mechanical-waves/intro": physics__mechanical_waves__intro,
   "momentum-and-impulse/intro": physics__momentum_and_impulse__intro,
