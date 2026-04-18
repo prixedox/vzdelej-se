@@ -6,8 +6,12 @@
  * Re-run: pnpm build:registry  (also runs in predev / prebuild).
  * The output is committed.
  */
-import { readdir, stat, writeFile } from "node:fs/promises";
+import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+
+// Matches `export const chapter` as the start of a declaration
+// (permitted after `export const`, with optional `:` and whitespace).
+const CHAPTER_EXPORT_RE = /export\s+const\s+chapter\b/;
 
 export async function buildRegistry(lessonsDir: string, outPath: string): Promise<void> {
   const entries: Array<{
@@ -33,6 +37,10 @@ export async function buildRegistry(lessonsDir: string, outPath: string): Promis
       const files = await readdir(topicDir);
       for (const file of files) {
         if (!file.endsWith(".ts") || file.endsWith(".test.ts") || file.endsWith(".d.ts")) continue;
+        // Skip helper/utility files — only files that export `chapter` are registered.
+        const fullPath = path.join(topicDir, file);
+        const source = await readFile(fullPath, "utf8");
+        if (!CHAPTER_EXPORT_RE.test(source)) continue;
         const chapterSlug = file.slice(0, -3);
         const importPath = `./${subject}/${topicSlug}/${chapterSlug}`;
         const identifier = `${subject}__${topicSlug.replace(/-/g, "_")}__${chapterSlug.replace(/-/g, "_")}`;

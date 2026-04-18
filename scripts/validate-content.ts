@@ -22,10 +22,21 @@ function collectLeafSlugs(topics: readonly TopicNode[]): Set<string> {
 
 function main() {
   const errors: string[] = [];
-  const leafSlugs = new Set([
-    ...collectLeafSlugs(mathTree.topics),
-    ...collectLeafSlugs(physicsTree.topics),
-  ]);
+  const mathLeaves = collectLeafSlugs(mathTree.topics);
+  const physicsLeaves = collectLeafSlugs(physicsTree.topics);
+
+  // Registry keys are `${topicSlug}/${chapterSlug}` (no subject prefix), so
+  // any cross-subject topic-slug collision would silently overwrite entries.
+  // Enforce global uniqueness explicitly.
+  for (const slug of mathLeaves) {
+    if (physicsLeaves.has(slug)) {
+      errors.push(
+        `[slug-collision] topic slug "${slug}" appears in both math and physics trees — must be globally unique`
+      );
+    }
+  }
+
+  const leafSlugs = new Set([...mathLeaves, ...physicsLeaves]);
 
   const chaptersByTopic = new Map<string, Map<number, string>>();
   for (const [key, chapter] of Object.entries(chapters)) {

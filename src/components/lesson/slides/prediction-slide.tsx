@@ -28,7 +28,7 @@ export function PredictionSlide({
 
   function handleSelect(idx: number) {
     if (locked) return;
-    // Count each distinct pick before reveal — matches mc-slide-v2 semantics.
+    // Count each distinct pick before reveal — matches mc-slide semantics.
     if (idx !== selectedIndex) setAttempts((a) => a + 1);
     setSelectedIndex(idx);
   }

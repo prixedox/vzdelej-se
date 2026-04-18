@@ -141,7 +141,7 @@ export function SlideDeck({ slides, onComplete }: SlideDeckProps) {
     }
   }, [answeredSteps, currentSlide, currentIndex, slides.length]);
 
-  // Complete when reaching complete-v2 slide
+  // Complete when reaching the terminal `complete` slide
   useEffect(() => {
     if (currentSlide.type === "complete") {
       onComplete(answeredSteps);

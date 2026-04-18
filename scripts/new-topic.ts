@@ -57,8 +57,12 @@ async function main() {
     process.exit(1);
   }
   const [subject, categorySlug, topicSlug] = parts;
+  if (!SLUG_RE.test(categorySlug)) {
+    console.error(`Invalid category slug shape: ${categorySlug}`);
+    process.exit(1);
+  }
   if (!SLUG_RE.test(topicSlug)) {
-    console.error(`Invalid slug shape: ${topicSlug}`);
+    console.error(`Invalid topic slug shape: ${topicSlug}`);
     process.exit(1);
   }
 

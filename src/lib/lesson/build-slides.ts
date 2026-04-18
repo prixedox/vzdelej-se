@@ -37,7 +37,7 @@ export function buildSlides(lesson: Lesson): Slide[] {
             body: lesson.narrative,
             callout: "Příběh",
           },
-          "v2-narrative",
+          "narrative",
           -1,
           0 // recalculated below
         ),
@@ -45,7 +45,7 @@ export function buildSlides(lesson: Lesson): Slide[] {
     : [];
 
   const stepSlides: Slide[] = lesson.steps.map((step, i) =>
-    stepToSlide(step, `v2-${i}`, i, 0)
+    stepToSlide(step, `slide-${i}`, i, 0)
   );
 
   const allContentSlides: Slide[] = [...narrativeSlides, ...stepSlides];
@@ -58,7 +58,7 @@ export function buildSlides(lesson: Lesson): Slide[] {
 
   const summaryIndex = allContentSlides.length;
   const summarySlide: Slide = {
-    id: `v2-${summaryIndex}`,
+    id: `slide-${summaryIndex}`,
     stepIndex: summaryIndex,
     totalSteps,
     type: "summary",
@@ -68,7 +68,7 @@ export function buildSlides(lesson: Lesson): Slide[] {
   allContentSlides.push(summarySlide);
 
   const completeSlide: Slide = {
-    id: `v2-${summaryIndex + 1}`,
+    id: `slide-${summaryIndex + 1}`,
     stepIndex: summaryIndex + 1,
     totalSteps,
     type: "complete",

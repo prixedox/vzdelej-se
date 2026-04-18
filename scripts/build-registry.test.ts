@@ -48,6 +48,19 @@ describe("buildRegistry", () => {
     expect(out).not.toContain("helpers.test");
   });
 
+  it("skips .ts files that don't export `chapter`", async () => {
+    // A plausible helper file that a future author might add
+    await writeChapter(path.join(tmp, "math", "linear-equations", "intro.ts"), "intro", "linear-equations", 1);
+    await writeFile(
+      path.join(tmp, "math", "linear-equations", "helpers.ts"),
+      `export const someHelper = 42;\n`
+    );
+
+    await buildRegistry(tmp, path.join(tmp, "data.generated.ts"));
+    const out = await readFile(path.join(tmp, "data.generated.ts"), "utf8");
+    expect(out).not.toMatch(/linear-equations\/helpers/);
+  });
+
   it("sorts entries deterministically by path", async () => {
     await writeChapter(path.join(tmp, "math", "zeta", "intro.ts"), "intro", "zeta", 1);
     await writeChapter(path.join(tmp, "math", "alpha", "intro.ts"), "intro", "alpha", 1);
