@@ -66,14 +66,14 @@ async function main() {
     process.exit(1);
   }
 
-  const treeFile: string | null =
-    subject === "math"
-      ? "math-tree.ts"
-      : subject === "physics"
-        ? "physics-tree.ts"
-        : subject === "chemistry"
-          ? "chemistry-tree.ts"
-          : null;
+  const treeFileMap: Record<string, string> = {
+    math: "math-tree.ts",
+    physics: "physics-tree.ts",
+    chemistry: "chemistry-tree.ts",
+    biology: "biology-tree.ts",
+    informatics: "informatics-tree.ts",
+  };
+  const treeFile = treeFileMap[subject];
   if (!treeFile) {
     console.error(`Unknown subject: ${subject}`);
     process.exit(1);
