@@ -72,6 +72,8 @@ async function main() {
     chemistry: "chemistry-tree.ts",
     biology: "biology-tree.ts",
     informatics: "informatics-tree.ts",
+    history: "history-tree.ts",
+    geography: "geography-tree.ts",
   };
   const treeFile = treeFileMap[subject];
   if (!treeFile) {
