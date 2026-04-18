@@ -12,6 +12,14 @@ export const mathTree = {
       icon: "🔢",
       children: [
         {
+          slug: "sets-and-logic",
+          name: "Množiny a výroková logika",
+          description: "Sjednocení, průnik, výroky, kvantifikátory",
+          aiContext:
+            "Množiny (sjednocení, průnik, rozdíl, doplněk), intervaly, výroková logika, kvantifikátory, pravdivostní tabulky, důkazy",
+          comingSoon: true,
+        },
+        {
           slug: "linear-equations",
           name: "Lineární rovnice",
           description: "Řešení rovnic prvního stupně",
@@ -52,6 +60,14 @@ export const mathTree = {
           description: "Aritmetické a geometrické posloupnosti",
           aiContext:
             "Aritmetická posloupnost, geometrická posloupnost, n-tý člen, součet prvních n členů, konvergence řad",
+        },
+        {
+          slug: "complex-numbers",
+          name: "Komplexní čísla",
+          description: "Čísla tvaru $a + bi$",
+          aiContext:
+            "Imaginární jednotka i, algebraický tvar, goniometrický tvar, Moivreova věta, rovnice v komplexních číslech, Gaussova rovina",
+          comingSoon: true,
         },
       ],
     },
@@ -133,6 +149,22 @@ export const mathTree = {
             "Vzdálenost bodů, rovnice přímky, rovnice kružnice, vzájemná poloha přímek, vektory v rovině",
         },
         {
+          slug: "vectors",
+          name: "Vektory",
+          description: "Vektorové operace, skalární a vektorový součin",
+          aiContext:
+            "Vektor, souřadnice vektoru, velikost, sčítání vektorů, skalární součin, vektorový součin, kolmost, rovnoběžnost, lineární kombinace",
+          comingSoon: true,
+        },
+        {
+          slug: "conics",
+          name: "Kuželosečky",
+          description: "Elipsa, hyperbola, parabola",
+          aiContext:
+            "Kružnice, elipsa (ohniska, hlavní a vedlejší osa), hyperbola (asymptoty), parabola (ohnisko, řídicí přímka), středová a obecná rovnice",
+          comingSoon: true,
+        },
+        {
           slug: "solid-geometry",
           name: "Stereometrie",
           description: "Tělesa a prostorová geometrie",
@@ -160,6 +192,14 @@ export const mathTree = {
           description: "Klasická a podmíněná pravděpodobnost",
           aiContext:
             "Klasická pravděpodobnost, jevy, sjednocení a průnik jevů, podmíněná pravděpodobnost, Bayesova věta",
+        },
+        {
+          slug: "statistics",
+          name: "Statistika",
+          description: "Popisná statistika — průměr, medián, rozptyl",
+          aiContext:
+            "Aritmetický průměr, medián, modus, rozptyl, směrodatná odchylka, kvartily, histogram, korelace, normální rozdělení",
+          comingSoon: true,
         },
       ],
     },

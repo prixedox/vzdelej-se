@@ -46,6 +46,22 @@ export const physicsTree = {
           aiContext:
             "Newtonův gravitační zákon, gravitační pole, intenzita gravitačního pole, Keplerovy zákony, kosmické rychlosti",
         },
+        {
+          slug: "oscillations",
+          name: "Mechanické kmitání",
+          description: "Kyvadlo, pružina, harmonický pohyb",
+          aiContext:
+            "Harmonický oscilátor, perioda, frekvence, amplituda, matematické kyvadlo, pružinové kyvadlo, tlumené kmity, rezonance",
+          comingSoon: true,
+        },
+        {
+          slug: "fluid-mechanics",
+          name: "Mechanika tekutin",
+          description: "Tlak, vztlak, proudění",
+          aiContext:
+            "Hydrostatický tlak, Pascalův zákon, Archimédův zákon, rovnice kontinuity, Bernoulliho rovnice, viskozita, povrchové napětí",
+          comingSoon: true,
+        },
       ],
     },
     {
@@ -104,6 +120,22 @@ export const physicsTree = {
           aiContext:
             "Magnetické pole vodiče s proudem, magnetická indukce, síla na vodič v magnetickém poli, elektromagnetická indukce, Faradayův zákon",
         },
+        {
+          slug: "electromagnetic-induction",
+          name: "Elektromagnetická indukce",
+          description: "Faradayův zákon, vlastní a vzájemná indukce",
+          aiContext:
+            "Elektromagnetická indukce, Faradayův zákon, Lenzův zákon, indukované napětí, vlastní indukce, cívky, transformátor",
+          comingSoon: true,
+        },
+        {
+          slug: "ac-circuits",
+          name: "Střídavý proud",
+          description: "AC obvody, impedance, fázorový diagram",
+          aiContext:
+            "Střídavý proud, efektivní hodnoty, fázový posun, impedance (R, L, C), rezonance v RLC obvodu, transformátor, výkon ve střídavých obvodech",
+          comingSoon: true,
+        },
       ],
     },
     {
@@ -140,6 +172,14 @@ export const physicsTree = {
           description: "Fotoelektrický jev, radioaktivita",
           aiContext:
             "Fotoelektrický jev, foton, vlnově-částicový dualismus, de Broglieho vlnová délka, struktura atomu, radioaktivita, jaderné reakce, poločas přeměny",
+        },
+        {
+          slug: "special-relativity",
+          name: "Speciální teorie relativity",
+          description: "Einstein, čas a prostor ve vysokých rychlostech",
+          aiContext:
+            "Postuláty speciální teorie relativity, dilatace času, kontrakce délek, relativistická hmotnost, ekvivalence hmoty a energie (E = mc²), Lorentzova transformace",
+          comingSoon: true,
         },
       ],
     },

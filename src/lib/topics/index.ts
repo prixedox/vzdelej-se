@@ -20,7 +20,7 @@ export const subjects = [
     description: "Algebra, funkce, geometrie, kombinatorika a analýza",
     icon: "📐",
     color: "from-blue-500 to-indigo-600",
-    leafCount: 21,
+    leafCount: 26,
   },
   {
     slug: "physics",
@@ -28,7 +28,7 @@ export const subjects = [
     description: "Mechanika, termodynamika, elektřina, vlnění a moderní fyzika",
     icon: "⚛️",
     color: "from-purple-500 to-pink-600",
-    leafCount: 14,
+    leafCount: 19,
   },
   {
     slug: "chemistry",
