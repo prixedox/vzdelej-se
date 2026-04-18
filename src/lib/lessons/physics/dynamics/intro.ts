@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Dynamika – síly a pohyb",
   narrative:
     "Proč se hokejový puk po odpálení pohybuje dál, i když na něj nikdo netlačí? Aristoteles by řekl, že se musí zastavit. Newton ukázal, že se mýlil — a jeho tři zákony změnily fyziku navždy.",

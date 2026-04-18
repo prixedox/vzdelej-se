@@ -1,144 +1,79 @@
-import type { LessonContent } from "@/types/lesson";
+import type { LessonStep, Lesson } from "@/types/lesson";
 import type { Slide } from "@/types/slide";
 
-export function buildSlides(content: LessonContent): Slide[] {
-  const slides: Slide[] = [];
-  let id = 0;
-
-  // ── Teorie ──
-  slides.push({
-    id: `s-${id++}`,
-    type: "section-title",
-    sectionLabel: "Teorie",
-    sectionIndex: 0,
-    title: content.conceptExplanation.title,
-    subtitle: "Vysvětlení konceptu",
-    icon: "book",
-  });
-
-  content.conceptExplanation.sections.forEach((section, i) => {
-    slides.push({
-      id: `s-${id++}`,
-      type: "concept-section",
-      sectionLabel: "Teorie",
-      sectionIndex: 0,
-      section,
-      sectionNumber: i + 1,
-      totalSections: content.conceptExplanation.sections.length,
-    });
-
-    if (section.knowledgeCheck) {
-      slides.push({
-        id: `s-${id++}`,
-        type: "knowledge-check",
-        sectionLabel: "Teorie",
-        sectionIndex: 0,
-        knowledgeCheck: section.knowledgeCheck,
-      });
-    }
-  });
-
-  // ── Explorations (between theory and walkthrough) ──
-  if (content.explorations && content.explorations.length > 0) {
-    slides.push({
-      id: `s-${id++}`,
-      type: "section-title",
-      sectionLabel: "Průzkum",
-      sectionIndex: 0,
-      title: "Prozkoumejte",
-      subtitle: "Interaktivní experimenty",
-      icon: "lightbulb",
-    });
-
-    content.explorations.forEach((exploration) => {
-      slides.push({
-        id: `s-${id++}`,
-        type: "exploration",
-        sectionLabel: "Průzkum",
-        sectionIndex: 0,
-        exploration,
-      });
-    });
+// Typed factory — keeps the tagged-union correlation between step.type
+// and slide.type. Adding a new step variant forces updating this switch.
+function stepToSlide(
+  step: LessonStep,
+  id: string,
+  stepIndex: number,
+  totalSteps: number
+): Slide {
+  const base = { id, stepIndex, totalSteps };
+  switch (step.type) {
+    case "explain":
+      return { ...base, type: "explain", step };
+    case "multiple-choice":
+      return { ...base, type: "multiple-choice", step };
+    case "text-input":
+      return { ...base, type: "text-input", step };
+    case "explore":
+      return { ...base, type: "explore", step };
+    case "reveal":
+      return { ...base, type: "reveal", step };
+    case "sort-order":
+      return { ...base, type: "sort-order", step };
+    case "prediction":
+      return { ...base, type: "prediction", step };
   }
+}
 
-  // ── Ukázka ──
-  slides.push({
-    id: `s-${id++}`,
-    type: "section-title",
-    sectionLabel: "Ukázka",
-    sectionIndex: 1,
-    title: "Vzorový příklad",
-    subtitle: "Krok za krokem k řešení",
-    icon: "lightbulb",
+export function buildSlides(lesson: Lesson): Slide[] {
+  const narrativeSlides: Slide[] = lesson.narrative
+    ? [
+        stepToSlide(
+          {
+            type: "explain",
+            body: lesson.narrative,
+            callout: "Příběh",
+          },
+          "v2-narrative",
+          -1,
+          0 // recalculated below
+        ),
+      ]
+    : [];
+
+  const stepSlides: Slide[] = lesson.steps.map((step, i) =>
+    stepToSlide(step, `v2-${i}`, i, 0)
+  );
+
+  const allContentSlides: Slide[] = [...narrativeSlides, ...stepSlides];
+  const totalSteps = allContentSlides.length + 2; // +summary +complete
+
+  allContentSlides.forEach((slide, i) => {
+    slide.stepIndex = i;
+    slide.totalSteps = totalSteps;
   });
 
-  slides.push({
-    id: `s-${id++}`,
-    type: "walkthrough-intro",
-    sectionLabel: "Ukázka",
-    sectionIndex: 1,
-    problemStatement: content.walkthroughProblem.problemStatement,
-  });
-
-  content.walkthroughProblem.steps.forEach((step, i) => {
-    slides.push({
-      id: `s-${id++}`,
-      type: "walkthrough-step",
-      sectionLabel: "Ukázka",
-      sectionIndex: 1,
-      step,
-      stepNumber: i + 1,
-      totalSteps: content.walkthroughProblem.steps.length,
-    });
-  });
-
-  slides.push({
-    id: `s-${id++}`,
-    type: "walkthrough-result",
-    sectionLabel: "Ukázka",
-    sectionIndex: 1,
-    finalAnswer: content.walkthroughProblem.finalAnswer,
-  });
-
-  // ── Procvičení ──
-  slides.push({
-    id: `s-${id++}`,
-    type: "section-title",
-    sectionLabel: "Procvičení",
-    sectionIndex: 2,
-    title: "Procvičení",
-    subtitle: `${content.practiceProblems.length} příkladů k vyřešení`,
-    icon: "pen",
-  });
-
-  content.practiceProblems.forEach((problem, i) => {
-    slides.push({
-      id: `s-${id++}`,
-      type: "practice-problem",
-      sectionLabel: "Procvičení",
-      sectionIndex: 2,
-      problem,
-      problemIndex: i,
-      totalProblems: content.practiceProblems.length,
-    });
-  });
-
-  // ── Shrnutí ──
-  slides.push({
-    id: `s-${id++}`,
+  const summaryIndex = allContentSlides.length;
+  const summarySlide: Slide = {
+    id: `v2-${summaryIndex}`,
+    stepIndex: summaryIndex,
+    totalSteps,
     type: "summary",
-    sectionLabel: "Shrnutí",
-    sectionIndex: 3,
-    keyTakeaways: content.summary.keyTakeaways,
-    nextTopicSuggestion: content.summary.nextTopicSuggestion,
-  });
+    keyTakeaways: lesson.summary.keyTakeaways,
+    nextTopicSuggestion: lesson.nextTopicSuggestion,
+  };
+  allContentSlides.push(summarySlide);
 
-  slides.push({
-    id: `s-${id++}`,
-    type: "complete-prompt",
-    sectionLabel: "Shrnutí",
-    sectionIndex: 3,
-  });
+  const completeSlide: Slide = {
+    id: `v2-${summaryIndex + 1}`,
+    stepIndex: summaryIndex + 1,
+    totalSteps,
+    type: "complete",
+  };
+  allContentSlides.push(completeSlide);
 
-  return slides;
+  return allContentSlides;
 }

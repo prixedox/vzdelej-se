@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Goniometrické funkce",
   narrative:
     "Starověcí astronomové potřebovali předpovídat pohyb hvězd a planet po obloze. Zjistili, že stačí znát poměry stran v pravoúhlém trojúhelníku — a tak se zrodily goniometrické funkce. Dnes je najdeme všude: od GPS navigace přes zvukové vlny až po počítačovou grafiku.",

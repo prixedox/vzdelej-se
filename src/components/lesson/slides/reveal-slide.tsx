@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { MathText } from "../math-display";
 import { VisualBlock } from "../visuals/visual-block";
 import { Eye } from "lucide-react";
-import type { RevealSlideV2 } from "@/types/slide-v2";
+import type { RevealSlide } from "@/types/slide";
 
-export function RevealSlideV2({ slide }: { slide: RevealSlideV2 }) {
+export function RevealSlide({ slide }: { slide: RevealSlide }) {
   const { step } = slide;
   const [revealed, setRevealed] = useState(false);
 

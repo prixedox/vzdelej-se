@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { subjectTrees } from "@/lib/topics";
+import { getChaptersForTopic } from "@/lib/lessons/data";
 import { TopicCard } from "@/components/topic/topic-card";
 import { ArrowLeft } from "lucide-react";
 
@@ -54,6 +55,7 @@ export default async function SubjectPage({
                   key={topic.slug}
                   topic={topic}
                   href={`/topics/${subjectSlug}/${topic.slug}`}
+                  chapterSlugs={getChaptersForTopic(topic.slug).map((c) => c.slug)}
                 />
               ))}
             </div>

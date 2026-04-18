@@ -2,128 +2,28 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { SlideDeck } from "./slide-deck";
-import { SlideDeckV2 } from "./slide-deck-v2";
 import { LessonComplete } from "./lesson-complete";
 import { buildSlides } from "@/lib/lesson/build-slides";
-import { buildSlidesV2 } from "@/lib/lesson/build-slides-v2";
-import { recordLessonCompletion } from "@/lib/lesson/progress-store";
-import type { LessonContent } from "@/types/lesson";
-import type { LessonV2 } from "@/types/lesson-v2";
+import { recordChapterCompletion } from "@/lib/lesson/progress-store";
+import type { Lesson } from "@/types/lesson";
 
 interface LessonShellProps {
-  content: LessonContent | LessonV2;
+  lesson: Lesson;
   topicSlug: string;
+  chapterSlug: string;
 }
 
-function isV2(content: LessonContent | LessonV2): content is LessonV2 {
-  return "steps" in content;
-}
-
-export function LessonShell({ content, topicSlug }: LessonShellProps) {
-  if (isV2(content)) {
-    return <LessonShellV2 content={content} topicSlug={topicSlug} />;
-  }
-  return <LessonShellV1 content={content} topicSlug={topicSlug} />;
-}
-
-// ── V1 ──
-
-function LessonShellV1({
-  content,
-  topicSlug,
-}: {
-  content: LessonContent;
-  topicSlug: string;
-}) {
-  const [answeredProblems, setAnsweredProblems] = useState<
-    Map<number, { isCorrect: boolean; hintsUsed: number; timeSpentMs: number }>
-  >(new Map());
-  const [completed, setCompleted] = useState(false);
-  const [tier, setTier] = useState<"bronze" | "silver" | "gold" | null>(null);
-
-  const slides = useMemo(() => buildSlides(content), [content]);
-  const totalProblems = content.practiceProblems.length;
-
-  const handleAnswer = useCallback(
-    (
-      problemIndex: number,
-      isCorrect: boolean,
-      hintsUsed: number,
-      timeSpentMs: number
-    ) => {
-      setAnsweredProblems((prev) => {
-        const next = new Map(prev);
-        next.set(problemIndex, { isCorrect, hintsUsed, timeSpentMs });
-
-        if (next.size === totalProblems) {
-          setCompleted(true);
-          const correctAnswers = Array.from(next.values()).filter(
-            (a) => a.isCorrect
-          ).length;
-          const score = totalProblems > 0 ? correctAnswers / totalProblems : 1;
-          const result = recordLessonCompletion(topicSlug, {
-            completedAt: Date.now(),
-            score,
-            correctAnswers,
-            totalProblems,
-          });
-          setTier(result.topics[topicSlug]?.tier ?? null);
-        }
-
-        return next;
-      });
-    },
-    [totalProblems, topicSlug]
-  );
-
-  if (completed) {
-    const correctAnswers = Array.from(answeredProblems.values()).filter(
-      (a) => a.isCorrect
-    ).length;
-    const score = totalProblems > 0 ? correctAnswers / totalProblems : 0;
-
-    return (
-      <LessonComplete
-        score={score}
-        totalProblems={totalProblems}
-        correctAnswers={correctAnswers}
-        isPerfect={correctAnswers === totalProblems}
-        tier={tier}
-      />
-    );
-  }
-
-  return (
-    <div className="max-w-3xl mx-auto">
-      <SlideDeck
-        slides={slides}
-        onAnswer={handleAnswer}
-        answeredProblems={answeredProblems}
-      />
-    </div>
-  );
-}
-
-// ── V2 (Brilliant-style) ──
-
-function LessonShellV2({
-  content,
-  topicSlug,
-}: {
-  content: LessonV2;
-  topicSlug: string;
-}) {
+export function LessonShell({ lesson, topicSlug, chapterSlug }: LessonShellProps) {
   const [completed, setCompleted] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [tier, setTier] = useState<"bronze" | "silver" | "gold" | null>(null);
 
-  const slides = useMemo(() => buildSlidesV2(content), [content]);
+  const slides = useMemo(() => buildSlides(lesson), [lesson]);
 
   const handleComplete = useCallback(
     (answeredSteps: Map<number, { isCorrect: boolean; attempts: number }>) => {
-      // Count question steps (account for narrative offset)
-      const narrativeOffset = content.narrative ? 1 : 0;
-      const questionStepIndices = content.steps
+      const narrativeOffset = lesson.narrative ? 1 : 0;
+      const questionStepIndices = lesson.steps
         .map((step, i) => ({ step, i: i + narrativeOffset }))
         .filter(
           ({ step }) =>
@@ -142,15 +42,15 @@ function LessonShellV2({
       setScore({ correct, total });
       setCompleted(true);
 
-      const result = recordLessonCompletion(topicSlug, {
+      const result = recordChapterCompletion(topicSlug, chapterSlug, {
         completedAt: Date.now(),
         score: total > 0 ? correct / total : 1,
         correctAnswers: correct,
         totalProblems: total,
       });
-      setTier(result.topics[topicSlug]?.tier ?? null);
+      setTier(result.chapters[`${topicSlug}/${chapterSlug}`]?.tier ?? null);
     },
-    [content.steps, content.narrative, topicSlug]
+    [lesson.steps, lesson.narrative, topicSlug, chapterSlug]
   );
 
   if (completed) {
@@ -168,7 +68,7 @@ function LessonShellV2({
 
   return (
     <div className="max-w-3xl mx-auto">
-      <SlideDeckV2 slides={slides} onComplete={handleComplete} />
+      <SlideDeck slides={slides} onComplete={handleComplete} />
     </div>
   );
 }

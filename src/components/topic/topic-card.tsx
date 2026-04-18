@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
-import { getTopicProgress } from "@/lib/lesson/progress-store";
+import { getTopicAggregateProgress } from "@/lib/lesson/progress-store";
 import { cn } from "@/lib/utils";
 import type { TopicNode } from "@/types/topic";
 
@@ -26,14 +26,20 @@ export function TopicCard({
   topic,
   href,
   childCount,
+  chapterSlugs,
 }: {
   topic: TopicNode;
   href: string;
   childCount?: number;
+  /** Chapter slugs for this topic — required for topics that link to chapter lists. */
+  chapterSlugs?: readonly string[];
 }) {
   const tier = useSyncExternalStore<"bronze" | "silver" | "gold" | null>(
     subscribe,
-    () => getTopicProgress(topic.slug)?.tier ?? null,
+    () => {
+      if (!chapterSlugs || chapterSlugs.length === 0) return null;
+      return getTopicAggregateProgress(topic.slug, chapterSlugs).overallTier;
+    },
     () => null
   );
 

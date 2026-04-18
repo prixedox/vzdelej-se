@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Lineární rovnice – základy",
   narrative:
     "Pekař potřebuje rozdělit těsto na stejné díly, ale neví kolik gramů má každý kus. Zná jen celkovou váhu a počet kusů. Jak to spočítá? Přesně k tomu slouží rovnice — najít neznámou hodnotu z toho, co víme.",

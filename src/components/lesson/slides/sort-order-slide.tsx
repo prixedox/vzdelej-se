@@ -7,19 +7,19 @@ import { MathText } from "../math-display";
 import { SortOrderInput } from "../sort-order-input";
 import { Send } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { SortOrderSlideV2 } from "@/types/slide-v2";
+import type { SortOrderSlide } from "@/types/slide";
 
-interface SortOrderSlideV2Props {
-  slide: SortOrderSlideV2;
+interface SortOrderSlideProps {
+  slide: SortOrderSlide;
   onAnswer: (stepIndex: number, isCorrect: boolean, attempts: number) => void;
   answered?: { isCorrect: boolean; attempts: number };
 }
 
-export function SortOrderSlideV2({
+export function SortOrderSlide({
   slide,
   onAnswer,
   answered,
-}: SortOrderSlideV2Props) {
+}: SortOrderSlideProps) {
   const { step } = slide;
   const [submitted, setSubmitted] = useState(!!answered);
   const [isCorrect, setIsCorrect] = useState(answered?.isCorrect ?? false);

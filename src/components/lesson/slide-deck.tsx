@@ -9,63 +9,82 @@ import type { Slide } from "@/types/slide";
 
 interface SlideDeckProps {
   slides: Slide[];
-  onAnswer: (
-    problemIndex: number,
-    isCorrect: boolean,
-    hintsUsed: number,
-    timeSpentMs: number
+  onComplete: (
+    answeredSteps: Map<number, { isCorrect: boolean; attempts: number }>
   ) => void;
-  answeredProblems: Map<
-    number,
-    { isCorrect: boolean; hintsUsed: number; timeSpentMs: number }
-  >;
 }
 
 const variants = {
   enter: (d: number) => ({
-    x: d > 0 ? 300 : -300,
+    x: d > 0 ? 200 : -200,
     opacity: 0,
+    scale: 0.97,
   }),
   center: {
     x: 0,
     opacity: 1,
+    scale: 1,
   },
   exit: (d: number) => ({
-    x: d > 0 ? -300 : 300,
+    x: d > 0 ? -200 : 200,
     opacity: 0,
+    scale: 0.97,
   }),
 };
 
-export function SlideDeck({
-  slides,
-  onAnswer,
-  answeredProblems,
-}: SlideDeckProps) {
+// Step types that block forward navigation until answered/interacted
+const BLOCKING_TYPES = new Set([
+  "multiple-choice",
+  "text-input",
+  "sort-order",
+  "prediction",
+]);
+
+export function SlideDeck({ slides, onComplete }: SlideDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [walkthroughAttempted, setWalkthroughAttempted] = useState<Set<string>>(
+  const [answeredSteps, setAnsweredSteps] = useState<
+    Map<number, { isCorrect: boolean; attempts: number }>
+  >(new Map());
+  const [interactedSteps, setInteractedSteps] = useState<Set<number>>(
     new Set()
   );
 
   const currentSlide = slides[currentIndex];
 
-  const handleWalkthroughAttempt = useCallback((slideId: string) => {
-    setWalkthroughAttempted((prev) => new Set(prev).add(slideId));
+  const handleAnswer = useCallback(
+    (stepIndex: number, isCorrect: boolean, attempts: number) => {
+      setAnsweredSteps((prev) => {
+        const next = new Map(prev);
+        next.set(stepIndex, { isCorrect, attempts });
+        return next;
+      });
+    },
+    []
+  );
+
+  const handleInteracted = useCallback((stepIndex: number) => {
+    setInteractedSteps((prev) => new Set(prev).add(stepIndex));
   }, []);
+
+  const isBlocked = useMemo(() => {
+    if (BLOCKING_TYPES.has(currentSlide.type)) {
+      return !answeredSteps.has(currentSlide.stepIndex);
+    }
+    // Explore with followUpQuestion blocks until interacted
+    if (
+      currentSlide.type === "explore" &&
+      currentSlide.step.followUpQuestion
+    ) {
+      return !interactedSteps.has(currentSlide.stepIndex);
+    }
+    return false;
+  }, [currentSlide, answeredSteps, interactedSteps]);
 
   const canGoNext = useMemo(() => {
     if (currentIndex >= slides.length - 1) return false;
-    if (currentSlide.type === "practice-problem") {
-      return answeredProblems.has(currentSlide.problemIndex);
-    }
-    if (
-      currentSlide.type === "walkthrough-step" &&
-      currentSlide.step.challenge
-    ) {
-      return walkthroughAttempted.has(currentSlide.id);
-    }
-    return true;
-  }, [currentIndex, currentSlide, answeredProblems, slides.length, walkthroughAttempted]);
+    return !isBlocked;
+  }, [currentIndex, slides.length, isBlocked]);
 
   const canGoPrev = currentIndex > 0;
   const isLastSlide = currentIndex === slides.length - 1;
@@ -105,28 +124,36 @@ export function SlideDeck({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goNext, goPrev]);
 
-  // Auto-advance after answering a practice problem
+  // Auto-advance 1.5s on correct answer
   useEffect(() => {
     if (
-      currentSlide.type === "practice-problem" &&
-      answeredProblems.has(currentSlide.problemIndex)
+      BLOCKING_TYPES.has(currentSlide.type) &&
+      answeredSteps.has(currentSlide.stepIndex)
     ) {
-      const result = answeredProblems.get(currentSlide.problemIndex);
-      if (result?.isCorrect) {
+      const result = answeredSteps.get(currentSlide.stepIndex);
+      if (result?.isCorrect && currentIndex < slides.length - 1) {
         const timer = setTimeout(() => {
-          if (currentIndex < slides.length - 1) {
-            setDirection(1);
-            setCurrentIndex((i) => i + 1);
-          }
-        }, 1800);
+          setDirection(1);
+          setCurrentIndex((i) => i + 1);
+        }, 1500);
         return () => clearTimeout(timer);
       }
     }
-  }, [answeredProblems, currentSlide, currentIndex, slides.length]);
+  }, [answeredSteps, currentSlide, currentIndex, slides.length]);
+
+  // Complete when reaching complete-v2 slide
+  useEffect(() => {
+    if (currentSlide.type === "complete") {
+      onComplete(answeredSteps);
+    }
+  }, [currentSlide.type, answeredSteps, onComplete]);
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)]">
-      <LessonProgressBar currentIndex={currentIndex} slides={slides} />
+      <LessonProgressBar
+        currentIndex={currentIndex}
+        totalSteps={slides.length}
+      />
 
       <div className="flex-1 overflow-hidden relative px-4">
         <AnimatePresence mode="wait" custom={direction}>
@@ -151,9 +178,10 @@ export function SlideDeck({
           >
             <SlideRenderer
               slide={currentSlide}
-              onAnswer={onAnswer}
-              answeredProblems={answeredProblems}
-              onWalkthroughAttempt={handleWalkthroughAttempt}
+              onAnswer={handleAnswer}
+              onInteracted={handleInteracted}
+              answeredSteps={answeredSteps}
+              interactedSteps={interactedSteps}
             />
           </motion.div>
         </AnimatePresence>
@@ -165,13 +193,7 @@ export function SlideDeck({
         onNext={goNext}
         onPrev={goPrev}
         isLastSlide={isLastSlide}
-        isPracticeBlocked={
-          (currentSlide.type === "practice-problem" &&
-            !answeredProblems.has(currentSlide.problemIndex)) ||
-          (currentSlide.type === "walkthrough-step" &&
-            !!currentSlide.step.challenge &&
-            !walkthroughAttempted.has(currentSlide.id))
-        }
+        isPracticeBlocked={isBlocked}
       />
     </div>
   );

@@ -10,19 +10,19 @@ import { HintReveal } from "../hint-reveal";
 import { checkAnswer } from "@/lib/lesson/answer-evaluator";
 import { Send, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { TextInputSlideV2 } from "@/types/slide-v2";
+import type { TextInputSlide } from "@/types/slide";
 
-interface TextInputSlideV2Props {
-  slide: TextInputSlideV2;
+interface TextInputSlideProps {
+  slide: TextInputSlide;
   onAnswer: (stepIndex: number, isCorrect: boolean, attempts: number) => void;
   answered?: { isCorrect: boolean; attempts: number };
 }
 
-export function TextInputSlideV2({
+export function TextInputSlide({
   slide,
   onAnswer,
   answered,
-}: TextInputSlideV2Props) {
+}: TextInputSlideProps) {
   const { step } = slide;
   const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(!!answered);

@@ -6,19 +6,19 @@ import { Button } from "@/components/ui/button";
 import { MathText } from "../math-display";
 import { VisualBlock } from "../visuals/visual-block";
 import { Telescope, Check } from "lucide-react";
-import type { ExploreSlideV2 } from "@/types/slide-v2";
+import type { ExploreSlide } from "@/types/slide";
 
-interface ExploreSlideV2Props {
-  slide: ExploreSlideV2;
+interface ExploreSlideProps {
+  slide: ExploreSlide;
   onInteracted: (stepIndex: number) => void;
   interacted?: boolean;
 }
 
-export function ExploreSlideV2({
+export function ExploreSlide({
   slide,
   onInteracted,
   interacted: initialInteracted,
-}: ExploreSlideV2Props) {
+}: ExploreSlideProps) {
   const { step } = slide;
   const [confirmed, setConfirmed] = useState(!!initialInteracted);
   const [showFollowUp, setShowFollowUp] = useState(!!initialInteracted);

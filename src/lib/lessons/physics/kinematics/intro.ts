@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Kinematika – popis pohybu",
   narrative:
     "Galileo Galilei stál na šikmé věži v Pise a pustil dvě koule — těžkou a lehkou. Která dopadla první? Většina lidí tipovala špatně. Pojďme zjistit, jak se tělesa skutečně pohybují.",

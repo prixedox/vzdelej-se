@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { buildSlidesV2 } from "./build-slides-v2";
-import type { LessonV2 } from "@/types/lesson-v2";
+import { buildSlides } from "./build-slides";
+import type { Lesson } from "@/types/lesson";
 
-const baseLesson: LessonV2 = {
+const baseLesson: Lesson = {
   title: "Test",
   steps: [
     { type: "explain", body: "intro" },
@@ -19,28 +19,28 @@ const baseLesson: LessonV2 = {
   summary: { keyTakeaways: ["k1"] },
 };
 
-describe("buildSlidesV2", () => {
+describe("buildSlides", () => {
   it("produces steps + summary + complete", () => {
-    const slides = buildSlidesV2(baseLesson);
+    const slides = buildSlides(baseLesson);
     expect(slides).toHaveLength(4);
-    expect(slides[0].type).toBe("explain-v2");
-    expect(slides[1].type).toBe("multiple-choice-v2");
-    expect(slides[2].type).toBe("summary-v2");
-    expect(slides[3].type).toBe("complete-v2");
+    expect(slides[0].type).toBe("explain");
+    expect(slides[1].type).toBe("multiple-choice");
+    expect(slides[2].type).toBe("summary");
+    expect(slides[3].type).toBe("complete");
   });
 
   it("prepends narrative when present", () => {
-    const slides = buildSlidesV2({ ...baseLesson, narrative: "Once upon a time…" });
+    const slides = buildSlides({ ...baseLesson, narrative: "Once upon a time…" });
     expect(slides).toHaveLength(5);
-    expect(slides[0].type).toBe("explain-v2");
-    if (slides[0].type === "explain-v2") {
+    expect(slides[0].type).toBe("explain");
+    if (slides[0].type === "explain") {
       expect(slides[0].step.body).toBe("Once upon a time…");
       expect(slides[0].step.callout).toBe("Příběh");
     }
   });
 
   it("assigns monotonic stepIndex and consistent totalSteps", () => {
-    const slides = buildSlidesV2(baseLesson);
+    const slides = buildSlides(baseLesson);
     slides.forEach((s, i) => expect(s.stepIndex).toBe(i));
     const total = slides[0].totalSteps;
     slides.forEach((s) => expect(s.totalSteps).toBe(total));
@@ -48,7 +48,7 @@ describe("buildSlidesV2", () => {
   });
 
   it("maps every step variant correctly", () => {
-    const allVariants: LessonV2 = {
+    const allVariants: Lesson = {
       title: "t",
       steps: [
         { type: "explain", body: "b" },
@@ -67,16 +67,16 @@ describe("buildSlidesV2", () => {
       ],
       summary: { keyTakeaways: ["k"] },
     };
-    const slides = buildSlidesV2(allVariants);
+    const slides = buildSlides(allVariants);
     const types = slides.slice(0, -2).map((s) => s.type);
     expect(types).toEqual([
-      "explain-v2",
-      "multiple-choice-v2",
-      "text-input-v2",
-      "explore-v2",
-      "reveal-v2",
-      "sort-order-v2",
-      "prediction-v2",
+      "explain",
+      "multiple-choice",
+      "text-input",
+      "explore",
+      "reveal",
+      "sort-order",
+      "prediction",
     ]);
   });
 });

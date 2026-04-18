@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Gravitace",
   narrative:
     "Podle legendy Newton seděl pod jabloní a spadlo mu jablko na hlavu. Ale jeho geniální otázka nebyla 'Proč padá jablko?', nýbrž 'Padá stejnou silou i Měsíc?' Uvědomil si, že tatáž síla drží Měsíc na oběžné dráze — a formuloval zákon, který spojil nebeskou a pozemskou mechaniku.",

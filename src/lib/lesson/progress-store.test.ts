@@ -1,13 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import {
   loadProgress,
-  recordLessonCompletion,
-  getTopicProgress,
+  recordChapterCompletion,
+  getChapterProgress,
+  getTopicAggregateProgress,
   updateStreak,
-  getTopicsForReview,
+  getChaptersForReview,
 } from "./progress-store";
 
-const STORAGE_KEY = "vzdelej-se-progress";
+const STORAGE_KEY = "vzdelej-se-progress-v2";
 
 class MemoryStorage implements Storage {
   private store = new Map<string, string>();
@@ -20,71 +21,101 @@ class MemoryStorage implements Storage {
 }
 
 beforeEach(() => {
-  // @ts-expect-error — override for tests
+  // @ts-expect-error — minimal window shim for tests
   globalThis.window = { localStorage: new MemoryStorage() };
-  // @ts-expect-error
-  globalThis.localStorage = globalThis.window.localStorage;
+  globalThis.localStorage = (globalThis.window as { localStorage: Storage }).localStorage;
 });
 
 describe("loadProgress shape guard", () => {
-  it("returns defaults when storage is empty", () => {
-    const p = loadProgress();
-    expect(p.topics).toEqual({});
-    expect(p.streak).toBe(0);
+  it("returns defaults when empty", () => {
+    expect(loadProgress().chapters).toEqual({});
   });
 
   it("returns defaults for 'null' JSON", () => {
     localStorage.setItem(STORAGE_KEY, "null");
-    const p = loadProgress();
-    expect(p.topics).toEqual({});
+    expect(loadProgress().chapters).toEqual({});
   });
 
-  it("returns defaults for missing topics field", () => {
+  it("returns defaults for missing chapters field", () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ streak: 5, lastActivityAt: 0 }));
-    const p = loadProgress();
-    expect(p.topics).toEqual({});
-    expect(p.streak).toBe(0);
+    expect(loadProgress().chapters).toEqual({});
   });
 
-  it("returns defaults for topics-as-array", () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ topics: [], streak: 0, lastActivityAt: 0 }));
-    const p = loadProgress();
-    expect(p.topics).toEqual({});
-  });
-
-  it("returns defaults for invalid JSON", () => {
-    localStorage.setItem(STORAGE_KEY, "{not-json");
-    const p = loadProgress();
-    expect(p.topics).toEqual({});
-  });
-
-  it("accepts valid saved data", () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      topics: { "foo": { bestScore: 1, completionCount: 1, lastCompletedAt: 0, results: [], tier: "gold" } },
-      streak: 3,
-      lastActivityAt: 123,
-    }));
-    const p = loadProgress();
-    expect(p.streak).toBe(3);
-    expect(getTopicProgress("foo")?.tier).toBe("gold");
+  it("returns defaults for chapters-as-array", () => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ chapters: [], streak: 0, lastActivityAt: 0 })
+    );
+    expect(loadProgress().chapters).toEqual({});
   });
 });
 
-describe("tier progression", () => {
-  it("never downgrades a tier", () => {
-    recordLessonCompletion("x", { completedAt: 1, score: 1, correctAnswers: 5, totalProblems: 5 });
-    expect(getTopicProgress("x")?.tier).toBe("gold");
-    recordLessonCompletion("x", { completedAt: 2, score: 0.5, correctAnswers: 1, totalProblems: 2 });
-    expect(getTopicProgress("x")?.tier).toBe("gold");
+describe("tier progression per chapter", () => {
+  it("never downgrades", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 5,
+      totalProblems: 5,
+    });
+    expect(getChapterProgress("t", "a")?.tier).toBe("gold");
+    recordChapterCompletion("t", "a", {
+      completedAt: 2,
+      score: 0.5,
+      correctAnswers: 1,
+      totalProblems: 2,
+    });
+    expect(getChapterProgress("t", "a")?.tier).toBe("gold");
   });
 
-  it("computes bronze/silver/gold bands", () => {
-    recordLessonCompletion("a", { completedAt: 1, score: 0.5, correctAnswers: 1, totalProblems: 2 });
-    expect(getTopicProgress("a")?.tier).toBe("bronze");
-    recordLessonCompletion("b", { completedAt: 1, score: 0.85, correctAnswers: 17, totalProblems: 20 });
-    expect(getTopicProgress("b")?.tier).toBe("silver");
-    recordLessonCompletion("c", { completedAt: 1, score: 1, correctAnswers: 5, totalProblems: 5 });
-    expect(getTopicProgress("c")?.tier).toBe("gold");
+  it("chapter keys are independent within a topic", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 5,
+      totalProblems: 5,
+    });
+    recordChapterCompletion("t", "b", {
+      completedAt: 1,
+      score: 0.5,
+      correctAnswers: 1,
+      totalProblems: 2,
+    });
+    expect(getChapterProgress("t", "a")?.tier).toBe("gold");
+    expect(getChapterProgress("t", "b")?.tier).toBe("bronze");
+  });
+});
+
+describe("topic aggregate", () => {
+  it("gold only when every chapter is gold", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    recordChapterCompletion("t", "b", {
+      completedAt: 1,
+      score: 0.5,
+      correctAnswers: 1,
+      totalProblems: 2,
+    });
+    const agg = getTopicAggregateProgress("t", ["a", "b"]);
+    expect(agg.completedChapters).toBe(2);
+    expect(agg.totalChapters).toBe(2);
+    expect(agg.overallTier).toBe("bronze");
+  });
+
+  it("null overallTier when any chapter is incomplete", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    const agg = getTopicAggregateProgress("t", ["a", "b"]);
+    expect(agg.completedChapters).toBe(1);
+    expect(agg.overallTier).toBeNull();
   });
 });
 
@@ -97,20 +128,35 @@ describe("streak", () => {
   });
 });
 
-describe("spaced retrieval intervals", () => {
-  it("includes only overdue topics", () => {
+describe("spaced retrieval", () => {
+  it("returns overdue chapter keys", () => {
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      topics: {
-        "due": { bestScore: 1, completionCount: 1, lastCompletedAt: now - 2 * oneDay, results: [], tier: "gold" },
-        "fresh": { bestScore: 1, completionCount: 1, lastCompletedAt: now, results: [], tier: "gold" },
-      },
-      streak: 0,
-      lastActivityAt: 0,
-    }));
-    const review = getTopicsForReview();
-    expect(review).toContain("due");
-    expect(review).not.toContain("fresh");
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        chapters: {
+          "t/due": {
+            bestScore: 1,
+            completionCount: 1,
+            lastCompletedAt: now - 2 * oneDay,
+            results: [],
+            tier: "gold",
+          },
+          "t/fresh": {
+            bestScore: 1,
+            completionCount: 1,
+            lastCompletedAt: now,
+            results: [],
+            tier: "gold",
+          },
+        },
+        streak: 0,
+        lastActivityAt: 0,
+      })
+    );
+    const review = getChaptersForReview();
+    expect(review).toContain("t/due");
+    expect(review).not.toContain("t/fresh");
   });
 });

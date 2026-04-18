@@ -5,9 +5,9 @@ import { MathText } from "../math-display";
 import { VisualBlock } from "../visuals/visual-block";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle } from "lucide-react";
-import type { ExplainSlideV2 } from "@/types/slide-v2";
+import type { ExplainSlide } from "@/types/slide";
 
-export function ExplainSlideV2({ slide }: { slide: ExplainSlideV2 }) {
+export function ExplainSlide({ slide }: { slide: ExplainSlide }) {
   const { step } = slide;
 
   return (

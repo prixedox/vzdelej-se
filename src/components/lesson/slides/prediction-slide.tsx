@@ -7,19 +7,19 @@ import { VisualBlock } from "../visuals/visual-block";
 import { Badge } from "@/components/ui/badge";
 import { Lightbulb, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PredictionSlideV2 } from "@/types/slide-v2";
+import type { PredictionSlide } from "@/types/slide";
 
-interface PredictionSlideV2Props {
-  slide: PredictionSlideV2;
+interface PredictionSlideProps {
+  slide: PredictionSlide;
   onAnswer: (stepIndex: number, isCorrect: boolean, attempts: number) => void;
   answered?: { isCorrect: boolean; attempts: number };
 }
 
-export function PredictionSlideV2({
+export function PredictionSlide({
   slide,
   onAnswer,
   answered,
-}: PredictionSlideV2Props) {
+}: PredictionSlideProps) {
   const { step } = slide;
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [attempts, setAttempts] = useState(0);

@@ -1,54 +1,44 @@
 /**
- * Lightweight localStorage tracking for lesson progress.
- * Used for: mastery gates, challenge tiers, streak system, spaced retrieval.
+ * localStorage tracking for chapter progress (mastery gates, tiers, streak,
+ * spaced retrieval).
  */
 
-const STORAGE_KEY = "vzdelej-se-progress";
+const STORAGE_KEY = "vzdelej-se-progress-v2";
 
 export interface LessonResult {
-  completedAt: number; // timestamp
-  score: number; // 0-1
+  completedAt: number;
+  score: number;
   correctAnswers: number;
   totalProblems: number;
   timeSpentMs?: number;
 }
 
-export interface TopicProgress {
-  /** Best result for this topic */
+export interface ChapterProgress {
   bestScore: number;
-  /** Number of times completed */
   completionCount: number;
-  /** Last completion timestamp */
   lastCompletedAt: number;
-  /** All results (most recent first, keep last 5) */
   results: LessonResult[];
-  /** Challenge tier: "bronze" | "silver" | "gold" | null */
   tier: "bronze" | "silver" | "gold" | null;
 }
 
 export interface ProgressData {
-  topics: Record<string, TopicProgress>;
-  /** Current streak (consecutive correct answers across sessions) */
+  /** Keyed by `${topicSlug}/${chapterSlug}`. */
+  chapters: Record<string, ChapterProgress>;
   streak: number;
-  /** Last activity timestamp */
   lastActivityAt: number;
 }
 
 function getDefaultProgress(): ProgressData {
-  return {
-    topics: {},
-    streak: 0,
-    lastActivityAt: Date.now(),
-  };
+  return { chapters: {}, streak: 0, lastActivityAt: Date.now() };
 }
 
 function isProgressData(value: unknown): value is ProgressData {
   if (typeof value !== "object" || value === null) return false;
   const v = value as Record<string, unknown>;
   return (
-    typeof v.topics === "object" &&
-    v.topics !== null &&
-    !Array.isArray(v.topics) &&
+    typeof v.chapters === "object" &&
+    v.chapters !== null &&
+    !Array.isArray(v.chapters) &&
     typeof v.streak === "number" &&
     typeof v.lastActivityAt === "number"
   );
@@ -60,9 +50,6 @@ export function loadProgress(): ProgressData {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return getDefaultProgress();
     const parsed: unknown = JSON.parse(raw);
-    // Guard against stale/corrupted shapes (schema drift, manual edits,
-    // valid-JSON-but-wrong-structure like "null"). Without this,
-    // getTopicsForReview / recordLessonCompletion would crash the page.
     if (!isProgressData(parsed)) return getDefaultProgress();
     return parsed;
   } catch {
@@ -75,7 +62,7 @@ function saveProgress(data: ProgressData): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {
-    // localStorage full or unavailable — silently fail
+    // quota/unavailable — silent
   }
 }
 
@@ -86,13 +73,22 @@ function computeTier(score: number): "bronze" | "silver" | "gold" | null {
   return null;
 }
 
-export function recordLessonCompletion(
+function tierRank(tier: "bronze" | "silver" | "gold"): number {
+  return tier === "gold" ? 3 : tier === "silver" ? 2 : 1;
+}
+
+function chapterKey(topicSlug: string, chapterSlug: string): string {
+  return `${topicSlug}/${chapterSlug}`;
+}
+
+export function recordChapterCompletion(
   topicSlug: string,
+  chapterSlug: string,
   result: LessonResult
 ): ProgressData {
   const progress = loadProgress();
-
-  const existing = progress.topics[topicSlug];
+  const key = chapterKey(topicSlug, chapterSlug);
+  const existing = progress.chapters[key];
   const tier = computeTier(result.score);
 
   if (existing) {
@@ -100,12 +96,11 @@ export function recordLessonCompletion(
     existing.lastCompletedAt = result.completedAt;
     existing.bestScore = Math.max(existing.bestScore, result.score);
     existing.results = [result, ...existing.results].slice(0, 5);
-    // Only upgrade tier, never downgrade
     if (tier && (!existing.tier || tierRank(tier) > tierRank(existing.tier))) {
       existing.tier = tier;
     }
   } else {
-    progress.topics[topicSlug] = {
+    progress.chapters[key] = {
       bestScore: result.score,
       completionCount: 1,
       lastCompletedAt: result.completedAt,
@@ -119,13 +114,42 @@ export function recordLessonCompletion(
   return progress;
 }
 
-function tierRank(tier: "bronze" | "silver" | "gold"): number {
-  return tier === "gold" ? 3 : tier === "silver" ? 2 : 1;
+export function getChapterProgress(
+  topicSlug: string,
+  chapterSlug: string
+): ChapterProgress | null {
+  return loadProgress().chapters[chapterKey(topicSlug, chapterSlug)] ?? null;
 }
 
-export function getTopicProgress(topicSlug: string): TopicProgress | null {
+export interface TopicAggregateProgress {
+  completedChapters: number;
+  totalChapters: number;
+  /** Lowest (worst) tier across all chapters; null unless every chapter is complete. */
+  overallTier: "bronze" | "silver" | "gold" | null;
+}
+
+export function getTopicAggregateProgress(
+  topicSlug: string,
+  allChapterSlugs: readonly string[]
+): TopicAggregateProgress {
   const progress = loadProgress();
-  return progress.topics[topicSlug] ?? null;
+  const completed = allChapterSlugs
+    .map((cs) => progress.chapters[chapterKey(topicSlug, cs)])
+    .filter((p): p is ChapterProgress => !!p && p.completionCount > 0);
+
+  let overallTier: "bronze" | "silver" | "gold" | null = null;
+  if (completed.length === allChapterSlugs.length && completed.length > 0) {
+    const ranks = completed.map((p) => (p.tier ? tierRank(p.tier) : 0));
+    const minRank = Math.min(...ranks);
+    overallTier =
+      minRank === 3 ? "gold" : minRank === 2 ? "silver" : minRank === 1 ? "bronze" : null;
+  }
+
+  return {
+    completedChapters: completed.length,
+    totalChapters: allChapterSlugs.length,
+    overallTier,
+  };
 }
 
 export function updateStreak(correct: boolean): number {
@@ -141,34 +165,31 @@ export function getStreak(): number {
 }
 
 /**
- * Get topics sorted by when they should be reviewed (spaced retrieval).
- * Interval grows with each completion (per-retry, not since-first-seen):
- * 1st completion → due after 1d, 2nd → 3d, 3rd → 7d, 4th → 14d, 5th+ → 30d.
+ * Chapters due for review (spaced retrieval).
+ * Intervals: 1d, 3d, 7d, 14d, 30d — per retry.
+ * Returns `${topicSlug}/${chapterSlug}` keys.
  */
-export function getTopicsForReview(limit = 3): string[] {
+export function getChaptersForReview(limit = 3): string[] {
   const progress = loadProgress();
   const now = Date.now();
+  const intervals = [1, 3, 7, 14, 30];
 
-  return Object.entries(progress.topics)
-    .filter(([, tp]) => tp.completionCount > 0)
-    .map(([slug, tp]) => {
-      const intervals = [1, 3, 7, 14, 30];
-      const intervalDays = intervals[Math.min(tp.completionCount - 1, intervals.length - 1)];
-      const intervalMs = intervalDays * 24 * 60 * 60 * 1000;
-      const dueAt = tp.lastCompletedAt + intervalMs;
-      const overdue = now - dueAt;
-      return { slug, overdue };
+  return Object.entries(progress.chapters)
+    .filter(([, cp]) => cp.completionCount > 0)
+    .map(([key, cp]) => {
+      const intervalDays = intervals[Math.min(cp.completionCount - 1, intervals.length - 1)];
+      const dueAt = cp.lastCompletedAt + intervalDays * 24 * 60 * 60 * 1000;
+      return { key, overdue: now - dueAt };
     })
     .filter(({ overdue }) => overdue > 0)
     .sort((a, b) => b.overdue - a.overdue)
     .slice(0, limit)
-    .map(({ slug }) => slug);
+    .map(({ key }) => key);
 }
 
-/** Get all completed topic slugs */
-export function getCompletedTopics(): string[] {
+export function getCompletedChapterKeys(): string[] {
   const progress = loadProgress();
-  return Object.keys(progress.topics).filter(
-    (slug) => progress.topics[slug].completionCount > 0
+  return Object.keys(progress.chapters).filter(
+    (k) => progress.chapters[k].completionCount > 0
   );
 }

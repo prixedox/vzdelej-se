@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Energie a práce",
   narrative:
     "Představte si, že tlačíte auto, které má prázdnou nádrž. Zpocení a unavení se ptáte: kam zmizela moje energie? Fyzici potřebovali přesný jazyk pro popis toho, co se děje, když síla působí na těleso — a tak vznikl pojem mechanická práce.",

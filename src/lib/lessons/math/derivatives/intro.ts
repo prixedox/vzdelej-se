@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Derivace",
   narrative:
     "Jak rychle roste populace bakterií? Jak prudce klesá teplota kávy? Jak se mění rychlost padajícího parašutisty? Všechny tyto otázky spojuje jedno: potřebujeme měřit rychlost změny v konkrétním okamžiku. Právě k tomu slouží derivace — nástroj, který nezávisle na sobě vynalezli Newton i Leibniz v 17. století.",

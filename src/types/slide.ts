@@ -1,57 +1,58 @@
 import type {
-  LessonSection,
-  WalkthroughStep,
-  PracticeProblem,
-  KnowledgeCheck,
-  ParameterExploration,
+  ExplainStep,
+  MultipleChoiceStep,
+  TextInputStep,
+  ExploreStep,
+  RevealStep,
+  SortOrderStep,
+  PredictionStep,
 } from "./lesson";
 
 // ── Base ──
 interface SlideBase {
   id: string;
-  sectionLabel: string;
-  sectionIndex: number; // 0-3 for progress coloring
-}
-
-// ── Slide variants ──
-
-export interface SectionTitleSlide extends SlideBase {
-  type: "section-title";
-  title: string;
-  subtitle: string;
-  icon: "book" | "lightbulb" | "pen" | "check";
-}
-
-export interface ConceptSectionSlide extends SlideBase {
-  type: "concept-section";
-  section: LessonSection;
-  sectionNumber: number;
-  totalSections: number;
-}
-
-export interface WalkthroughIntroSlide extends SlideBase {
-  type: "walkthrough-intro";
-  problemStatement: string;
-}
-
-export interface WalkthroughStepSlide extends SlideBase {
-  type: "walkthrough-step";
-  step: WalkthroughStep;
-  stepNumber: number;
+  stepIndex: number;
   totalSteps: number;
 }
 
-export interface WalkthroughResultSlide extends SlideBase {
-  type: "walkthrough-result";
-  finalAnswer: string;
+// ── Step slides (1:1 with LessonStep) ──
+
+export interface ExplainSlide extends SlideBase {
+  type: "explain";
+  step: ExplainStep;
 }
 
-export interface PracticeProblemSlide extends SlideBase {
-  type: "practice-problem";
-  problem: PracticeProblem;
-  problemIndex: number;
-  totalProblems: number;
+export interface MultipleChoiceSlide extends SlideBase {
+  type: "multiple-choice";
+  step: MultipleChoiceStep;
 }
+
+export interface TextInputSlide extends SlideBase {
+  type: "text-input";
+  step: TextInputStep;
+}
+
+export interface ExploreSlide extends SlideBase {
+  type: "explore";
+  step: ExploreStep;
+}
+
+export interface RevealSlide extends SlideBase {
+  type: "reveal";
+  step: RevealStep;
+}
+
+export interface SortOrderSlide extends SlideBase {
+  type: "sort-order";
+  step: SortOrderStep;
+}
+
+export interface PredictionSlide extends SlideBase {
+  type: "prediction";
+  step: PredictionStep;
+}
+
+// ── Terminal slides ──
 
 export interface SummarySlide extends SlideBase {
   type: "summary";
@@ -59,28 +60,17 @@ export interface SummarySlide extends SlideBase {
   nextTopicSuggestion?: string;
 }
 
-export interface CompletePromptSlide extends SlideBase {
-  type: "complete-prompt";
-}
-
-export interface KnowledgeCheckSlide extends SlideBase {
-  type: "knowledge-check";
-  knowledgeCheck: KnowledgeCheck;
-}
-
-export interface ExplorationSlide extends SlideBase {
-  type: "exploration";
-  exploration: ParameterExploration;
+export interface CompleteSlide extends SlideBase {
+  type: "complete";
 }
 
 export type Slide =
-  | SectionTitleSlide
-  | ConceptSectionSlide
-  | WalkthroughIntroSlide
-  | WalkthroughStepSlide
-  | WalkthroughResultSlide
-  | PracticeProblemSlide
+  | ExplainSlide
+  | MultipleChoiceSlide
+  | TextInputSlide
+  | ExploreSlide
+  | RevealSlide
+  | SortOrderSlide
+  | PredictionSlide
   | SummarySlide
-  | CompletePromptSlide
-  | KnowledgeCheckSlide
-  | ExplorationSlide;
+  | CompleteSlide;

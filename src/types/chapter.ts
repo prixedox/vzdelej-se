@@ -1,4 +1,4 @@
-import type { LessonV2 } from "./lesson-v2";
+import type { Lesson } from "./lesson";
 
 /** A single learnable unit within a topic. */
 export interface ChapterDefinition {
@@ -11,5 +11,5 @@ export interface ChapterDefinition {
   /** Display title (Czech). */
   title: string;
   /** The lesson content (steps, narrative, summary). */
-  lesson: LessonV2;
+  lesson: Lesson;
 }

@@ -7,15 +7,15 @@ import { VisualBlock } from "../visuals/visual-block";
 import { HintReveal } from "../hint-reveal";
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { MultipleChoiceSlideV2 } from "@/types/slide-v2";
+import type { MultipleChoiceSlide } from "@/types/slide";
 
-interface McSlideV2Props {
-  slide: MultipleChoiceSlideV2;
+interface McSlideProps {
+  slide: MultipleChoiceSlide;
   onAnswer: (stepIndex: number, isCorrect: boolean, attempts: number) => void;
   answered?: { isCorrect: boolean; attempts: number };
 }
 
-export function McSlideV2({ slide, onAnswer, answered }: McSlideV2Props) {
+export function McSlide({ slide, onAnswer, answered }: McSlideProps) {
   const { step } = slide;
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [attempts, setAttempts] = useState(answered?.attempts ?? 0);

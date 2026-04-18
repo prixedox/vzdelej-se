@@ -1,7 +1,7 @@
 import type { ChapterDefinition } from "@/types/chapter";
-import type { LessonV2 } from "@/types/lesson-v2";
+import type { Lesson } from "@/types/lesson";
 
-const lesson: LessonV2 = {
+const lesson: Lesson = {
   title: "Kvadratické rovnice – základy",
   narrative:
     "Proč matematici vymysleli logaritmy? Protože potřebovali řešit rovnice s mocninami. Ale ještě předtím museli zvládnout rovnice s $\\color{#e74c3c}{x^2}$ — a ty mají překvapivou vlastnost: mohou mít dvě, jedno, nebo žádné řešení.",

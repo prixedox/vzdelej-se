@@ -1,4 +1,4 @@
-// ── Visual block types ──
+// ── Visual block types (shared across lesson system) ──
 export type VisualType =
   | "balance-scale"
   | "number-line"
@@ -37,109 +37,93 @@ export interface VisualBlock {
   caption?: string;
 }
 
-// ── Lesson content types ──
-// ── Knowledge check (inline quiz after theory) ──
-export interface KnowledgeCheckChoice {
+// ── Step types (each step = one screen) ──
+
+export interface ExplainStep {
+  type: "explain";
+  body: string;
+  visual?: VisualBlock;
+  callout?: string;
+  misconception?: string;
+}
+
+export interface MultipleChoiceChoice {
   label: string;
   isCorrect: boolean;
-  feedback?: string;
+  feedback: string;
 }
 
-export interface KnowledgeCheck {
+export interface MultipleChoiceStep {
+  type: "multiple-choice";
   question: string;
-  choices: KnowledgeCheckChoice[];
-  explanation: string;
-}
-
-export interface LessonSection {
-  heading: string;
-  body: string; // Markdown with LaTeX
   visual?: VisualBlock;
-  examples?: LessonExample[];
-  knowledgeCheck?: KnowledgeCheck;
+  choices: MultipleChoiceChoice[];
+  explanation: string;
+  hints?: string[];
 }
 
-export interface LessonExample {
-  problem: string;
-  solution: string;
-}
-
-export interface ConceptExplanation {
-  title: string;
-  sections: LessonSection[];
-}
-
-// ── Walkthrough challenge (try-it-yourself) ──
-export interface WalkthroughChallenge {
-  prompt: string;
+export interface TextInputStep {
+  type: "text-input";
+  question: string;
+  visual?: VisualBlock;
   expectedAnswer: string;
   acceptableAnswers?: string[];
   numericTolerance?: number;
-  choices?: { label: string; isCorrect: boolean }[];
-}
-
-export interface WalkthroughStep {
-  instruction: string;
-  math?: string;
+  wrongAnswerFeedback?: Record<string, string>;
   explanation: string;
+  hints?: string[];
+}
+
+export interface ExploreStep {
+  type: "explore";
+  prompt: string;
+  visual: VisualBlock;
+  followUpQuestion?: string;
+}
+
+export interface RevealStep {
+  type: "reveal";
+  question: string;
   visual?: VisualBlock;
-  challenge?: WalkthroughChallenge;
+  revealedContent: string;
 }
 
-export interface WalkthroughProblem {
-  problemStatement: string;
-  steps: WalkthroughStep[];
-  finalAnswer: string;
+export interface SortOrderStep {
+  type: "sort-order";
+  question: string;
+  items: string[];
+  explanation: string;
 }
 
-// ── Practice problem types ──
-export interface TextInputProblem {
-  type?: "text-input";
-  id: string;
-  problemStatement: string;
-  expectedAnswer: string;
-  acceptableAnswers: string[];
-  numericTolerance?: number;
-  hints: string[];
-  solutionExplanation: string;
-  difficulty: "easy" | "medium" | "hard";
+export interface PredictionStep {
+  type: "prediction";
+  scenario: string;
+  question: string;
+  options: PredictionOption[];
+  reveal: string;
+  visual?: VisualBlock;
 }
 
-export interface MultipleChoiceProblem {
-  type: "multiple-choice";
-  id: string;
-  problemStatement: string;
-  choices: { label: string; isCorrect: boolean }[];
-  hints: string[];
-  solutionExplanation: string;
-  difficulty: "easy" | "medium" | "hard";
+export interface PredictionOption {
+  label: string;
+  isCorrect: boolean;
 }
 
-export type PracticeProblem = TextInputProblem | MultipleChoiceProblem;
+export type LessonStep =
+  | ExplainStep
+  | MultipleChoiceStep
+  | TextInputStep
+  | ExploreStep
+  | RevealStep
+  | SortOrderStep
+  | PredictionStep;
 
-export interface LessonSummary {
-  keyTakeaways: string[];
+// ── Lesson root ──
+
+export interface Lesson {
+  title?: string;
+  narrative?: string;
+  steps: LessonStep[];
+  summary: { keyTakeaways: string[] };
   nextTopicSuggestion?: string;
 }
-
-// ── Parameter exploration ──
-export interface ExplorationTask {
-  prompt: string;
-  observation: string;
-}
-
-export interface ParameterExploration {
-  title: string;
-  visual: VisualBlock;
-  tasks: ExplorationTask[];
-}
-
-export interface LessonContent {
-  conceptExplanation: ConceptExplanation;
-  walkthroughProblem: WalkthroughProblem;
-  practiceProblems: PracticeProblem[];
-  summary: LessonSummary;
-  explorations?: ParameterExploration[];
-}
-
-export type LessonStatus = "not_started" | "in_progress" | "completed";
