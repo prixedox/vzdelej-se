@@ -1,46 +1,46 @@
 import type { TopicTreeData } from "@/types/topic";
 
-export const physicsTree: TopicTreeData = {
+export const physicsTree = {
   subject: "physics",
   subjectName: "Fyzika",
   icon: "⚛️",
   topics: [
     {
-      slug: "mechanika",
+      slug: "mechanics",
       name: "Mechanika",
       description: "Pohyb, síly a energie",
       icon: "🔧",
       children: [
         {
-          slug: "kinematika",
+          slug: "kinematics",
           name: "Kinematika",
           description: "Popis pohybu těles",
           aiContext:
             "Rovnoměrný a nerovnoměrný pohyb, dráha, rychlost, zrychlení, volný pád, vrhy (svislý, vodorovný, šikmý), grafy pohybu",
         },
         {
-          slug: "dynamika",
+          slug: "dynamics",
           name: "Dynamika",
           description: "Newtonovy zákony a síly",
           aiContext:
             "Newtonovy pohybové zákony, síla, hmotnost, tíhová síla, třecí síla, dostředivá síla, pohyb po nakloněné rovině",
         },
         {
-          slug: "energie-a-prace",
+          slug: "energy-and-work",
           name: "Energie a práce",
           description: "Mechanická energie, práce, výkon",
           aiContext:
             "Kinetická energie, potenciální energie, práce, výkon, zákon zachování mechanické energie, účinnost",
         },
         {
-          slug: "hybnost-a-impulz",
+          slug: "momentum-and-impulse",
           name: "Hybnost a impulz",
           description: "Zákon zachování hybnosti",
           aiContext:
             "Hybnost, impulz síly, zákon zachování hybnosti, srážky (dokonale pružné, nepružné), reaktivní pohyb",
         },
         {
-          slug: "gravitace",
+          slug: "gravity",
           name: "Gravitace",
           description: "Gravitační zákon a pohyb planet",
           aiContext:
@@ -49,27 +49,27 @@ export const physicsTree: TopicTreeData = {
       ],
     },
     {
-      slug: "termodynamika",
+      slug: "thermodynamics",
       name: "Termodynamika",
       description: "Teplo, teplota a termodynamické děje",
       icon: "🌡️",
       children: [
         {
-          slug: "teplota-a-teplo",
+          slug: "temperature-and-heat",
           name: "Teplota a teplo",
           description: "Základy termiky",
           aiContext:
             "Teplota, teplotní stupnice, teplo, měrná tepelná kapacita, kalorimetrická rovnice, skupenské přeměny, skupenské teplo",
         },
         {
-          slug: "idealni-plyn",
+          slug: "ideal-gas",
           name: "Ideální plyn",
           description: "Stavová rovnice a děje v plynech",
           aiContext:
             "Stavová rovnice ideálního plynu, izotermický, izobarický, izochorický a adiabatický děj, p-V diagramy",
         },
         {
-          slug: "zakony-termodynamiky",
+          slug: "thermodynamics-laws",
           name: "Zákony termodynamiky",
           description: "Hlavní věty termodynamiky",
           aiContext:
@@ -78,27 +78,27 @@ export const physicsTree: TopicTreeData = {
       ],
     },
     {
-      slug: "elektrina-a-magnetismus",
+      slug: "electromagnetism",
       name: "Elektřina a magnetismus",
       description: "Elektrické pole, obvody, magnetismus",
       icon: "⚡",
       children: [
         {
-          slug: "elektricke-pole",
+          slug: "electric-field",
           name: "Elektrické pole",
           description: "Coulombův zákon, potenciál",
           aiContext:
             "Elektrický náboj, Coulombův zákon, intenzita elektrického pole, elektrický potenciál a napětí, kondenzátory, kapacita",
         },
         {
-          slug: "elektricke-obvody",
+          slug: "electric-circuits",
           name: "Elektrické obvody",
           description: "Ohmův zákon, sériové a paralelní zapojení",
           aiContext:
             "Elektrický proud, Ohmův zákon, odpor, rezistivita, sériové a paralelní zapojení, Kirchhoffovy zákony, elektrická práce a výkon",
         },
         {
-          slug: "magneticke-pole",
+          slug: "magnetic-field",
           name: "Magnetické pole",
           description: "Magnetismus a elektromagnetická indukce",
           aiContext:
@@ -107,20 +107,20 @@ export const physicsTree: TopicTreeData = {
       ],
     },
     {
-      slug: "vlneni-a-optika",
+      slug: "waves-and-optics",
       name: "Vlnění a optika",
       description: "Mechanické vlnění, zvuk, světlo",
       icon: "🌊",
       children: [
         {
-          slug: "mechanicke-vlneni",
+          slug: "mechanical-waves",
           name: "Mechanické vlnění a zvuk",
           description: "Vlny, interference, zvuk",
           aiContext:
             "Vlnění příčné a podélné, vlnová délka, frekvence, rychlost šíření, interference, stojaté vlnění, zvuk, Dopplerův jev",
         },
         {
-          slug: "optika",
+          slug: "optics",
           name: "Optika",
           description: "Odraz, lom, čočky a zrcadla",
           aiContext:
@@ -129,13 +129,13 @@ export const physicsTree: TopicTreeData = {
       ],
     },
     {
-      slug: "moderni-fyzika",
+      slug: "modern-physics",
       name: "Moderní fyzika",
       description: "Kvantová fyzika a jaderná fyzika",
       icon: "🔬",
       children: [
         {
-          slug: "kvantova-fyzika",
+          slug: "quantum-physics",
           name: "Kvantová a jaderná fyzika",
           description: "Fotoelektrický jev, radioaktivita",
           aiContext:
@@ -144,4 +144,12 @@ export const physicsTree: TopicTreeData = {
       ],
     },
   ],
-};
+} as const satisfies TopicTreeData;
+
+type LeafSlugOf<T> = T extends { children: readonly (infer C)[] }
+  ? C extends { slug: infer S }
+    ? S
+    : never
+  : never;
+
+export type PhysicsTopicSlug = LeafSlugOf<(typeof physicsTree.topics)[number]>;

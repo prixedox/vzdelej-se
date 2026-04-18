@@ -4,14 +4,14 @@ export interface TopicNode {
   description?: string;
   icon?: string;
   aiContext?: string;
-  children?: TopicNode[];
+  children?: readonly TopicNode[];
 }
 
 export interface TopicTreeData {
   subject: string;
   subjectName: string;
   icon: string;
-  topics: TopicNode[];
+  topics: readonly TopicNode[];
 }
 
 export type Subject = "math" | "physics";

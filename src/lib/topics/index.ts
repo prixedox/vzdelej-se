@@ -29,7 +29,7 @@ export const subjects = [
 export function getLeafTopics(tree: TopicTreeData): TopicNode[] {
   const leaves: TopicNode[] = [];
 
-  function traverse(nodes: TopicNode[]) {
+  function traverse(nodes: readonly TopicNode[]) {
     for (const node of nodes) {
       if (node.children && node.children.length > 0) {
         traverse(node.children);
@@ -47,7 +47,7 @@ export function findTopic(
   tree: TopicTreeData,
   slug: string
 ): TopicNode | null {
-  function search(nodes: TopicNode[]): TopicNode | null {
+  function search(nodes: readonly TopicNode[]): TopicNode | null {
     for (const node of nodes) {
       if (node.slug === slug) return node;
       if (node.children) {
@@ -60,3 +60,9 @@ export function findTopic(
 
   return search(tree.topics);
 }
+
+export type { MathTopicSlug } from "./math-tree";
+export type { PhysicsTopicSlug } from "./physics-tree";
+import type { MathTopicSlug } from "./math-tree";
+import type { PhysicsTopicSlug } from "./physics-tree";
+export type TopicSlug = MathTopicSlug | PhysicsTopicSlug;

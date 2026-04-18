@@ -1,6 +1,6 @@
 import type { TopicTreeData } from "@/types/topic";
 
-export const mathTree: TopicTreeData = {
+export const mathTree = {
   subject: "math",
   subjectName: "Matematika",
   icon: "📐",
@@ -12,42 +12,42 @@ export const mathTree: TopicTreeData = {
       icon: "🔢",
       children: [
         {
-          slug: "linearni-rovnice",
+          slug: "linear-equations",
           name: "Lineární rovnice",
           description: "Řešení rovnic prvního stupně",
           aiContext:
             "Lineární rovnice ax + b = c, úpravy, ekvivalentní úpravy, slovní úlohy vedoucí na lineární rovnice",
         },
         {
-          slug: "kvadraticke-rovnice",
+          slug: "quadratic-equations",
           name: "Kvadratické rovnice",
           description: "Řešení rovnic druhého stupně",
           aiContext:
             "Kvadratické rovnice ax² + bx + c = 0, diskriminant, Vietovy vzorce, rozklad na součin",
         },
         {
-          slug: "soustavy-rovnic",
+          slug: "systems-of-equations",
           name: "Soustavy rovnic",
           description: "Soustavy lineárních rovnic",
           aiContext:
             "Soustavy dvou lineárních rovnic o dvou neznámých, dosazovací a sčítací metoda, grafické řešení",
         },
         {
-          slug: "nerovnice",
+          slug: "inequalities",
           name: "Nerovnice",
           description: "Lineární a kvadratické nerovnice",
           aiContext:
             "Lineární nerovnice, kvadratické nerovnice, intervalový zápis, nerovnice s absolutní hodnotou",
         },
         {
-          slug: "vyrazove-upravy",
+          slug: "algebraic-expressions",
           name: "Výrazové úpravy",
           description: "Úpravy algebraických výrazů",
           aiContext:
             "Vytýkání, vzorce (a+b)², (a-b)², a²-b², rozklad polynomů, lomené výrazy",
         },
         {
-          slug: "posloupnosti",
+          slug: "sequences",
           name: "Posloupnosti a řady",
           description: "Aritmetické a geometrické posloupnosti",
           aiContext:
@@ -56,48 +56,48 @@ export const mathTree: TopicTreeData = {
       ],
     },
     {
-      slug: "funkce",
+      slug: "functions",
       name: "Funkce",
       description: "Funkce a jejich vlastnosti",
       icon: "📈",
       children: [
         {
-          slug: "linearni-funkce",
+          slug: "linear-functions",
           name: "Lineární funkce",
           description: "Funkce f(x) = ax + b",
           aiContext:
             "Lineární funkce, graf přímky, směrnice, průsečíky s osami, rovnoběžnost a kolmost přímek",
         },
         {
-          slug: "kvadraticka-funkce",
+          slug: "quadratic-functions",
           name: "Kvadratická funkce",
           description: "Funkce f(x) = ax² + bx + c",
           aiContext:
             "Parabola, vrchol paraboly, průsečíky s osou x, diskriminant, posuny a transformace grafu",
         },
         {
-          slug: "exponencialni-funkce",
+          slug: "exponential-functions",
           name: "Exponenciální funkce",
           description: "Funkce f(x) = aˣ",
           aiContext:
             "Exponenciální funkce, exponenciální rovnice, exponenciální růst a pokles, pravidla pro počítání s mocninami",
         },
         {
-          slug: "logaritmicka-funkce",
+          slug: "logarithmic-functions",
           name: "Logaritmická funkce",
           description: "Funkce f(x) = log_a(x)",
           aiContext:
             "Logaritmus, logaritmické rovnice, vlastnosti logaritmů, přirozený logaritmus, dekadický logaritmus",
         },
         {
-          slug: "goniometricke-funkce",
+          slug: "trigonometric-functions",
           name: "Goniometrické funkce",
           description: "Sinus, kosinus, tangens",
           aiContext:
             "Sin, cos, tan, jednotková kružnice, perioda, amplituda, goniometrické rovnice, grafy goniometrických funkcí",
         },
         {
-          slug: "absolutni-hodnota",
+          slug: "absolute-value",
           name: "Funkce s absolutní hodnotou",
           description: "Grafy a rovnice s absolutní hodnotou",
           aiContext:
@@ -106,34 +106,34 @@ export const mathTree: TopicTreeData = {
       ],
     },
     {
-      slug: "geometrie",
+      slug: "geometry",
       name: "Geometrie",
       description: "Planimetrie a stereometrie",
       icon: "📏",
       children: [
         {
-          slug: "trojuhelniky",
+          slug: "triangles",
           name: "Trojúhelníky",
           description: "Vlastnosti a výpočty trojúhelníků",
           aiContext:
             "Druhy trojúhelníků, Pythagorova věta, sinová a kosinová věta, obsah trojúhelníku, Eukleidovy věty",
         },
         {
-          slug: "kruznice-a-kruhy",
+          slug: "circles",
           name: "Kružnice a kruhy",
           description: "Obvod, obsah, tečny, sečny",
           aiContext:
             "Kružnice, kruh, obvod a obsah kruhu, tečna ke kružnici, vzájemná poloha kružnic, kruhové výseče a úseče",
         },
         {
-          slug: "analyticka-geometrie",
+          slug: "analytic-geometry",
           name: "Analytická geometrie",
           description: "Souřadnicová geometrie v rovině",
           aiContext:
             "Vzdálenost bodů, rovnice přímky, rovnice kružnice, vzájemná poloha přímek, vektory v rovině",
         },
         {
-          slug: "stereometrie",
+          slug: "solid-geometry",
           name: "Stereometrie",
           description: "Tělesa a prostorová geometrie",
           aiContext:
@@ -142,20 +142,20 @@ export const mathTree: TopicTreeData = {
       ],
     },
     {
-      slug: "kombinatorika",
+      slug: "combinatorics-and-probability",
       name: "Kombinatorika a pravděpodobnost",
       description: "Kombinatorika, pravděpodobnost, statistika",
       icon: "🎲",
       children: [
         {
-          slug: "kombinatorika-zaklady",
+          slug: "combinatorics",
           name: "Základy kombinatoriky",
           description: "Variace, kombinace, permutace",
           aiContext:
             "Variace, kombinace, permutace, faktoriál, kombinační čísla, princip inkluze a exkluze",
         },
         {
-          slug: "pravdepodobnost",
+          slug: "probability",
           name: "Pravděpodobnost",
           description: "Klasická a podmíněná pravděpodobnost",
           aiContext:
@@ -164,27 +164,27 @@ export const mathTree: TopicTreeData = {
       ],
     },
     {
-      slug: "zaklady-analyzy",
+      slug: "calculus",
       name: "Základy analýzy",
       description: "Limity, derivace a integrály",
       icon: "∞",
       children: [
         {
-          slug: "limity",
+          slug: "limits",
           name: "Limity",
           description: "Limity posloupností a funkcí",
           aiContext:
             "Limita posloupnosti, limita funkce, jednostranné limity, nevlastní limity, l'Hôpitalovo pravidlo",
         },
         {
-          slug: "derivace",
+          slug: "derivatives",
           name: "Derivace",
           description: "Derivace funkcí a jejich aplikace",
           aiContext:
             "Definice derivace, derivace elementárních funkcí, pravidla derivování, monotonie, extrémy funkce, tečna ke grafu",
         },
         {
-          slug: "integraly",
+          slug: "integrals",
           name: "Integrály",
           description: "Neurčité a určité integrály",
           aiContext:
@@ -193,4 +193,12 @@ export const mathTree: TopicTreeData = {
       ],
     },
   ],
-};
+} as const satisfies TopicTreeData;
+
+type LeafSlugOf<T> = T extends { children: readonly (infer C)[] }
+  ? C extends { slug: infer S }
+    ? S
+    : never
+  : never;
+
+export type MathTopicSlug = LeafSlugOf<(typeof mathTree.topics)[number]>;

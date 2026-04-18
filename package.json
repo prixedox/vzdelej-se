@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "predev": "pnpm build:registry",
     "build": "next build",
+    "prebuild": "pnpm build:registry && pnpm validate:content",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "build:registry": "tsx scripts/build-registry.ts",
+    "validate:content": "tsx scripts/validate-content.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
