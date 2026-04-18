@@ -2,56 +2,77 @@
 paths:
   - "src/lib/lesson/**"
   - "src/lib/lessons/**"
-  - "src/types/lesson*.ts"
-  - "src/types/slide*.ts"
+  - "src/types/chapter.ts"
+  - "src/types/lesson.ts"
+  - "src/types/slide.ts"
 ---
 
 # Lesson System
 
-Lessons are static TS objects in `src/lib/lessons/data.ts`. No database, no API calls.
+Lessons are static TS chapter files under `src/lib/lessons/{subject}/{topic}/{chapter}.ts`. A codegen script stitches them into `src/lib/lessons/data.generated.ts`; `data.ts` exposes a tiny query API on top. No database, no API calls.
 
 ## Content Flow
 
-1. User picks topic → navigates to `/lessons/${topicSlug}?subject=${subjectSlug}`
-2. Lesson page calls `getLesson()` from `data.ts`
+1. User picks a chapter → `/topics/${subjectSlug}/${topicSlug}/${chapterSlug}`
+2. Page calls `getChapter(topicSlug, chapterSlug)` from `@/lib/lessons/data`
 3. `LessonShell` builds slides, manages answer state locally
-4. On completion: shows score (no persistence)
+4. On completion: `recordChapterCompletion(topicSlug, chapterSlug, result)` writes tier/score to `localStorage`
 
 ## Key Files
 
-- Registry: `src/lib/lessons/data.ts` — keyed by `topicSlug` (one lesson per topic)
-- Builders: `src/lib/lesson/build-slides.ts` (V1), `build-slides-v2.ts` (V2)
+- Chapter files: `src/lib/lessons/{subject}/{topic-slug}/{chapter-slug}.ts` — each exports `export const chapter: ChapterDefinition`
+- Query API: `src/lib/lessons/data.ts` — `getChapter`, `hasChapter`, `getChaptersForTopic`
+- Generated registry: `src/lib/lessons/data.generated.ts` — DO NOT hand-edit (committed, rebuilt by `pnpm build:registry`)
+- Schema: `src/lib/lessons/schema.ts` — Zod `chapterSchema` (run via `pnpm validate:content`)
+- Builder: `src/lib/lesson/build-slides.ts` — `Lesson` → `Slide[]`
 - Evaluator: `src/lib/lesson/answer-evaluator.ts` — client-side, never throws
-- Types: `src/types/lesson.ts` + `slide.ts` (V1), `lesson-v2.ts` + `slide-v2.ts` (V2)
+- Progress: `src/lib/lesson/progress-store.ts` — per-chapter tier, streak, spaced review
+- Types: `src/types/chapter.ts`, `src/types/lesson.ts`, `src/types/slide.ts`
 
-## Adding a New Lesson (V2)
+## Adding a New Chapter
 
-```ts
-// 1. Create src/lib/lessons/math/topic-slug-v2.ts
-import type { LessonV2 } from "@/types/lesson-v2";
-export const topicSlugLesson: LessonV2 = { title: "...", steps: [...], summary: { keyTakeaways: [...] } };
-
-// 2. Add to lessons record in src/lib/lessons/data.ts
-import { topicSlugLesson } from "./math/topic-slug-v2";
-// then: "topic-slug": topicSlugLesson,
+```bash
+pnpm new-chapter math/linear-equations/two-step-equations "Dvoukrokové rovnice"
 ```
 
-Slug must match the topic slug in `src/lib/topics/`.
+Or by hand:
 
-## V2 Step Types
+```ts
+// src/lib/lessons/math/linear-equations/two-step-equations.ts
+import type { ChapterDefinition } from "@/types/chapter";
+import type { Lesson } from "@/types/lesson";
 
-`explain` (2-3 sentences + optional visual) · `multiple-choice` (per-choice feedback) · `text-input` (free text, optional wrong-answer feedback) · `explore` (interactive visual + prompt) · `reveal` (click-to-show) · `sort-order` (drag to reorder)
+const lesson: Lesson = {
+  title: "Dvoukrokové rovnice",
+  steps: [
+    { type: "explain", body: "Rovnice typu $2x + 3 = 11$ řešíme ve dvou krocích..." },
+  ],
+  summary: { keyTakeaways: ["Nejdřív odečítáme/přičítáme, pak násobíme/dělíme."] },
+};
 
-## V1 Structure (legacy)
+export const chapter: ChapterDefinition = {
+  slug: "two-step-equations",
+  topicSlug: "linear-equations",
+  order: 2,
+  title: "Dvoukrokové rovnice",
+  lesson,
+};
+```
 
-`conceptExplanation` → `walkthroughProblem` → `practiceProblems` (exactly 3 hints each) → `summary`
+Then `pnpm build:registry` (or just `pnpm dev` — `predev` regenerates).
+
+## Step Types
+
+`explain` (2–3 sentences + optional visual) · `multiple-choice` (per-choice feedback, exactly one correct) · `text-input` (free text, optional `wrongAnswerFeedback` + `numericTolerance`) · `explore` (interactive visual + prompt) · `reveal` (click-to-show) · `sort-order` (drag to reorder) · `prediction` (guess-then-reveal).
 
 ## Answer Evaluation
 
-Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance (`|user - expected| <= tolerance`).
+Normalizes both strings (trim, lowercase, Czech comma→dot, strip LaTeX). Checks: exact match → acceptable variants → numeric tolerance (`|user - expected| <= tolerance`). Fractions (`1/9`) and scientific notation (`3,34·10^-7`) are supported.
 
 ## Gotchas
 
-- V1 practice problems must have exactly 3 hints
-- No persistence — answers/progress lost on page reload
-- File naming: `{topic-slug}-v2.ts` for V2, `{topic-slug}.ts` for V1
+- User-facing text is Czech; slugs, filenames and identifiers are English
+- `text-input` with `numericTolerance` must have a numeric `expectedAnswer` or `acceptableAnswer`
+- `multiple-choice` must have exactly one `isCorrect: true`
+- Chapter filename (minus `.ts`) must equal `chapter.slug`. `topicSlug` must be a leaf in the topic tree
+- `order` must be unique within a topic

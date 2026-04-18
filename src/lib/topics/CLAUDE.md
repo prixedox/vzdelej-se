@@ -6,28 +6,35 @@ Topic tree definitions. Hierarchical: Subject → Category → Topic (leaf).
 
 | File | Purpose |
 |------|---------|
-| `index.ts` | Exports `subjectTrees`, `subjects`, `getLeafTopics()`, `findTopic()` |
-| `math-tree.ts` | Math topic tree: Algebra (6), Funkce (5), Geometrie (4), Kombinatorika (2), Analýza (3) = 21 leaf topics |
-| `physics-tree.ts` | Physics topic tree: Mechanika (5), Termodynamika (3), E&M (3), Vlnění a optika (2), Moderní fyzika (1) = 14 leaf topics |
+| `index.ts` | Exports `subjectTrees`, `subjects`, `getLeafTopics()`, `findTopic()`, slug union types |
+| `math-tree.ts` | Math topic tree: 21 leaf topics across Algebra, Functions, Geometry, Combinatorics, Analysis |
+| `physics-tree.ts` | Physics topic tree: 14 leaf topics across Mechanics, Thermodynamics, E&M, Waves/Optics, Modern |
 
 ## TopicNode Structure
 
 ```typescript
 TopicNode {
-  slug: string;        // URL-safe identifier, unique per subject
-  name: string;        // Czech display name
-  description?: string;
+  slug: string;        // URL-safe English identifier (e.g. "linear-equations"), unique per subject
+  name: string;        // Czech display name (e.g. "Lineární rovnice")
+  description?: string; // Czech
   icon?: string;
-  aiContext?: string;   // Extra context for content authoring
+  aiContext?: string;   // Czech — extra hints for content authoring
   children?: TopicNode[];  // Absent on leaf nodes
 }
 ```
 
-Only **leaf nodes** (no `children`) are actual lesson topics that link to content.
+Only **leaf nodes** (no `children`) are actual lesson topics. Each leaf must have at least one chapter file under `src/lib/lessons/{subject}/{slug}/`, or `pnpm validate:content` fails.
 
 ## Adding a New Topic
 
-1. Add `TopicNode` to the appropriate tree file (`math-tree.ts` or `physics-tree.ts`)
-2. Place it under the correct category parent
-3. The `slug` must match the lesson key prefix in `src/lib/lessons/data.ts`
-4. Create the corresponding lesson file in `src/lib/lessons/`
+Prefer the scaffolder — it inserts the node + creates an `intro.ts` chapter:
+
+```bash
+pnpm new-topic math/algebra/polynomials "Polynomy"
+```
+
+Manual steps if you'd rather:
+
+1. Add a `TopicNode` (English slug, Czech name) under the right category in `math-tree.ts` or `physics-tree.ts`
+2. Create `src/lib/lessons/{subject}/{slug}/intro.ts` with a `ChapterDefinition`
+3. `pnpm build:registry && pnpm validate:content`

@@ -15,4 +15,4 @@ React components organized by domain.
 - Single responsibility — rendering + complex logic? Extract logic to a hook or `src/lib/`
 - Props down, callbacks up — parent owns state, child signals changes
 - Minimize `"use client"` — only on components that use hooks/browser APIs
-- All user-visible text in Czech
+- All user-visible text in Czech; identifiers stay English

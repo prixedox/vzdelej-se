@@ -12,7 +12,9 @@
     "test": "vitest",
     "test:run": "vitest run",
     "build:registry": "tsx scripts/build-registry.ts",
-    "validate:content": "tsx scripts/validate-content.ts"
+    "validate:content": "tsx scripts/validate-content.ts",
+    "new-chapter": "tsx scripts/new-chapter.ts",
+    "new-topic": "tsx scripts/new-topic.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

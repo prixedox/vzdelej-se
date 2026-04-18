@@ -12,9 +12,9 @@ Static topic trees defined in TypeScript. No database.
 
 ## Files
 
-- `src/lib/topics/index.ts` — exports `subjectTrees`, `subjects`, `getLeafTopics()`, `findTopic()`
-- `src/lib/topics/math-tree.ts` — 21 leaf topics: Algebra (6), Funkce (5), Geometrie (4), Kombinatorika (2), Analýza (3)
-- `src/lib/topics/physics-tree.ts` — 14 leaf topics: Mechanika (5), Termodynamika (3), E&M (3), Vlnění a optika (2), Moderní fyzika (1)
+- `src/lib/topics/index.ts` — exports `subjectTrees`, `subjects`, `getLeafTopics()`, `findTopic()`, slug union types
+- `src/lib/topics/math-tree.ts` — 21 leaf topics across Algebra, Functions, Geometry, Combinatorics, Analysis
+- `src/lib/topics/physics-tree.ts` — 14 leaf topics across Mechanics, Thermodynamics, E&M, Waves/Optics, Modern
 
 ## Structure
 
@@ -22,14 +22,25 @@ Static topic trees defined in TypeScript. No database.
 TopicNode { slug, name, description?, icon?, aiContext?, children?: TopicNode[] }
 ```
 
-Hierarchical: Subject → Category → Topic (leaf). Only leaf nodes (no `children`) link to lessons.
+- `slug` — English URL-safe identifier (e.g. `linear-equations`, `quantum-physics`)
+- `name`, `description`, `aiContext` — Czech display text
+
+Hierarchical: Subject → Category → Topic (leaf). Only leaf nodes (no `children`) link to chapters.
 
 ## Adding a New Topic
 
-1. Add `TopicNode` to `math-tree.ts` or `physics-tree.ts` under the right category
-2. `slug` must match the lesson key prefix in `src/lib/lessons/data.ts`
-3. Create the lesson file in `src/lib/lessons/`
+Prefer the scaffolder — it inserts the node + creates an `intro.ts` chapter:
+
+```bash
+pnpm new-topic math/algebra/polynomials "Polynomy"
+```
+
+Manual steps:
+
+1. Add `TopicNode` (English slug, Czech name) under the right category in `math-tree.ts` or `physics-tree.ts`
+2. Create `src/lib/lessons/{subject}/{slug}/intro.ts` exporting a `ChapterDefinition` whose `topicSlug` matches
+3. `pnpm build:registry && pnpm validate:content`
 
 ## Routing
 
-`/topics` → subject cards → `/topics/[subjectSlug]` → topic tree → `/topics/[subjectSlug]/[topicSlug]` → start lesson
+`/topics` → subject cards → `/topics/[subjectSlug]` → topic tree → `/topics/[subjectSlug]/[topicSlug]` → chapter list → `/topics/[subjectSlug]/[topicSlug]/[chapterSlug]` → lesson player

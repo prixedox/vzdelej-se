@@ -1,10 +1,10 @@
 # src/components/lesson/visuals/
 
-Interactive and static visual widgets embedded in slides. 27 types.
+Interactive and static visual widgets embedded in slides.
 
 ## Router
 
-`visual-block.tsx` — switch on `VisualBlock.type`, renders the matching component. All are `"use client"`.
+`visual-block.tsx` — switch on `VisualBlock.type` (see `@/types/lesson` `VisualType`), renders the matching component. Unknown types render nothing (silent fail). All visuals are `"use client"`.
 
 ## Shared
 
@@ -21,3 +21,9 @@ Interactive and static visual widgets embedded in slides. 27 types.
 ## Props
 
 Props arrive as `Record<string, unknown>` from the router. Define a typed interface inside your component and cast immediately.
+
+## Adding a New Visual
+
+1. Add the type string to `VisualType` in `@/types/lesson`
+2. Create the component here (`"use client"`)
+3. Add a case in `visual-block.tsx`

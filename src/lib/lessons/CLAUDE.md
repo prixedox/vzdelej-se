@@ -1,27 +1,48 @@
 # src/lib/lessons/
 
-Static lesson content. Each file exports a typed lesson object.
+Static chapter content. One file per chapter.
 
 ## Structure
 
 ```
-data.ts              ← Central registry: imports all lessons, exports getLesson()
-math/{slug}-v2.ts    ← V2 lessons (preferred for new content)
-math/{slug}.ts       ← V1 lessons (legacy)
-physics/{slug}-v2.ts
-physics/{slug}.ts
+data.ts                      ← Thin query API: getChapter, hasChapter, getChaptersForTopic
+data.generated.ts            ← AUTO-GENERATED registry (committed) — never hand-edit
+schema.ts                    ← Zod `chapterSchema` used by scripts/validate-content.ts
+{subject}/                   ← math/ or physics/
+  {topic-slug}/              ← English topic slug (e.g. linear-equations)
+    {chapter-slug}.ts        ← English chapter slug (e.g. intro)
 ```
 
-## Adding a New Lesson
+Each chapter file exports `export const chapter: ChapterDefinition` with `{slug, topicSlug, order, title, lesson}`. Title and lesson content are Czech; slugs/identifiers are English.
 
-1. Create `src/lib/lessons/{math|physics}/{topic-slug}-v2.ts`
-2. Export a `LessonV2` typed object
-3. Import in `data.ts` and add to the `lessons` record: `"topic-slug": myLesson`
-4. Slug must match the topic slug in `src/lib/topics/`
+## Adding a New Chapter
+
+```bash
+pnpm new-chapter math/linear-equations/two-step-equations "Dvoukrokové rovnice"
+```
+
+Then edit the generated file and run `pnpm build:registry` (or just `pnpm dev` — `predev` regenerates).
+
+Manual steps if you'd rather:
+
+1. Create `src/lib/lessons/{subject}/{topic-slug}/{chapter-slug}.ts`
+2. Export `export const chapter: ChapterDefinition = { slug, topicSlug, order, title, lesson }`
+3. `pnpm build:registry` to refresh `data.generated.ts`
+
+## Validation
+
+`pnpm validate:content` (runs on `prebuild`) enforces via Zod:
+
+- Slug shape `^[a-z0-9-]+$` on `slug` + `topicSlug`
+- `multiple-choice` steps have exactly one `isCorrect: true`
+- `text-input` with `numericTolerance` must have a numeric `expectedAnswer` / `acceptableAnswer`
+- Registry key `${topicSlug}/${slug}` matches file location
+- `topicSlug` exists as a leaf in the topic tree
+- No two chapters in a topic share the same `order`
+- Every leaf topic has at least one chapter
 
 ## Content Rules
 
-- All text in Czech, LaTeX for math (`$...$` inline, `$$...$$` block)
-- V2 `explain` steps: 2-3 sentences max, use visuals liberally
-- Multiple choice: every choice needs `feedback` explaining why it's right/wrong
-- Export name convention: `camelCaseSlug` + `V2` + `Difficulty`, e.g., `linearniRovniceV2Beginner`
+- All user-facing text in Czech, LaTeX for math (`$...$` inline, `$$...$$` block)
+- `explain` steps: 2–3 sentences max, use visuals liberally
+- Multiple-choice: every choice needs `feedback` explaining why it is right/wrong

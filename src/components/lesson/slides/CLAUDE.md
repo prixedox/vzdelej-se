@@ -2,17 +2,20 @@
 
 One component per slide type. Each renders a single "screen" of a lesson.
 
-## V1 Slides
+## Slides
 
-concept-slide · practice-slide · walkthrough-intro/step/result-slide · summary-slide · section-title-slide · exploration-slide · knowledge-check-slide
+`explain-slide` · `mc-slide` · `text-input-slide` · `explore-slide` · `reveal-slide` · `sort-order-slide` · `prediction-slide` · `summary-slide`
 
-## V2 Slides
+Each corresponds 1:1 with a `LessonStep` variant (`@/types/lesson`) plus the terminal summary/complete slides. Adding a new slide type:
 
-explain-slide-v2 · mc-slide-v2 · text-input-slide-v2 · explore-slide-v2 · reveal-slide-v2 · sort-order-slide-v2 · summary-slide-v2
+1. Add step variant to `@/types/lesson` (`LessonStep` union)
+2. Add slide variant to `@/types/slide` (`Slide` union)
+3. Create the component here
+4. Add case in `slide-renderer.tsx` and `build-slides.ts`
 
 ## Conventions
 
 - Receives slide data as props — no data fetching inside
-- Answer callbacks (`onAnswer`, `onCorrect`) passed down from LessonShell
+- Answer callbacks (`onAnswer`, `onInteracted`) passed down from LessonShell
 - Use `MathText` for body text with mixed markdown + LaTeX
 - All visible text in Czech

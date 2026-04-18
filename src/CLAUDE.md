@@ -17,3 +17,5 @@ All source code. `@/` import alias points here.
 - `lib/` ← imports `types/`, never `components/` or `app/`
 - `components/` ← imports `types/` and `lib/`, never `app/`
 - `app/` ← imports everything, but only composes — no business logic here
+
+Tests live next to code as `*.test.ts` / `*.test.tsx`.
