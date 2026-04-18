@@ -96,8 +96,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const [subject, topicSlug, chapterSlug] = parts;
 
   (async () => {
-    const { mathTree } = await import("../src/lib/topics/math-tree");
-    const { physicsTree } = await import("../src/lib/topics/physics-tree");
+    const { subjectTrees } = await import("../src/lib/topics");
     type MinimalNode = { slug: string; children?: readonly MinimalNode[] };
     const collect = (topics: readonly MinimalNode[]): string[] => {
       const out: string[] = [];
@@ -108,10 +107,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       topics.forEach(walk);
       return out;
     };
-    const known = new Set([
-      ...collect(mathTree.topics as unknown as readonly MinimalNode[]),
-      ...collect(physicsTree.topics as unknown as readonly MinimalNode[]),
-    ]);
+    const known = new Set<string>();
+    for (const tree of Object.values(subjectTrees)) {
+      for (const slug of collect(tree.topics as unknown as readonly MinimalNode[])) {
+        known.add(slug);
+      }
+    }
 
     try {
       const file = await createChapter({

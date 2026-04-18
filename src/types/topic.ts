@@ -4,6 +4,8 @@ export interface TopicNode {
   description?: string;
   icon?: string;
   aiContext?: string;
+  /** Marks a topic as "content being prepared" — no chapters required; UI renders a placeholder. */
+  comingSoon?: boolean;
   children?: readonly TopicNode[];
 }
 

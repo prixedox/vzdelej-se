@@ -66,8 +66,14 @@ async function main() {
     process.exit(1);
   }
 
-  const treeFile =
-    subject === "math" ? "math-tree.ts" : subject === "physics" ? "physics-tree.ts" : null;
+  const treeFile: string | null =
+    subject === "math"
+      ? "math-tree.ts"
+      : subject === "physics"
+        ? "physics-tree.ts"
+        : subject === "chemistry"
+          ? "chemistry-tree.ts"
+          : null;
   if (!treeFile) {
     console.error(`Unknown subject: ${subject}`);
     process.exit(1);

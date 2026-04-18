@@ -1,10 +1,12 @@
 import { mathTree } from "./math-tree";
 import { physicsTree } from "./physics-tree";
+import { chemistryTree } from "./chemistry-tree";
 import type { TopicTreeData, TopicNode } from "@/types/topic";
 
 export const subjectTrees: Record<string, TopicTreeData> = {
   math: mathTree,
   physics: physicsTree,
+  chemistry: chemistryTree,
 };
 
 export const subjects = [
@@ -23,6 +25,14 @@ export const subjects = [
     icon: "⚛️",
     color: "from-purple-500 to-pink-600",
     leafCount: 14,
+  },
+  {
+    slug: "chemistry",
+    name: "Chemie",
+    description: "Obecná, anorganická, organická chemie a biochemie",
+    icon: "🧪",
+    color: "from-emerald-500 to-teal-600",
+    leafCount: 28,
   },
 ];
 
@@ -63,6 +73,8 @@ export function findTopic(
 
 export type { MathTopicSlug } from "./math-tree";
 export type { PhysicsTopicSlug } from "./physics-tree";
+export type { ChemistryTopicSlug } from "./chemistry-tree";
 import type { MathTopicSlug } from "./math-tree";
 import type { PhysicsTopicSlug } from "./physics-tree";
-export type TopicSlug = MathTopicSlug | PhysicsTopicSlug;
+import type { ChemistryTopicSlug } from "./chemistry-tree";
+export type TopicSlug = MathTopicSlug | PhysicsTopicSlug | ChemistryTopicSlug;
