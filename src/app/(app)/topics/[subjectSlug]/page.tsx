@@ -2,8 +2,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { subjectTrees } from "@/lib/topics";
 import { getChaptersForTopic } from "@/lib/lessons/data";
+import { allSubjectParams } from "@/lib/static-params";
 import { TopicCard } from "@/components/topic/topic-card";
 import { ArrowLeft } from "lucide-react";
+
+export function generateStaticParams() {
+  return allSubjectParams();
+}
 
 export default async function SubjectPage({
   params,
