@@ -114,4 +114,35 @@ describe("validateStageChapter", () => {
   it("allows the formula in the naming block itself", () => {
     expect(validateStageChapter("k", chapter())).toEqual([]);
   });
+
+  it("does not flag a short formula token embedded inside an unrelated word (regression)", () => {
+    // formulaToken("F = ma") === "ma"; "matematice" contains "ma" twice but
+    // never as a standalone occurrence — must not be treated as a leak.
+    const ok = chapter({
+      beats: [
+        {
+          kind: "observe",
+          prompt: "Zkus si to spočítat jako v matematice, uvidíš, co se stane.",
+        },
+      ],
+      naming: {
+        observation: "Síla je úměrná hmotnosti a zrychlení.",
+        formula: "F = ma",
+        mapping: "$F$ je síla, $m$ je hmotnost, $a$ je zrychlení.",
+      },
+    });
+    expect(validateStageChapter("k", ok)).toEqual([]);
+  });
+
+  it("still flags a standalone short formula token", () => {
+    const bad = chapter({
+      beats: [{ kind: "observe", prompt: "výsledek je ma" }],
+      naming: {
+        observation: "Síla je úměrná hmotnosti a zrychlení.",
+        formula: "F = ma",
+        mapping: "$F$ je síla, $m$ je hmotnost, $a$ je zrychlení.",
+      },
+    });
+    expect(validateStageChapter("k", bad).some((e) => e.includes("formula-leak"))).toBe(true);
+  });
 });
