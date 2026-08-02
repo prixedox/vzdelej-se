@@ -6,6 +6,7 @@
  */
 import { deckChapterSchema, stageChapterSchema } from "@/lib/lessons/schema";
 import { validateStageChapter } from "@/lib/lessons/validate-stage";
+import { checkDiacritics } from "@/lib/lessons/diacritics";
 import { chapters } from "@/lib/lessons/data";
 import { subjectTrees } from "@/lib/topics";
 import type { TopicNode, TopicTreeData } from "@/types/topic";
@@ -72,6 +73,7 @@ function main() {
     if (isStage) {
       errors.push(...validateStageChapter(key, chapter as StageChapter));
     }
+    errors.push(...checkDiacritics(key, chapter));
     const expectedKey = `${chapter.topicSlug}/${chapter.slug}`;
     if (key !== expectedKey) {
       errors.push(`[key-mismatch] registry key ${key} does not match chapter ${expectedKey}`);
