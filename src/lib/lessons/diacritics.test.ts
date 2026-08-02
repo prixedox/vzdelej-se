@@ -5,6 +5,7 @@ import {
   checkDiacritics,
   DIACRITIC_EXEMPT,
   MIN_LETTERS,
+  MIN_DIACRITIC_RATIO,
 } from "./diacritics";
 import type { ChapterDefinition } from "@/types/chapter";
 
@@ -24,6 +25,26 @@ describe("collectProse", () => {
       steps: [{ question: "Kolik?" }],
     });
     expect(found.sort()).toEqual(["Druhé.", "Kolik?", "První."]);
+  });
+
+  it("descends into wrongAnswerFeedback maps (Record<string, string>), collecting the prose values but not the answer keys", () => {
+    const found = collectProse({
+      steps: [
+        {
+          type: "text-input",
+          question: "Kolik je 4 + 4?",
+          wrongAnswerFeedback: {
+            "7": "Skoro, zkus to znovu.",
+            "9": "Přepočítej sčítání.",
+          },
+        },
+      ],
+    });
+    expect(found.sort()).toEqual([
+      "Kolik je 4 + 4?",
+      "Přepočítej sčítání.",
+      "Skoro, zkus to znovu.",
+    ]);
   });
 });
 
@@ -92,7 +113,48 @@ describe("checkDiacritics", () => {
   });
 
   it("skips chapters with too little prose to judge", () => {
-    expect(diacriticRatio("Ano.").letters).toBeLessThan(MIN_LETTERS);
-    expect(checkDiacritics("linear-equations/fresh", makeChapter("Ano."))).toEqual([]);
+    // Deliberately bypasses makeChapter: its fixed "Testovací kapitola" title
+    // and "Shrnutí." takeaway are themselves accented and long enough to
+    // clear MIN_DIACRITIC_RATIO on their own, which would make this pass
+    // regardless of the MIN_LETTERS floor. Here the *entire* collected prose
+    // (title + body + takeaways) must stay under MIN_LETTERS and, since it is
+    // diacritic-free, would fail the ratio gate if the floor did not short-circuit first.
+    const shortStripped: ChapterDefinition = {
+      slug: "fresh",
+      topicSlug: "linear-equations",
+      order: 99,
+      title: "",
+      lesson: {
+        steps: [{ type: "explain", body: "Ano ano ano zadny hacek tady." }],
+        summary: { keyTakeaways: [] },
+      },
+    };
+    const { letters, ratio } = diacriticRatio(collectProse(shortStripped).join(" "));
+    expect(letters).toBeLessThan(MIN_LETTERS);
+    expect(ratio).toBeLessThan(MIN_DIACRITIC_RATIO);
+    expect(checkDiacritics("linear-equations/fresh", shortStripped)).toEqual([]);
+  });
+
+  it("treats a ratio exactly at MIN_DIACRITIC_RATIO as passing (inclusive boundary)", () => {
+    // Synthetic, not real prose: precisely 200 letters (== MIN_LETTERS, so the
+    // letters floor does not fire) with exactly 8 marked, pinning the ratio to
+    // exactly 0.04 == MIN_DIACRITIC_RATIO. This exercises the `>=` boundary in
+    // checkDiacritics directly, rather than comfortably clearing it.
+    const boundaryText = "a".repeat(192) + "á".repeat(8);
+    const { letters, ratio } = diacriticRatio(boundaryText);
+    expect(letters).toBe(200);
+    expect(ratio).toBeCloseTo(MIN_DIACRITIC_RATIO, 10);
+
+    const chapter: ChapterDefinition = {
+      slug: "boundary",
+      topicSlug: "linear-equations",
+      order: 99,
+      title: "",
+      lesson: {
+        steps: [{ type: "explain", body: boundaryText }],
+        summary: { keyTakeaways: [] },
+      },
+    };
+    expect(checkDiacritics("linear-equations/boundary", chapter)).toEqual([]);
   });
 });

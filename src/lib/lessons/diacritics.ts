@@ -27,6 +27,7 @@ export const PROSE_KEYS = new Set([
   "onReached",
   "observation",
   "mapping",
+  "wrongAnswerFeedback",
 ]);
 
 /**
@@ -63,7 +64,11 @@ export function collectProse(value: unknown): string[] {
     }
     if (node && typeof node === "object") {
       for (const [key, child] of Object.entries(node as Record<string, unknown>)) {
-        walk(child, PROSE_KEYS.has(key));
+        // Inherit: once inside a prose-keyed field (e.g. wrongAnswerFeedback,
+        // a Record<string, string>), descendant string VALUES stay prose even
+        // though their own keys ("32", "16", ...) are answer identifiers, not
+        // prose keys themselves.
+        walk(child, underProseKey || PROSE_KEYS.has(key));
       }
     }
   };
