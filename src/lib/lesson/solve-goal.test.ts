@@ -10,6 +10,7 @@ import {
 
 const mod: StageModule = {
   params: PARABOLA_ROOTS_PARAMS,
+  solvableParams: ["c"],
   ranges: { a: [-3, 3], b: [-6, 6], c: [-8, 6] },
   readouts_declared: PARABOLA_ROOTS_READOUTS,
   readouts,
@@ -54,6 +55,7 @@ describe("solveGoal", () => {
   it("never samples a parameter value outside its declared range while zooming toward an unreachable boundary target", () => {
     const guardedMod: StageModule = {
       params: ["x"],
+      solvableParams: ["x"],
       ranges: { x: [0, 10] },
       readouts_declared: ["y"],
       readouts: (p) => {
@@ -90,5 +92,56 @@ describe("solveGoal", () => {
     expect(isGoalMet(goal, ro)).toBe(true);
     expect(Math.abs(ro.rootGap)).toBeLessThan(0.001);
     expect(ro.rootCount).toBe(1);
+  });
+
+  // Regression pin for the "sideways slide" defect: from an overshot state
+  // (student dragged the vertex above the axis, past the touching point) the
+  // OLD sweep order (a, b, c) let the `b` sweep succeed before `c` ever got a
+  // turn, proposing a change to `b` — a param the parabola-roots UI exposes
+  // no control for at all (only `c` has a slider / drag handle). That
+  // produced a curve that visibly slides sideways, a motion the student
+  // cannot reproduce. `solveGoal` must now only ever consider
+  // `solvableParams` (here, just `c`).
+  describe("from an overshot state (student dragged past the touching point)", () => {
+    for (const c of [0.5, 1, 3]) {
+      it(`c=${c}: solves by moving only "c"`, () => {
+        const current = { a: 1, b: 0, c };
+        const solved = solveGoal(goal, mod, current);
+        expect(solved).not.toBeNull();
+
+        const changed = PARABOLA_ROOTS_PARAMS.filter(
+          (p) => solved![p] !== (current as Record<string, number>)[p]
+        );
+        expect(changed).toEqual(["c"]);
+
+        const ro = readouts(solved!);
+        expect(isGoalMet(goal, ro)).toBe(true);
+        expect(ro.rootCount).toBe(1);
+      });
+    }
+  });
+
+  it("never proposes a param excluded from solvableParams, even when that param alone would satisfy the goal", () => {
+    const base = {
+      params: ["x", "y"],
+      ranges: { x: [0, 10] as [number, number], y: [0, 10] as [number, number] },
+      readouts_declared: ["y"],
+      readouts: (p: Record<string, number>) => ({ y: p.y ?? 0 }),
+    };
+    const excludeGoal = { readout: "y", target: 5, within: 0.01 };
+    const current = { x: 0, y: 0 };
+
+    // Positive control: with `y` solvable, the goal is trivially reachable by
+    // moving it — this proves the fixture itself is meaningful.
+    const withY: StageModule = { ...base, solvableParams: ["x", "y"] };
+    const solvedWithY = solveGoal(excludeGoal, withY, current);
+    expect(solvedWithY).not.toBeNull();
+    expect(solvedWithY!.y).toBeCloseTo(5, 1);
+
+    // The actual guard: `y` excluded from solvableParams. `x` cannot affect
+    // the `y` readout at all, so the goal must come back unreachable rather
+    // than "solved" by moving the excluded param.
+    const withoutY: StageModule = { ...base, solvableParams: ["x"] };
+    expect(solveGoal(excludeGoal, withoutY, current)).toBeNull();
   });
 });

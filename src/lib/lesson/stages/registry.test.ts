@@ -36,4 +36,13 @@ describe("stage registry", () => {
       expect(mod.readouts_declared.length, type).toBeGreaterThan(0);
     }
   });
+
+  it("every registered stage declares at least one solvable param, all of them real params", () => {
+    for (const [type, mod] of Object.entries(stageRegistry)) {
+      expect(mod.solvableParams.length, type).toBeGreaterThan(0);
+      for (const p of mod.solvableParams) {
+        expect(mod.params, `${type}.${p}`).toContain(p);
+      }
+    }
+  });
 });

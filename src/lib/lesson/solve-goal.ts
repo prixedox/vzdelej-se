@@ -6,9 +6,12 @@ const SAMPLES = 200;
 const ZOOM_ROUNDS = 5;
 
 /**
- * Find parameters that satisfy `goal`, by sweeping one declared param at a
- * time across its registry-declared range. Generic across stages — no stage's
- * parameter names appear here.
+ * Find parameters that satisfy `goal`, by sweeping one of the stage's
+ * declared SOLVABLE params at a time across its registry-declared range.
+ * Generic across stages — no stage's parameter names appear here. Restricted
+ * to `solvableParams` (not all of `params`) so the search can never propose
+ * changing a param the student has no control over: that would demonstrate a
+ * motion they cannot reproduce with the one control they actually have.
  *
  * A single flat sweep is not enough: some readouts (e.g. a root gap through a
  * touching point) behave like `sqrt` near their target, so the interesting
@@ -43,7 +46,7 @@ export function solveGoal(
 ): Record<string, number> | null {
   if (isGoalMet(goal, mod.readouts(current))) return current;
 
-  for (const param of mod.params) {
+  for (const param of mod.solvableParams) {
     const range = mod.ranges[param];
     if (!range) continue;
     const [rangeMin, rangeMax] = range;
