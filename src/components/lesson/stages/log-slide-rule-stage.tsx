@@ -171,7 +171,7 @@ export function LogSlideRuleStage({
         min={0}
         max={1}
         step={0.001}
-        onChange={setOffset}
+        onChange={(v) => interactive && setOffset(v)}
         color="#f59e0b"
       />
 

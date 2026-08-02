@@ -48,7 +48,25 @@ export function MotionTimelineStage({ params, onParamsChange, interactive }: Sta
         <text x={VB.w - PAD.right} y={toY(0) + 22} textAnchor="end" className="fill-slate-500 text-[11px]">
           čas (s)
         </text>
-        <text x={PAD.left - 6} y={PAD.top + 4} textAnchor="end" className="fill-slate-500 text-[11px]">
+        {/*
+          Rotated the conventional way for a y-axis label (reads bottom-to-top).
+          Anchored at x=16, well inside PAD.left=40, so the text's short
+          "thickness" (post-rotation, its horizontal footprint) never reaches
+          x=0 on the left or the axis line at x=40 on the right. Verified in a
+          real browser via getBBox() + the element's own rotate matrix (getBBox()
+          alone excludes the element's own `transform`): the rendered extent
+          lands at x ∈ [5.0, 19.2] — the font's ascent/descent are asymmetric
+          (~11px vs ~3px), so the rotated footprint isn't centered on the
+          anchor x, which is why 16 (not 12) was chosen for a safe margin on
+          both sides.
+        */}
+        <text
+          x={16}
+          y={(PAD.top + toY(0)) / 2}
+          textAnchor="middle"
+          transform={`rotate(-90 16 ${(PAD.top + toY(0)) / 2})`}
+          className="fill-slate-500 text-[11px]"
+        >
           dráha (m)
         </text>
 

@@ -147,7 +147,7 @@ export function ParabolaRootsStage({
         min={C_RANGE[0]}
         max={C_RANGE[1]}
         step={0.1}
-        onChange={setC}
+        onChange={(v) => interactive && setC(v)}
         color="#22c55e"
       />
 

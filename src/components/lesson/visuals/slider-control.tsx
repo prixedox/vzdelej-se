@@ -2,6 +2,17 @@
 
 import { useId } from "react";
 
+/**
+ * Czech convention is a decimal comma (3,14 not 3.14). JS's own number→string
+ * conversion already picks the shortest round-tripping representation with no
+ * spurious trailing zeros, so this only swaps the separator — an integer's
+ * string form has no "." to swap, so integer-valued sliders (the majority of
+ * existing usages) render unchanged.
+ */
+function formatCzechNumber(value: number): string {
+  return String(value).replace(".", ",");
+}
+
 interface SliderControlProps {
   label: string;
   value: number;
@@ -88,7 +99,7 @@ export function SliderControl({
         className="text-sm font-bold min-w-[3.5rem] tabular-nums"
         style={{ color }}
       >
-        {value}
+        {formatCzechNumber(value)}
         {unit && ` ${unit}`}
       </span>
     </div>
