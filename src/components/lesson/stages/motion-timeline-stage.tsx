@@ -35,11 +35,11 @@ export function MotionTimelineStage({ params, onParamsChange, interactive }: Sta
   const sAtEnd = v0 * tEnd + (a * tEnd * tEnd) / 2;
 
   return (
-    <div className="w-full space-y-3">
+    <div className="flex h-full w-full min-h-0 flex-1 flex-col gap-3">
       <svg
         viewBox={`0 0 ${VB.w} ${VB.h}`}
         preserveAspectRatio="xMidYMid meet"
-        className="w-full h-auto rounded-lg bg-slate-50 dark:bg-slate-900"
+        className="w-full flex-1 min-h-0 rounded-lg bg-slate-50 dark:bg-slate-900"
         role="img"
         aria-label="Dráha v čase a její sečna"
       >

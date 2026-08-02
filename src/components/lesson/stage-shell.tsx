@@ -109,8 +109,21 @@ export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) 
       <div className="flex flex-col gap-4">
         <LessonProgressBar currentIndex={index} totalSteps={screens.length} />
 
-        {/* The stage never unmounts: it is the continuity of the lesson. */}
-        <div className="sticky top-16 z-10 rounded-lg border bg-background p-3 shadow-sm">
+        {/*
+          The stage never unmounts: it is the continuity of the lesson.
+          Fixed at ~45vh (per spec) so the beat strip below it — prompt,
+          "Ukaž mi to" button, the green onReached box — stays on-screen
+          without scrolling on a typical laptop viewport. This must be a
+          definite height (not `max-h`): a flex column sized only by
+          `max-height` has no free space to hand a `flex-1` child until its
+          siblings' natural size already exceeds the cap, which would let the
+          SVG collapse toward 0 instead of filling the box. `min-h-0` here and
+          on the stage's own root lets that flex-1 SVG (see each stage
+          component) shrink below its native aspect-ratio height rather than
+          overflowing it; `overflow-hidden` is the last-resort guard if a
+          stage's slider/text chrome alone ever exceeds the cap.
+        */}
+        <div className="sticky top-16 z-10 flex h-[45vh] flex-col overflow-hidden rounded-lg border bg-background p-3 shadow-sm">
           <StageCanvas
             type={lesson.stage.type}
             params={params}
