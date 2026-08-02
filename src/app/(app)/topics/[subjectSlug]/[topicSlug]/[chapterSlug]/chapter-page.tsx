@@ -37,11 +37,20 @@ export default function ChapterPageClient() {
         <ArrowLeft className="h-4 w-4" />
         Zpět na {topic.name}
       </Link>
-      <LessonShell
-        lesson={chapter.lesson}
-        topicSlug={topicSlug}
-        chapterSlug={chapterSlug}
-      />
+      {chapter.format === "stage" ? (
+        <div className="text-center py-20 space-y-3">
+          <h2 className="text-2xl font-bold">Kapitola nenalezena</h2>
+          <Link href="/topics" className="text-primary hover:underline">
+            Zpět na témata
+          </Link>
+        </div>
+      ) : (
+        <LessonShell
+          lesson={chapter.lesson}
+          topicSlug={topicSlug}
+          chapterSlug={chapterSlug}
+        />
+      )}
     </div>
   );
 }
