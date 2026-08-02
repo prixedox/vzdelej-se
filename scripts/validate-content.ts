@@ -4,10 +4,12 @@
  * against the topic trees. Runs in `prebuild`. Fails the build on any
  * violation.
  */
-import { chapterSchema } from "@/lib/lessons/schema";
+import { deckChapterSchema, stageChapterSchema } from "@/lib/lessons/schema";
+import { validateStageChapter } from "@/lib/lessons/validate-stage";
 import { chapters } from "@/lib/lessons/data";
 import { subjectTrees } from "@/lib/topics";
 import type { TopicNode, TopicTreeData } from "@/types/topic";
+import type { StageChapter } from "@/types/chapter";
 
 function collectLeaves(topics: readonly TopicNode[]): TopicNode[] {
   const out: TopicNode[] = [];
@@ -56,7 +58,9 @@ function main() {
 
   const chaptersByTopic = new Map<string, Map<number, string>>();
   for (const [key, chapter] of Object.entries(chapters)) {
-    const parsed = chapterSchema.safeParse(chapter);
+    const isStage = chapter.format === "stage";
+    const schema = isStage ? stageChapterSchema : deckChapterSchema;
+    const parsed = schema.safeParse(chapter);
     if (!parsed.success) {
       errors.push(
         `[schema] ${key}: ${parsed.error.issues
@@ -64,6 +68,9 @@ function main() {
           .join("; ")}`
       );
       continue;
+    }
+    if (isStage) {
+      errors.push(...validateStageChapter(key, chapter as StageChapter));
     }
     const expectedKey = `${chapter.topicSlug}/${chapter.slug}`;
     if (key !== expectedKey) {
