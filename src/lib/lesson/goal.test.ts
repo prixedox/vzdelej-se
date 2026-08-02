@@ -42,4 +42,26 @@ describe("isGoalMet", () => {
     expect(() => isGoalMet(bad, { x: 1 })).not.toThrow();
     expect(isGoalMet(bad, { x: 1 })).toBe(false);
   });
+
+  it("rejects infinite tolerance", () => {
+    const g: Goal = { readout: "value", target: 0, within: Infinity };
+    expect(isGoalMet(g, { value: 100 })).toBe(false);
+    expect(isGoalMet(g, { value: 0 })).toBe(false);
+  });
+
+  it("rejects negative infinite tolerance", () => {
+    const g: Goal = { readout: "value", target: 0, within: -Infinity };
+    expect(isGoalMet(g, { value: 0 })).toBe(false);
+  });
+
+  it("rejects infinite target", () => {
+    const g: Goal = { readout: "value", target: Infinity, within: 0.15 };
+    expect(isGoalMet(g, { value: 100 })).toBe(false);
+    expect(isGoalMet(g, { value: Infinity })).toBe(false);
+  });
+
+  it("rejects negative infinite target", () => {
+    const g: Goal = { readout: "value", target: -Infinity, within: 0.15 };
+    expect(isGoalMet(g, { value: -100 })).toBe(false);
+  });
 });
