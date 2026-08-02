@@ -2456,6 +2456,12 @@ export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) 
               )}
               {screen.kind === "naming" && <NamingPanel naming={screen.naming} />}
               {screen.kind === "apply" && (
+                /*
+                 * Answers are intentionally discarded. Deck lessons collect
+                 * them to compute a score and tier; stage lessons are never
+                 * scored, so there is nothing to accumulate. The slide's own
+                 * inline feedback is the whole point of the practice step.
+                 */
                 <SlideRenderer
                   slide={screen.slide}
                   onAnswer={() => {}}
