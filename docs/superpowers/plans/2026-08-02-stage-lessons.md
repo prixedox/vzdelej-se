@@ -38,7 +38,7 @@ Every task's requirements implicitly include this section.
 
 ### Task 1: Stage types and the chapter union
 
-Introduces every type later tasks reference, and converts `ChapterDefinition` to a union without touching any of the 43 existing chapter files.
+Introduces every type later tasks reference, and converts `ChapterDefinition` to a union without touching any of the 38 existing chapter files.
 
 **Files:**
 - Create: `src/types/stage.ts`
@@ -196,7 +196,7 @@ In `src/app/(app)/topics/[subjectSlug]/[topicSlug]/[chapterSlug]/chapter-page.ts
 - [ ] **Step 5: Verify types and the existing suite are clean**
 
 Run: `pnpm exec tsc --noEmit && pnpm test:run && pnpm lint`
-Expected: tsc clean, all existing tests PASS, lint clean. The 43 existing chapter files are unmodified.
+Expected: tsc clean, all existing tests PASS, lint clean. The 38 existing chapter files are unmodified.
 
 - [ ] **Step 6: Commit**
 
@@ -1288,7 +1288,7 @@ Remove the now-unused `chapterSchema` import. Then replace the schema-parse bloc
 - [ ] **Step 6: Verify the full validation still passes on existing content**
 
 Run: `pnpm validate:content`
-Expected: `✓ Content OK: 43 chapters across ...` — the 43 deck chapters route to `deckChapterSchema` and still pass.
+Expected: `✓ Content OK: 38 chapters across ...` — the 38 deck chapters route to `deckChapterSchema` and still pass.
 
 - [ ] **Step 7: Commit**
 
@@ -1545,7 +1545,7 @@ Then, immediately after the `if (isStage) { ... }` block added in Task 7, add:
 - [ ] **Step 6: Verify existing content still validates**
 
 Run: `pnpm validate:content`
-Expected: `✓ Content OK: 43 chapters across ...`. The five exempt chapters are skipped; every other chapter clears 4 %.
+Expected: `✓ Content OK: 38 chapters across ...`. The five exempt chapters are skipped; every other chapter clears 4 %.
 
 If any non-exempt chapter fails, that is a genuine find — report it rather than widening the exemption list.
 
@@ -2639,7 +2639,7 @@ export const chapter: StageChapter = {
 - [ ] **Step 2: Regenerate the registry and validate**
 
 Run: `pnpm build:registry && pnpm validate:content`
-Expected: `✓ Content OK: 44 chapters across ...`. If a `[formula-leak]` error appears, a beat mentions `b^2-4ac` — rewrite that beat in words, do not weaken the check.
+Expected: `✓ Content OK: 39 chapters across ...`. If a `[formula-leak]` error appears, a beat mentions `b^2-4ac` — rewrite that beat in words, do not weaken the check.
 
 - [ ] **Step 3: Run the whole suite and the type checker**
 
@@ -3008,7 +3008,7 @@ export const chapter: StageChapter = {
 - [ ] **Step 9: Regenerate, validate, verify**
 
 Run: `pnpm build:registry && pnpm validate:content && pnpm exec tsc --noEmit && pnpm test:run && pnpm lint`
-Expected: `✓ Content OK: 45 chapters across ...`, everything else clean.
+Expected: `✓ Content OK: 40 chapters across ...`, everything else clean.
 
 Then `pnpm dev` and open `http://localhost:3000/vzdelej-se/topics/math/logarithmic-functions/why-logarithms/`. Confirm the top ruler slides, the alignment readout tracks it, the goal fires at 3, and the formula first appears on the naming screen.
 
@@ -3366,7 +3366,7 @@ Before committing, confirm `order: 3` is free in `src/lib/lessons/physics/kinema
 - [ ] **Step 9: Regenerate, validate, verify**
 
 Run: `pnpm build:registry && pnpm validate:content && pnpm exec tsc --noEmit && pnpm test:run && pnpm lint`
-Expected: `✓ Content OK: 46 chapters across ...`, everything else clean.
+Expected: `✓ Content OK: 41 chapters across ...`, everything else clean.
 
 Then `pnpm dev` and open `http://localhost:3000/vzdelej-se/topics/physics/kinematics/velocity-as-slope/`. Confirm both sliders move the secant, the goal fires as `h` shrinks, and the formula first appears on the naming screen.
 
@@ -3397,6 +3397,6 @@ Expected: all pass, static export completes.
 
 1. All three pilot chapters play end to end, formula last, nothing blocking.
 2. `pnpm validate:content` rejects a formula leaked into a beat — verify by temporarily pasting `b^2-4ac` into a discriminant beat prompt, running validation, confirming the `[formula-leak]` error, then reverting.
-3. The 43 existing chapters are unchanged: `git log --oneline -- src/lib/lessons/math src/lib/lessons/physics` shows only the three new chapter files added.
+3. The 38 existing chapters are unchanged: `git log --oneline -- src/lib/lessons/math src/lib/lessons/physics` shows only the three new chapter files added.
 4. `prefers-reduced-motion` is honored on stage lessons.
 5. A judgment call is possible on whether `log-slide-rule` teaches logarithms better than the current deck chapter. **This is the gate for the rollout project** — do not begin converting the remaining chapters until it is answered.
