@@ -153,7 +153,13 @@ export function getChapterProgress(
 export interface TopicAggregateProgress {
   completedChapters: number;
   totalChapters: number;
-  /** Lowest (worst) tier across all chapters; null unless every chapter is complete. */
+  /**
+   * Lowest (worst) tier across scored (non-derived) chapters; null unless
+   * every chapter in the topic is complete. Derived (stage) chapters count
+   * toward completion but are excluded from the tier calculation itself —
+   * a topic with no scored chapters at all stays null since there is
+   * nothing to badge.
+   */
   overallTier: "bronze" | "silver" | "gold" | null;
 }
 
@@ -168,10 +174,17 @@ export function getTopicAggregateProgress(
 
   let overallTier: "bronze" | "silver" | "gold" | null = null;
   if (completed.length === allChapterSlugs.length && completed.length > 0) {
-    const ranks = completed.map((p) => (p.tier ? tierRank(p.tier) : 0));
-    const minRank = Math.min(...ranks);
-    overallTier =
-      minRank === 3 ? "gold" : minRank === 2 ? "silver" : minRank === 1 ? "bronze" : null;
+    // Derived (stage) chapters are never scored, so they must not drag the
+    // aggregate down to null just for existing. Only graded chapters decide
+    // overallTier; a topic with no graded chapters at all has nothing to
+    // badge, so it correctly stays null.
+    const scored = completed.filter((p) => !p.derived);
+    if (scored.length > 0) {
+      const ranks = scored.map((p) => (p.tier ? tierRank(p.tier) : 0));
+      const minRank = Math.min(...ranks);
+      overallTier =
+        minRank === 3 ? "gold" : minRank === 2 ? "silver" : minRank === 1 ? "bronze" : null;
+    }
   }
 
   return {

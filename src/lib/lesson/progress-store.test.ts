@@ -162,6 +162,91 @@ describe("spaced retrieval", () => {
   });
 });
 
+describe("topic aggregate with derived (stage) chapters", () => {
+  it("kinematics regression: 2 deck chapters gold + 1 derived -> overallTier gold, completedChapters 3", () => {
+    recordChapterCompletion("kinematics", "deck-a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    recordChapterCompletion("kinematics", "deck-b", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    recordChapterDerived("kinematics", "velocity-as-slope");
+    const agg = getTopicAggregateProgress("kinematics", [
+      "deck-a",
+      "deck-b",
+      "velocity-as-slope",
+    ]);
+    expect(agg.completedChapters).toBe(3);
+    expect(agg.totalChapters).toBe(3);
+    expect(agg.overallTier).toBe("gold");
+  });
+
+  it("worst-tier-wins still holds across scored chapters when a derived one is present", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    recordChapterCompletion("t", "b", {
+      completedAt: 1,
+      score: 0.5,
+      correctAnswers: 1,
+      totalProblems: 2,
+    });
+    recordChapterDerived("t", "c");
+    const agg = getTopicAggregateProgress("t", ["a", "b", "c"]);
+    expect(agg.overallTier).toBe("bronze");
+  });
+
+  it("a topic of only derived chapters has overallTier null but is still fully completed", () => {
+    recordChapterDerived("t", "a");
+    recordChapterDerived("t", "b");
+    const agg = getTopicAggregateProgress("t", ["a", "b"]);
+    expect(agg.completedChapters).toBe(2);
+    expect(agg.totalChapters).toBe(2);
+    expect(agg.overallTier).toBeNull();
+  });
+
+  it("all-deck topic: behavior is unchanged (regression guard)", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    recordChapterCompletion("t", "b", {
+      completedAt: 1,
+      score: 0.5,
+      correctAnswers: 1,
+      totalProblems: 2,
+    });
+    const agg = getTopicAggregateProgress("t", ["a", "b"]);
+    expect(agg.completedChapters).toBe(2);
+    expect(agg.totalChapters).toBe(2);
+    expect(agg.overallTier).toBe("bronze");
+  });
+
+  it("derived chapter not yet visited keeps overallTier null", () => {
+    recordChapterCompletion("t", "a", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 1,
+      totalProblems: 1,
+    });
+    // "b" will eventually be a derived chapter, but has not been visited yet.
+    const agg = getTopicAggregateProgress("t", ["a", "b"]);
+    expect(agg.completedChapters).toBe(1);
+    expect(agg.overallTier).toBeNull();
+  });
+});
+
 describe("recordChapterDerived", () => {
   beforeEach(() => {
     localStorage.clear();
