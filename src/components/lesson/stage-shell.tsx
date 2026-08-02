@@ -15,6 +15,7 @@ import { NamingPanel } from "./beats/naming-panel";
 import { StageComplete } from "./stage-complete";
 import { SlideRenderer } from "./slide-renderer";
 import { LessonProgressBar } from "./lesson-progress-bar";
+import { MathText } from "./math-display";
 import { Button } from "@/components/ui/button";
 import type { StageLesson } from "@/types/stage";
 
@@ -40,6 +41,21 @@ export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) 
   const beat = screen.kind === "beat" ? screen.beat : null;
   const reached =
     beat?.kind === "manipulate" ? isGoalMet(beat.goal, readouts) : false;
+
+  // True once the current predict beat's option has been picked. Freezes the
+  // canvas for the reveal travel below (see `interactive`) — the student is
+  // meant to watch the outcome, not drag through it. Reset whenever the beat
+  // changes by adjusting state directly during render (React's documented
+  // pattern for resetting state when a prop changes) rather than in an
+  // effect — an effect here would fire an extra render after the one that
+  // already shows the new beat, which is both unnecessary and what the
+  // set-state-in-effect lint rule flags.
+  const [predictAnswered, setPredictAnswered] = useState(false);
+  const [predictAnsweredBeat, setPredictAnsweredBeat] = useState(beat);
+  if (beat !== predictAnsweredBeat) {
+    setPredictAnsweredBeat(beat);
+    setPredictAnswered(false);
+  }
 
   // Travel to the beat's preset on entry, so the student watches the stage
   // move into position rather than finding it already there.
@@ -100,7 +116,11 @@ export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) 
             params={params}
             onParamsChange={setNow}
             highlight={beat?.highlight}
-            interactive={screen.kind === "beat"}
+            // False during naming (nothing to manipulate) and, once a
+            // predict beat has been answered, during its reveal travel — a
+            // drag mid-travel would call setNow and cancel it, teleporting
+            // the stage instead of letting the student watch the outcome.
+            interactive={screen.kind === "beat" && !predictAnswered}
           />
         </div>
 
@@ -119,8 +139,13 @@ export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) 
                   reached={reached}
                   onShowMe={showMe}
                   onPredictAnswered={() => {
-                    // Travel, so the predicted outcome is watched happening.
-                    if (beat.kind === "predict") springTo(beat.then);
+                    // Travel, so the predicted outcome is watched happening;
+                    // freeze the canvas for the duration (see `interactive`
+                    // above) so a drag cannot cancel that travel.
+                    if (beat.kind === "predict") {
+                      setPredictAnswered(true);
+                      springTo(beat.then);
+                    }
                   }}
                 />
               )}
@@ -141,13 +166,20 @@ export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) 
                 />
               )}
               {screen.kind === "summary" && (
-                <ul className="space-y-2">
-                  {screen.keyTakeaways.map((t) => (
-                    <li key={t} className="rounded-lg border bg-muted/40 p-3 text-sm">
-                      {t}
-                    </li>
-                  ))}
-                </ul>
+                <div className="space-y-2">
+                  <ul className="space-y-2">
+                    {screen.keyTakeaways.map((t) => (
+                      <li key={t} className="rounded-lg border bg-muted/40 p-3 text-sm">
+                        <MathText content={t} />
+                      </li>
+                    ))}
+                  </ul>
+                  {screen.nextTopicSuggestion && (
+                    <p className="text-sm text-muted-foreground">
+                      Další doporučené téma: {screen.nextTopicSuggestion}
+                    </p>
+                  )}
+                </div>
               )}
             </motion.div>
           </AnimatePresence>
