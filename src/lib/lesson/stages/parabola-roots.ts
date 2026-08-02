@@ -9,8 +9,18 @@ export const PARABOLA_ROOTS_READOUTS = ["rootCount", "rootGap", "vertexY"];
 /** `a` is clamped away from zero — a zero leading coefficient is not a parabola. */
 const MIN_A = 1e-6;
 
+/**
+ * Single source of truth for the zero-guard on `a`. Anything that divides by
+ * `a` — here or in a component recomputing the same discriminant/vertex math
+ * (e.g. for drawing root markers or handling a drag) — must clamp through
+ * this, not redeclare `MIN_A` locally.
+ */
+export function safeA(a: number): number {
+  return Math.abs(a) < MIN_A ? (a < 0 ? -MIN_A : MIN_A) : a;
+}
+
 export function readouts(p: Record<string, number>): Record<string, number> {
-  const a = Math.abs(p.a) < MIN_A ? (p.a < 0 ? -MIN_A : MIN_A) : p.a;
+  const a = safeA(p.a);
   const b = p.b ?? 0;
   const c = p.c ?? 0;
   const d = b * b - 4 * a * c;

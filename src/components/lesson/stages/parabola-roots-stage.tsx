@@ -2,15 +2,19 @@
 
 import { useRef } from "react";
 import { motion } from "motion/react";
-import { readouts } from "@/lib/lesson/stages/parabola-roots";
+import { readouts, safeA } from "@/lib/lesson/stages/parabola-roots";
 import { SliderControl } from "@/components/lesson/visuals/slider-control";
 import { cn } from "@/lib/utils";
 import type { StageProps } from "./stage-canvas";
 
 const VB = { w: 480, h: 320 };
 const X_RANGE: [number, number] = [-5, 5];
-const Y_RANGE: [number, number] = [-6, 10];
 const C_RANGE: [number, number] = [-8, 6];
+// At the default a=1, b=0, vertexY = c - b²/(4a) = c, so the vertex tracks
+// the `c` slider 1:1. Y_RANGE's lower bound must therefore be <= C_RANGE's
+// lower bound (-8), or the vertex clips out of view before the slider hits
+// its own minimum. Upper bound just needs to clear C_RANGE's max (6).
+const Y_RANGE: [number, number] = [-8, 10];
 
 function toSvgX(x: number): number {
   return ((x - X_RANGE[0]) / (X_RANGE[1] - X_RANGE[0])) * VB.w;
@@ -44,11 +48,16 @@ export function ParabolaRootsStage({
   const r = readouts({ a, b, c });
   const rootsHighlighted = highlight?.includes("roots") ?? false;
 
-  // Real roots, for the markers. rootGap is signed; only positive means two.
-  const disc = b * b - 4 * a * c;
+  // Zero-guarded `a`, shared with readouts() so the markers and the drag
+  // handler below never divide by an authored a ≈ 0.
+  const aSafe = safeA(a);
+
+  // Real x-intercepts for the marker circles. disc >= 0 covers both two
+  // distinct roots and the exactly-touching case (disc === 0, one repeated root).
+  const disc = b * b - 4 * aSafe * c;
   const roots =
     disc >= 0
-      ? [(-b - Math.sqrt(disc)) / (2 * a), (-b + Math.sqrt(disc)) / (2 * a)]
+      ? [(-b - Math.sqrt(disc)) / (2 * aSafe), (-b + Math.sqrt(disc)) / (2 * aSafe)]
       : [];
 
   function setC(next: number) {
@@ -61,11 +70,22 @@ export function ParabolaRootsStage({
     const ratio = (e.clientY - rect.top) / rect.height;
     const yValue = Y_RANGE[1] - ratio * (Y_RANGE[1] - Y_RANGE[0]);
     // Dragging moves the vertex to the pointer: c = yTarget + b²/4a.
-    setC(yValue + (b * b) / (4 * a));
+    setC(yValue + (b * b) / (4 * aSafe));
+  }
+
+  function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
+    if (!interactive) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function handlePointerEnd(e: React.PointerEvent<SVGSVGElement>) {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
   }
 
   return (
-    <div className="w-full space-y-3" aria-label="Parabola a její kořeny">
+    <div className="w-full space-y-3">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${VB.w} ${VB.h}`}
@@ -74,8 +94,12 @@ export function ParabolaRootsStage({
           "w-full h-auto rounded-lg bg-slate-50 dark:bg-slate-900",
           interactive ? "cursor-ns-resize touch-none" : "cursor-default"
         )}
+        onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
         role="img"
+        aria-label="Parabola a její kořeny"
       >
         <line
           x1={0}
@@ -103,9 +127,9 @@ export function ParabolaRootsStage({
           animate={{ pathLength: 1 }}
           transition={{ duration: 0.7, ease: "easeInOut" }}
         />
-        {roots.map((x) => (
+        {roots.map((x, i) => (
           <circle
-            key={x}
+            key={i}
             cx={toSvgX(x)}
             cy={toSvgY(0)}
             r={rootsHighlighted ? 8 : 5}
