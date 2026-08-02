@@ -5,7 +5,7 @@ import type { StageLesson } from "@/types/stage";
 const lesson: StageLesson = {
   stage: { type: "parabola-roots", initial: { a: 1, b: 0, c: -4 }, readouts: ["rootGap"] },
   beats: [
-    { kind: "observe", prompt: "Táhni parabolou nahoru a dolů." },
+    { kind: "observe", prompt: "Táhni parabolu nahoru a dolů." },
     {
       kind: "manipulate",
       prompt: "Posuň ji tak, aby se osy jen dotýkala.",
@@ -83,7 +83,7 @@ describe("buildBeats", () => {
     const first = buildBeats(lesson)[0];
     expect(first.kind).toBe("beat");
     if (first.kind === "beat") {
-      expect(first.beat.prompt).toBe("Táhni parabolou nahoru a dolů.");
+      expect(first.beat.prompt).toBe("Táhni parabolu nahoru a dolů.");
     }
   });
 });

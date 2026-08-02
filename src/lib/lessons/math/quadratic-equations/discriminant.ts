@@ -12,7 +12,7 @@ const lesson: StageLesson = {
     {
       kind: "observe",
       prompt:
-        "Táhni parabolou nahoru a dolů. Sleduj červené body — tam, kde parabola protíná vodorovnou osu.",
+        "Táhni parabolu nahoru a dolů. Sleduj červené body — tam, kde parabola protíná vodorovnou osu.",
       highlight: ["roots"],
     },
     {
@@ -21,7 +21,7 @@ const lesson: StageLesson = {
       goal: { readout: "rootGap", target: 0, within: 0.15 },
       onReached:
         "Přesně tady. Oba průsečíky se slily do jediného bodu — parabola se osy jen dotkla.",
-      nudge: "Zkoušej parabolu zvedat nahoru. Body se k sobě přibližují.",
+      nudge: "Zkoušej zvedat parabolu výše. Body se k sobě přibližují.",
       highlight: ["roots"],
     },
     {
@@ -43,7 +43,7 @@ const lesson: StageLesson = {
       "Viděl jsi tři stavy: dva průsečíky, pak jediný dotyk, pak žádný. Mezi nimi je přesná hranice — okamžik dotyku.",
     formula: "D = b^2 - 4ac",
     mapping:
-      "Číslo $D$ měří, jak daleko jsi od té hranice. $D > 0$ — dva průsečíky. $D = 0$ — přesně ten dotyk, který jsi našel. $D < 0$ — parabola je nad osou a průsečík není žádný.",
+      "Číslo $D$ měří, jak daleko jsi od té hranice. $D > 0$ — dva průsečíky. $D = 0$ — přesně ten dotyk, který jsi našel. $D < 0$ — žádný průsečík, parabola se vznáší nad osou.",
   },
   apply: [
     {
@@ -73,7 +73,7 @@ const lesson: StageLesson = {
   summary: {
     keyTakeaways: [
       "Diskriminant měří vzdálenost od okamžiku, kdy se parabola osy jen dotkne.",
-      "$D > 0$ dva kořeny, $D = 0$ jeden, $D < 0$ žádný reálný.",
+      "Platí: $D > 0$ znamená dva kořeny, $D = 0$ jeden dvojnásobný kořen a $D < 0$ žádný reálný kořen.",
     ],
   },
 };

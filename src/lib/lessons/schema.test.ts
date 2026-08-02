@@ -154,7 +154,7 @@ const validStageChapter = {
       readouts: ["rootCount", "rootGap", "vertexY"],
     },
     beats: [
-      { kind: "observe", prompt: "Táhni parabolou nahoru a dolů." },
+      { kind: "observe", prompt: "Táhni parabolu nahoru a dolů." },
       {
         kind: "manipulate",
         prompt: "Posuň ji tak, aby se osy jen dotýkala.",

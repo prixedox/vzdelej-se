@@ -70,4 +70,25 @@ describe("solveGoal", () => {
     expect(() => solveGoal(goal, guardedMod, { x: 0 })).not.toThrow();
     expect(solveGoal(goal, guardedMod, { x: 0 })).toBeNull();
   });
+
+  // Pins the fix for a live bug: the discriminant chapter's manipulate beat
+  // ("bring the parabola to a tangent") used to accept the FIRST sample
+  // encountered along the sweep that satisfied the tolerance, landing at
+  // c ≈ -0.01 (rootCount 2) while the "onReached" message claims the two
+  // roots merged into one — a self-contradicting screen at the pedagogical
+  // climax. The true touching point for this exact setup is c = 0 exactly
+  // (rootGap 0, rootCount 1). solveGoal must now return the BEST candidate
+  // (closest to the target) rather than the first acceptable one.
+  it("returns the closest candidate to the touching point, not the first acceptable one (regression pin)", () => {
+    const solved = solveGoal(goal, mod, { a: 1, b: 0, c: -4 })!;
+    expect(solved).not.toBeNull();
+
+    const oldFirstHitC = -0.01;
+    expect(Math.abs(solved.c)).toBeLessThan(Math.abs(oldFirstHitC) / 10);
+
+    const ro = readouts(solved);
+    expect(isGoalMet(goal, ro)).toBe(true);
+    expect(Math.abs(ro.rootGap)).toBeLessThan(0.001);
+    expect(ro.rootCount).toBe(1);
+  });
 });
