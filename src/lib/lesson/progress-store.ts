@@ -19,6 +19,8 @@ export interface ChapterProgress {
   lastCompletedAt: number;
   results: LessonResult[];
   tier: "bronze" | "silver" | "gold" | null;
+  /** True for stage-format chapters, which are never scored or tiered. */
+  derived?: boolean;
 }
 
 export interface ProgressData {
@@ -112,6 +114,33 @@ export function recordChapterCompletion(
   progress.lastActivityAt = Date.now();
   saveProgress(progress);
   return progress;
+}
+
+/**
+ * Record that a stage chapter was worked through. Deliberately records no
+ * score and no tier: the target learner arrives low on confidence, and
+ * grading them would confirm the feeling that sent them here.
+ */
+export function recordChapterDerived(
+  topicSlug: string,
+  chapterSlug: string
+): ProgressData {
+  const data = loadProgress();
+  const key = chapterKey(topicSlug, chapterSlug);
+  const existing = data.chapters[key];
+
+  data.chapters[key] = {
+    bestScore: 0,
+    completionCount: (existing?.completionCount ?? 0) + 1,
+    lastCompletedAt: Date.now(),
+    results: [],
+    tier: null,
+    derived: true,
+  };
+  data.lastActivityAt = Date.now();
+
+  saveProgress(data);
+  return data;
 }
 
 export function getChapterProgress(

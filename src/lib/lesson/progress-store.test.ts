@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import {
   loadProgress,
   recordChapterCompletion,
+  recordChapterDerived,
   getChapterProgress,
   getTopicAggregateProgress,
   updateStreak,
@@ -158,5 +159,41 @@ describe("spaced retrieval", () => {
     const review = getChaptersForReview();
     expect(review).toContain("t/due");
     expect(review).not.toContain("t/fresh");
+  });
+});
+
+describe("recordChapterDerived", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("marks the chapter derived with no tier and no score", () => {
+    const data = recordChapterDerived("quadratic-equations", "discriminant");
+    const entry = data.chapters["quadratic-equations/discriminant"];
+    expect(entry.derived).toBe(true);
+    expect(entry.tier).toBeNull();
+    expect(entry.bestScore).toBe(0);
+    expect(entry.results).toEqual([]);
+  });
+
+  it("counts repeat visits without ever assigning a tier", () => {
+    recordChapterDerived("quadratic-equations", "discriminant");
+    const data = recordChapterDerived("quadratic-equations", "discriminant");
+    const entry = data.chapters["quadratic-equations/discriminant"];
+    expect(entry.completionCount).toBe(2);
+    expect(entry.tier).toBeNull();
+  });
+
+  it("leaves deck-chapter progress untouched", () => {
+    recordChapterCompletion("linear-equations", "intro", {
+      completedAt: 1,
+      score: 1,
+      correctAnswers: 3,
+      totalProblems: 3,
+    });
+    recordChapterDerived("quadratic-equations", "discriminant");
+    const data = loadProgress();
+    expect(data.chapters["linear-equations/intro"].tier).toBe("gold");
+    expect(data.chapters["quadratic-equations/discriminant"].tier).toBeNull();
   });
 });
