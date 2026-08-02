@@ -3,7 +3,7 @@ import type { Slide } from "@/types/slide";
 
 // Typed factory — keeps the tagged-union correlation between step.type
 // and slide.type. Adding a new step variant forces updating this switch.
-function stepToSlide(
+export function stepToSlide(
   step: LessonStep,
   id: string,
   stepIndex: number,
