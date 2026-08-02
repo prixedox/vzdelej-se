@@ -1,0 +1,169 @@
+"use client";
+
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { AnimatePresence, motion, MotionConfig, useReducedMotion } from "motion/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { buildBeats } from "@/lib/lesson/build-beats";
+import { isGoalMet } from "@/lib/lesson/goal";
+import { solveGoal } from "@/lib/lesson/solve-goal";
+import { getStageModule } from "@/lib/lesson/stages/registry";
+import { useAnimatedParams } from "./use-animated-params";
+import { recordChapterDerived } from "@/lib/lesson/progress-store";
+import { StageCanvas } from "./stages/stage-canvas";
+import { BeatStrip } from "./beats/beat-strip";
+import { NamingPanel } from "./beats/naming-panel";
+import { StageComplete } from "./stage-complete";
+import { SlideRenderer } from "./slide-renderer";
+import { LessonProgressBar } from "./lesson-progress-bar";
+import { Button } from "@/components/ui/button";
+import type { StageLesson } from "@/types/stage";
+
+interface StageShellProps {
+  lesson: StageLesson;
+  topicSlug: string;
+  chapterSlug: string;
+}
+
+export function StageShell({ lesson, topicSlug, chapterSlug }: StageShellProps) {
+  const screens = useMemo(() => buildBeats(lesson), [lesson]);
+  const [index, setIndex] = useState(0);
+  const { params, setNow, springTo } = useAnimatedParams(lesson.stage.initial);
+  const reduceMotion = useReducedMotion();
+
+  const screen = screens[index];
+  const mod = getStageModule(lesson.stage.type);
+  const readouts = useMemo(() => mod?.readouts(params) ?? {}, [mod, params]);
+
+  // Narrowed once, up front, so every consumer below (including closures
+  // passed as props) reads from this local instead of re-narrowing
+  // `screen.beat` deep inside a callback.
+  const beat = screen.kind === "beat" ? screen.beat : null;
+  const reached =
+    beat?.kind === "manipulate" ? isGoalMet(beat.goal, readouts) : false;
+
+  // Travel to the beat's preset on entry, so the student watches the stage
+  // move into position rather than finding it already there.
+  useEffect(() => {
+    if (beat?.preset) springTo(beat.preset);
+  }, [beat, springTo]);
+
+  // Nothing blocks. A student who is already stuck must never meet a locked door.
+  const goNext = useCallback(
+    () => setIndex((i) => Math.min(screens.length - 1, i + 1)),
+    [screens.length]
+  );
+  const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) || target.isContentEditable) {
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goNext, goPrev]);
+
+  useEffect(() => {
+    if (screen.kind === "complete") recordChapterDerived(topicSlug, chapterSlug);
+  }, [screen.kind, topicSlug, chapterSlug]);
+
+  function showMe() {
+    if (beat?.kind !== "manipulate" || !mod) return;
+    const solved = solveGoal(beat.goal, mod, params);
+    // Travel there rather than teleport — the student needs to see which way
+    // it moved, otherwise being shown teaches nothing.
+    if (solved) springTo(solved);
+  }
+
+  if (screen.kind === "complete") {
+    return <StageComplete keyTakeaways={lesson.summary.keyTakeaways} />;
+  }
+
+  return (
+    <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+      <div className="flex flex-col gap-4">
+        <LessonProgressBar currentIndex={index} totalSteps={screens.length} />
+
+        {/* The stage never unmounts: it is the continuity of the lesson. */}
+        <div className="sticky top-16 z-10 rounded-lg border bg-background p-3 shadow-sm">
+          <StageCanvas
+            type={lesson.stage.type}
+            params={params}
+            onParamsChange={setNow}
+            highlight={beat?.highlight}
+            interactive={screen.kind === "beat"}
+          />
+        </div>
+
+        <div className="min-h-[9rem]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={screen.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            >
+              {beat && (
+                <BeatStrip
+                  beat={beat}
+                  reached={reached}
+                  onShowMe={showMe}
+                  onPredictAnswered={() => {
+                    // Travel, so the predicted outcome is watched happening.
+                    if (beat.kind === "predict") springTo(beat.then);
+                  }}
+                />
+              )}
+              {screen.kind === "naming" && <NamingPanel naming={screen.naming} />}
+              {screen.kind === "apply" && (
+                /*
+                 * Answers are intentionally discarded. Deck lessons collect
+                 * them to compute a score and tier; stage lessons are never
+                 * scored, so there is nothing to accumulate. The slide's own
+                 * inline feedback is the whole point of the practice step.
+                 */
+                <SlideRenderer
+                  slide={screen.slide}
+                  onAnswer={() => {}}
+                  onInteracted={() => {}}
+                  answeredSteps={new Map()}
+                  interactedSteps={new Set()}
+                />
+              )}
+              {screen.kind === "summary" && (
+                <ul className="space-y-2">
+                  {screen.keyTakeaways.map((t) => (
+                    <li key={t} className="rounded-lg border bg-muted/40 p-3 text-sm">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="flex items-center justify-between border-t pt-4">
+          <Button variant="outline" size="sm" onClick={goPrev} disabled={index === 0}>
+            <ChevronLeft className="h-4 w-4" />
+            Zpět
+          </Button>
+          <Button size="sm" onClick={goNext}>
+            Další
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </MotionConfig>
+  );
+}
