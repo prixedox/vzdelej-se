@@ -17,6 +17,7 @@ import { chapter as math__linear_equations__intro } from "./math/linear-equation
 import { chapter as math__linear_equations__word_problems } from "./math/linear-equations/word-problems";
 import { chapter as math__linear_functions__intro } from "./math/linear-functions/intro";
 import { chapter as math__logarithmic_functions__intro } from "./math/logarithmic-functions/intro";
+import { chapter as math__logarithmic_functions__why_logarithms } from "./math/logarithmic-functions/why-logarithms";
 import { chapter as math__probability__intro } from "./math/probability/intro";
 import { chapter as math__quadratic_equations__discriminant } from "./math/quadratic-equations/discriminant";
 import { chapter as math__quadratic_equations__intro } from "./math/quadratic-equations/intro";
@@ -58,6 +59,7 @@ export const chapters: Readonly<Record<string, ChapterDefinition>> = {
   "linear-equations/word-problems": math__linear_equations__word_problems,
   "linear-functions/intro": math__linear_functions__intro,
   "logarithmic-functions/intro": math__logarithmic_functions__intro,
+  "logarithmic-functions/why-logarithms": math__logarithmic_functions__why_logarithms,
   "probability/intro": math__probability__intro,
   "quadratic-equations/discriminant": math__quadratic_equations__discriminant,
   "quadratic-equations/intro": math__quadratic_equations__intro,

@@ -4,6 +4,11 @@ import {
   PARABOLA_ROOTS_PARAMS,
   PARABOLA_ROOTS_READOUTS,
 } from "./parabola-roots";
+import {
+  readouts as logSlideRuleReadouts,
+  LOG_SLIDE_RULE_PARAMS,
+  LOG_SLIDE_RULE_READOUTS,
+} from "./log-slide-rule";
 
 export interface StageModule {
   /** Parameter keys this stage accepts in `initial`, `preset`, and `then`. */
@@ -30,6 +35,12 @@ export const stageRegistry: Partial<Record<StageType, StageModule>> = {
     ranges: { a: [-3, 3], b: [-6, 6], c: [-8, 6] },
     readouts_declared: PARABOLA_ROOTS_READOUTS,
     readouts: parabolaRootsReadouts,
+  },
+  "log-slide-rule": {
+    params: LOG_SLIDE_RULE_PARAMS,
+    ranges: { offset: [0, 1] },
+    readouts_declared: LOG_SLIDE_RULE_READOUTS,
+    readouts: logSlideRuleReadouts,
   },
 };
 
