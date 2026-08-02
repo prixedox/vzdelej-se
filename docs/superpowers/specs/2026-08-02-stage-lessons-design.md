@@ -24,11 +24,30 @@ Explain-then-drill is precisely what school already did to them. Repeating it wi
 typography will not land. Three parts of the current design actively work against this
 learner:
 
+<!-- Observations below verified by running the dev server and walking two chapters
+     (math/quadratic-equations/intro, math/derivatives/intro) at 1280x900. -->
+
+
 - `slide-deck.tsx:70` blocks advancing past an unanswered question — the app's response to
   "I don't know" is to lock the door.
 - `lesson-complete.tsx` reports "Úspěšnost 62 %" and a Bronze/Silver/Gold tier — someone
   who arrived feeling stupid leaves with a score confirming it.
 - The formula is always declared first, then practiced. Magic-ness is never addressed.
+
+Walking the app confirms the diagnosis and adds one more point: **slides are text floating
+in a void.** On a 1280x900 desktop, `quadratic-equations/intro` slide 1 is three lines of
+prose above roughly 700px of empty white, and it is slide 1 of 23. `derivatives/intro`
+slide 2 asks the student to *draw a tangent and predict its slope* — a purely geometric
+question — with no picture on screen at all.
+
+### The existing proto-stage
+
+`derivatives/intro` slide 5 renders `interactive-derivative`: curve, secant, two sliders,
+live difference-quotient readout. It is already most of what a stage is, and its prompt —
+*"Posouvejte h směrem k nule a sledujte, co se děje se sečnou"* — is a `ManipulateBeat` in
+all but name. The engine cannot tell whether the student actually did it; it only waits
+for a click. That gap is exactly what `Goal` + readouts close, and this component is the
+reference implementation to adapt when building the pilot stages.
 
 ## Approach
 
@@ -337,6 +356,30 @@ the formula going in the wrong *field*; only this stops it being smuggled into a
 
 `apply` steps validate through the existing step rules, unchanged.
 
+### Czech diacritic density check (applies to all chapters, both formats)
+
+A scan of the 38 content chapters found five written with no or almost no Czech diacritics:
+
+| chapter | diacritic density |
+|---------|-------------------|
+| `math/limits/intro.ts` | 0 % |
+| `math/probability/intro.ts` | 0 % |
+| `math/triangles/intro.ts` | 0 % |
+| `math/derivatives/intro.ts` | 1.7 % |
+| `math/trigonometric-functions/intro.ts` | 2.7 % |
+
+Czech prose in the healthy chapters runs 7–14 %. The affected text reads as broken to a
+Czech student — *"rychlost znamena draha delena casem"*, badge *"Zahadka"* — and some has
+degraded grammar beyond the missing accents: *"v pravouhlm trojuhelniku"*
+(→ *pravoúhlém trojúhelníku*), *"pocet priznivy vysledku"* (→ *počet příznivých výsledků*).
+
+`validate:content` passes them because Zod only checks structure.
+
+Add a rule: for every chapter, compute diacritic density over user-facing string literals
+(excluding LaTeX spans) and **fail the build under 4 %**. This guards the new pilot content
+as it is written, not just the existing corpus. Repairing the five chapters above is
+tracked separately — see Out of scope.
+
 ## Error handling
 
 - **Unknown `stage.type`** → visible Czech fallback with a back link, *not* silence.
@@ -372,6 +415,26 @@ Each of these is a separate project with its own spec:
   static completion screen
 - A "I'm stuck on X" search entry point — genuinely right for this learner, since the
   current subject → topic → chapter tree assumes browsing, but independent of this work
+
+### Existing bugs found while walking the app
+
+Real defects in the current deck format, none caused by this work and none fixed by it.
+They should be filed and fixed independently; the diacritic *validator* is in scope above,
+but repairing the affected chapters is not.
+
+1. **`explore` slide CTA is occluded by the nav bar.** On `derivatives/intro` slide 5 at
+   1280x900, the "Hotovo" button renders at y 870–906 while the nav bar occupies y 843–900.
+   The control that unblocks the slide sits behind the bar, while the nav reads
+   "Odpovězte pro pokračování" with Další disabled. Effectively a soft dead end.
+2. **Duplicate question.** `quadratic-equations/intro` slide 2 (prediction) and slide 3
+   (multiple-choice) ask the same question with the same three options — the second
+   immediately after the first has revealed the answer.
+3. **Wrong narrative.** `quadratic-equations/intro` opens with *"Proč matematici vymysleli
+   logaritmy?"* on a chapter about quadratics.
+4. **Five chapters missing Czech diacritics**, listed in the Validation section.
+5. **Stale lock message.** After a prediction option is selected but before "Odhalit
+   odpověď" is clicked, the nav still reads "Odpovězte pro pokračování" although the
+   student has answered.
 
 ## Success criteria
 
