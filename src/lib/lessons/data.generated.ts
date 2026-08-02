@@ -35,6 +35,7 @@ import { chapter as physics__gravity__intro } from "./physics/gravity/intro";
 import { chapter as physics__ideal_gas__intro } from "./physics/ideal-gas/intro";
 import { chapter as physics__kinematics__intro } from "./physics/kinematics/intro";
 import { chapter as physics__kinematics__projectile_motion } from "./physics/kinematics/projectile-motion";
+import { chapter as physics__kinematics__velocity_as_slope } from "./physics/kinematics/velocity-as-slope";
 import { chapter as physics__magnetic_field__intro } from "./physics/magnetic-field/intro";
 import { chapter as physics__mechanical_waves__intro } from "./physics/mechanical-waves/intro";
 import { chapter as physics__momentum_and_impulse__intro } from "./physics/momentum-and-impulse/intro";
@@ -77,6 +78,7 @@ export const chapters: Readonly<Record<string, ChapterDefinition>> = {
   "ideal-gas/intro": physics__ideal_gas__intro,
   "kinematics/intro": physics__kinematics__intro,
   "kinematics/projectile-motion": physics__kinematics__projectile_motion,
+  "kinematics/velocity-as-slope": physics__kinematics__velocity_as_slope,
   "magnetic-field/intro": physics__magnetic_field__intro,
   "mechanical-waves/intro": physics__mechanical_waves__intro,
   "momentum-and-impulse/intro": physics__momentum_and_impulse__intro,

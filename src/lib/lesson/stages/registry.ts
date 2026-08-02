@@ -9,6 +9,11 @@ import {
   LOG_SLIDE_RULE_PARAMS,
   LOG_SLIDE_RULE_READOUTS,
 } from "./log-slide-rule";
+import {
+  readouts as motionTimelineReadouts,
+  MOTION_TIMELINE_PARAMS,
+  MOTION_TIMELINE_READOUTS,
+} from "./motion-timeline";
 
 export interface StageModule {
   /** Parameter keys this stage accepts in `initial`, `preset`, and `then`. */
@@ -25,11 +30,11 @@ export interface StageModule {
 }
 
 /**
- * `Partial` while only one stage exists — Tasks 13 and 14 add the other two,
- * and Task 14 restores the exhaustive `Record<StageType, StageModule>` so a
- * declared-but-unimplemented stage type becomes a compile error.
+ * Exhaustive: every `StageType` member must have an entry here, or this is a
+ * compile error. That guarantee is what makes a declared-but-unimplemented
+ * stage type impossible to ship.
  */
-export const stageRegistry: Partial<Record<StageType, StageModule>> = {
+export const stageRegistry: Record<StageType, StageModule> = {
   "parabola-roots": {
     params: PARABOLA_ROOTS_PARAMS,
     ranges: { a: [-3, 3], b: [-6, 6], c: [-8, 6] },
@@ -41,6 +46,12 @@ export const stageRegistry: Partial<Record<StageType, StageModule>> = {
     ranges: { offset: [0, 1] },
     readouts_declared: LOG_SLIDE_RULE_READOUTS,
     readouts: logSlideRuleReadouts,
+  },
+  "motion-timeline": {
+    params: MOTION_TIMELINE_PARAMS,
+    ranges: { t: [0.2, 4], h: [0.05, 2], v0: [0, 10], a: [-5, 5] },
+    readouts_declared: MOTION_TIMELINE_READOUTS,
+    readouts: motionTimelineReadouts,
   },
 };
 
