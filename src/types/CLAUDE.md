@@ -6,9 +6,10 @@ Shared TypeScript interfaces. Imported by both `components/` and `lib/`.
 
 | File | Purpose |
 |------|---------|
-| `chapter.ts` | `ChapterDefinition` — `{slug, topicSlug, order, title, lesson}` |
+| `chapter.ts` | `ChapterDefinition` = `DeckChapter \| StageChapter`, discriminated on `format` (`"deck"` — optional, existing files omit it — or `"stage"`). Both share `{slug, topicSlug, order, title}`; `lesson` is a `Lesson` or a `StageLesson` respectively |
 | `lesson.ts` | `Lesson`, `LessonStep` (discriminated union: `explain`, `multiple-choice`, `text-input`, `explore`, `reveal`, `sort-order`, `prediction`), `VisualBlock`, `VisualType` |
 | `slide.ts` | `Slide` discriminated union — one variant per step type + `summary` + `complete` |
+| `stage.ts` | `StageType`, `StageSpec`, `Goal`, `Beat` (discriminated union: `observe`, `manipulate`, `predict`), `NamingBeat`, `StageLesson` — the "derive-then-name" stage format |
 | `topic.ts` | `TopicNode`, `TopicTreeData` for topic trees |
 
 ## Rules

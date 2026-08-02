@@ -23,7 +23,7 @@ Lessons are static TS chapter files under `src/lib/lessons/{subject}/{topic}/{ch
 - Chapter files: `src/lib/lessons/{subject}/{topic-slug}/{chapter-slug}.ts` — each exports `export const chapter: ChapterDefinition`
 - Query API: `src/lib/lessons/data.ts` — `getChapter`, `hasChapter`, `getChaptersForTopic`
 - Generated registry: `src/lib/lessons/data.generated.ts` — DO NOT hand-edit (committed, rebuilt by `pnpm build:registry`)
-- Schema: `src/lib/lessons/schema.ts` — Zod `chapterSchema` (run via `pnpm validate:content`)
+- Schema: `src/lib/lessons/schema.ts` — Zod `deckChapterSchema` / `stageChapterSchema`, picked per `chapter.format` (run via `pnpm validate:content`); `chapterSchema` is a plain union of the two with no production caller
 - Builder: `src/lib/lesson/build-slides.ts` — `Lesson` → `Slide[]`
 - Evaluator: `src/lib/lesson/answer-evaluator.ts` — client-side, never throws
 - Progress: `src/lib/lesson/progress-store.ts` — per-chapter tier, streak, spaced review

@@ -36,7 +36,11 @@ export interface ManipulateBeat extends BeatBase {
   goal: Goal;
   /** Fires the instant the goal holds. Czech. */
   onReached: string;
-  /** Offered after sustained fiddling without reaching the goal. Czech. */
+  /**
+   * Rendered immediately whenever the goal is not yet met — there is no
+   * "struggled for a while" delay before it appears. Shown alongside the
+   * "Ukaž mi to" escape. Czech.
+   */
   nudge?: string;
 }
 

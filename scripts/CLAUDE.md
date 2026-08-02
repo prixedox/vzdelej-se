@@ -7,7 +7,7 @@ Node-only CLI scripts. Run via `tsx` — no bundler, no React imports, no DOM.
 | Script | Command | Purpose |
 |--------|---------|---------|
 | `build-registry.ts` | `pnpm build:registry` | Scan `src/lib/lessons/{subject}/{topic}/*.ts` and write `src/lib/lessons/data.generated.ts`. Runs on `predev` + `prebuild`; output is committed. |
-| `validate-content.ts` | `pnpm validate:content` | Run Zod `chapterSchema` over every chapter, cross-check against topic trees. Runs on `prebuild`. Fails the build on any violation. |
+| `validate-content.ts` | `pnpm validate:content` | Parse every chapter with Zod `deckChapterSchema` or `stageChapterSchema` (picked per `chapter.format` — `chapterSchema` itself has no production caller), cross-check against topic trees, plus stage-only checks and the Czech diacritic gate. Runs on `prebuild`. Fails the build on any violation. |
 | `new-chapter.ts` | `pnpm new-chapter <subject>/<topic>/<chapter> [title]` | Scaffold a chapter file. Computes next `order` automatically. |
 | `new-topic.ts` | `pnpm new-topic <subject>/<category>/<topic> [name]` | Insert a `TopicNode` into the tree file + scaffold an `intro.ts` chapter. |
 
