@@ -1,5 +1,6 @@
 "use client";
 
+import type { StageType } from "@/types/stage";
 import { ParabolaRootsStage } from "./parabola-roots-stage";
 import { LogSlideRuleStage } from "./log-slide-rule-stage";
 import { MotionTimelineStage } from "./motion-timeline-stage";
@@ -13,7 +14,17 @@ export interface StageProps {
   interactive: boolean;
 }
 
-export function StageCanvas({ type, ...props }: StageProps & { type: string }) {
+/**
+ * Compile-time exhaustiveness guard: only typechecks if every `StageType`
+ * member was narrowed away by an earlier `case`. Add a `StageType` without a
+ * matching case here and this line fails to compile — the registry is no
+ * longer the only place that catches a declared-but-unimplemented stage.
+ */
+function assertUnreachable(x: never): void {
+  void x;
+}
+
+export function StageCanvas({ type, ...props }: StageProps & { type: StageType }) {
   switch (type) {
     case "parabola-roots":
       return <ParabolaRootsStage {...props} />;
@@ -22,6 +33,7 @@ export function StageCanvas({ type, ...props }: StageProps & { type: string }) {
     case "motion-timeline":
       return <MotionTimelineStage {...props} />;
     default:
+      assertUnreachable(type);
       // A stage is the whole lesson, so failing silently would render a blank
       // page. Block visuals fail silently because they are decoration.
       return (
