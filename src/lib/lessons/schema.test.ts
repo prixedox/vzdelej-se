@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { chapterSchema } from "./schema";
+import { chapterSchema, stageChapterSchema } from "./schema";
 
 const validLesson = {
   steps: [{ type: "explain" as const, body: "hello" }],
@@ -138,5 +138,104 @@ describe("chapterSchema", () => {
 
   it("rejects negative order", () => {
     expect(chapterSchema.safeParse({ ...validChapter, order: -1 }).success).toBe(false);
+  });
+});
+
+const validStageChapter = {
+  slug: "discriminant",
+  topicSlug: "quadratic-equations",
+  order: 2,
+  format: "stage" as const,
+  title: "Diskriminant",
+  lesson: {
+    stage: {
+      type: "parabola-roots",
+      initial: { a: 1, b: 0, c: -4 },
+      readouts: ["rootCount", "rootGap", "vertexY"],
+    },
+    beats: [
+      { kind: "observe", prompt: "Táhni parabolou nahoru a dolů." },
+      {
+        kind: "manipulate",
+        prompt: "Posuň ji tak, aby se osy jen dotýkala.",
+        goal: { readout: "rootGap", target: 0, within: 0.15 },
+        onReached: "Teď se oba kořeny slily v jeden.",
+      },
+    ],
+    naming: {
+      observation: "Existuje přesná hranice.",
+      formula: "D = b^2 - 4ac",
+      mapping: "$D$ měří vzdálenost od té hranice.",
+    },
+    summary: { keyTakeaways: ["Diskriminant měří vzdálenost od dotyku."] },
+  },
+};
+
+describe("stageChapterSchema", () => {
+  it("accepts a well-formed stage chapter", () => {
+    expect(stageChapterSchema.safeParse(validStageChapter).success).toBe(true);
+  });
+
+  it("rejects a stage chapter with no beats", () => {
+    const bad = { ...validStageChapter, lesson: { ...validStageChapter.lesson, beats: [] } };
+    expect(stageChapterSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("rejects a missing naming block", () => {
+    const lesson = { ...validStageChapter.lesson } as Record<string, unknown>;
+    delete lesson.naming;
+    expect(stageChapterSchema.safeParse({ ...validStageChapter, lesson }).success).toBe(false);
+  });
+
+  it("rejects an empty naming formula", () => {
+    const bad = {
+      ...validStageChapter,
+      lesson: {
+        ...validStageChapter.lesson,
+        naming: { ...validStageChapter.lesson.naming, formula: "" },
+      },
+    };
+    expect(stageChapterSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("rejects a predict beat without exactly one correct option", () => {
+    const bad = {
+      ...validStageChapter,
+      lesson: {
+        ...validStageChapter.lesson,
+        beats: [
+          {
+            kind: "predict",
+            prompt: "A když ji zvedneš ještě výš?",
+            question: "Kolik bude kořenů?",
+            options: [
+              { label: "Dva", isCorrect: true },
+              { label: "Žádný", isCorrect: true },
+            ],
+            then: { c: 2 },
+            reveal: "Žádný.",
+          },
+        ],
+      },
+    };
+    expect(stageChapterSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("rejects a negative goal tolerance", () => {
+    const bad = {
+      ...validStageChapter,
+      lesson: {
+        ...validStageChapter.lesson,
+        beats: [
+          {
+            kind: "manipulate",
+            prompt: "Posuň.",
+            goal: { readout: "rootGap", target: 0, within: -1 },
+            onReached: "Hotovo.",
+          },
+        ],
+      },
+    };
+    expect(stageChapterSchema.safeParse(bad).success).toBe(false);
   });
 });

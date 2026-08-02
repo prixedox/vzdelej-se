@@ -140,12 +140,94 @@ export const lessonSchema = z.object({
   nextTopicSuggestion: z.string().optional(),
 });
 
-export const chapterSchema = z.object({
+// ── Stage format ──
+
+const goalSchema = z.object({
+  readout: z.string().min(1),
+  target: z.number().finite(),
+  within: z.number().nonnegative(),
+});
+
+const paramMap = z.record(z.string(), z.number().finite());
+
+const beatBase = {
+  prompt: z.string().min(1),
+  preset: paramMap.optional(),
+  highlight: z.array(z.string().min(1)).optional(),
+};
+
+const observeBeat = z.object({ kind: z.literal("observe"), ...beatBase });
+
+const manipulateBeat = z.object({
+  kind: z.literal("manipulate"),
+  ...beatBase,
+  goal: goalSchema,
+  onReached: z.string().min(1),
+  nudge: z.string().min(1).optional(),
+});
+
+const predictBeat = z.object({
+  kind: z.literal("predict"),
+  ...beatBase,
+  question: z.string().min(1),
+  options: z
+    .array(z.object({ label: z.string().min(1), isCorrect: z.boolean() }))
+    .min(2)
+    .refine(
+      (opts) => opts.filter((o) => o.isCorrect).length === 1,
+      "predict beat must have exactly one correct option"
+    ),
+  then: paramMap,
+  reveal: z.string().min(1),
+});
+
+const beatSchema = z.discriminatedUnion("kind", [observeBeat, manipulateBeat, predictBeat]);
+
+export const stageLessonSchema = z.object({
+  title: z.string().min(1).optional(),
+  stage: z.object({
+    type: z.string().min(1),
+    initial: paramMap,
+    readouts: z.array(z.string().min(1)).min(1),
+  }),
+  beats: z.array(beatSchema).min(1),
+  naming: z.object({
+    observation: z.string().min(1),
+    formula: z.string().min(1),
+    mapping: z.string().min(1),
+  }),
+  apply: z.array(lessonStepSchema).optional(),
+  summary: z.object({ keyTakeaways: z.array(z.string().min(1)).min(1) }),
+  nextTopicSuggestion: z.string().optional(),
+});
+
+// ── Chapter ──
+
+const chapterBase = {
   slug: slugShape,
   topicSlug: slugShape,
   order: z.number().int().nonnegative(),
   title: z.string().min(1),
+};
+
+export const deckChapterSchema = z.object({
+  ...chapterBase,
+  format: z.literal("deck").optional(),
   lesson: lessonSchema,
 });
+
+export const stageChapterSchema = z.object({
+  ...chapterBase,
+  format: z.literal("stage"),
+  lesson: stageLessonSchema,
+});
+
+/**
+ * A plain union rather than a discriminated one: existing deck chapters omit
+ * `format` entirely, which `z.discriminatedUnion` would reject. Callers that
+ * want precise errors should branch on `format` and use the specific schema —
+ * `validate-content.ts` does exactly that.
+ */
+export const chapterSchema = z.union([deckChapterSchema, stageChapterSchema]);
 
 export type ChapterSchema = z.infer<typeof chapterSchema>;
