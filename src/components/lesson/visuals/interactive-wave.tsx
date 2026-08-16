@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { MathDisplay } from "../math-display";
 import { SliderControl } from "./slider-control";
 
@@ -95,41 +95,34 @@ export function InteractiveWave({
   const [isPlaying, setIsPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
-  const rafRef = useRef<number>(0);
-  const lastTimeRef = useRef(0);
 
   // Derived quantities
   const velocity = useMemo(() => frequency * wavelength, [frequency, wavelength]);
   const period = useMemo(() => 1 / frequency, [frequency]);
 
-  // Animation loop
-  const animate = useCallback(
-    (timestamp: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-      const dt = Math.min((timestamp - lastTimeRef.current) / 1000, 0.05);
-      lastTimeRef.current = timestamp;
-      setTime((prev) => prev + dt);
-      rafRef.current = requestAnimationFrame(animate);
-    },
-    [],
-  );
-
+  // The loop lives inside the effect so it can call itself without a
+  // self-referencing useCallback, and so cleanup owns the frame handle.
   useEffect(() => {
-    if (isPlaying) {
-      lastTimeRef.current = 0;
-      rafRef.current = requestAnimationFrame(animate);
-    } else {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    }
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (!isPlaying) return;
+
+    let raf = 0;
+    let lastTime = 0;
+
+    const step = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+      setTime((prev) => prev + dt);
+      raf = requestAnimationFrame(step);
     };
-  }, [isPlaying, animate]);
+
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [isPlaying]);
 
   const handleReset = useCallback(() => {
     setIsPlaying(false);
     setTime(0);
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
   }, []);
 
   // Build wave paths
@@ -196,16 +189,17 @@ export function InteractiveWave({
     if (mode === "interference") return null;
 
     const step = 0.05;
+    let crest: { x: number; yTop: number; yBot: number } | null = null;
     for (let xCm = step; xCm < 20 - step; xCm += step) {
       const yPrev = waveY(xCm - step, time, amplitude, wavelength, frequency, mode, phaseDeg, 0);
       const yCurr = waveY(xCm, time, amplitude, wavelength, frequency, mode, phaseDeg, 0);
       const yNext = waveY(xCm + step, time, amplitude, wavelength, frequency, mode, phaseDeg, 0);
       if (yCurr > yPrev && yCurr > yNext && yCurr > 0.1 * amplitude * PX_PER_CM) {
-        const svgX = MARGIN_L + xCm * PX_PER_CM;
-        return { x: svgX, yTop: CENTER_Y - yCurr, yBot: CENTER_Y };
+        crest = { x: MARGIN_L + xCm * PX_PER_CM, yTop: CENTER_Y - yCurr, yBot: CENTER_Y };
+        break;
       }
     }
-    return null;
+    return crest;
   }, [time, amplitude, wavelength, frequency, mode, phaseDeg, showLabels]);
 
   // Standing wave: nodes and antinodes

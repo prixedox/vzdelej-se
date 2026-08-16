@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { MotionG } from "./motion-g";
 
 interface MotionDiagramProps {
   positions: number[];   // x positions at each time step
@@ -122,16 +122,14 @@ export function MotionDiagram({
         {/* Position dots */}
         {positions.map((pos, i) => {
           const x = xPos(pos);
-          const DotG = animated ? motion.g : "g";
-          const dotProps = animated
-            ? {
-                initial: { opacity: 0, scale: 0 } as any,
-                animate: { opacity: 1, scale: 1 } as any,
-                transition: { delay: 0.15 * i, type: "spring", stiffness: 300, damping: 15 },
-              }
-            : {};
           return (
-            <DotG key={i} {...(dotProps as any)}>
+            <MotionG
+              key={i}
+              animated={animated}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 * i, type: "spring", stiffness: 300, damping: 15 }}
+            >
               <circle cx={x} cy={lineY} r={8} fill={colors[i]} stroke="white" strokeWidth="2.5" />
               <text x={x} y={lineY + 3} textAnchor="middle" fill="white" fontSize="8" fontWeight="bold">
                 {i}
@@ -148,7 +146,7 @@ export function MotionDiagram({
                   {labels[i]}
                 </text>
               )}
-            </DotG>
+            </MotionG>
           );
         })}
       </svg>

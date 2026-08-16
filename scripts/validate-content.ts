@@ -22,7 +22,19 @@ function collectLeaves(topics: readonly TopicNode[]): TopicNode[] {
   return out;
 }
 
-function main() {
+export interface ContentReport {
+  errors: string[];
+  totalChapters: number;
+  shippedTopics: number;
+  comingSoonTopics: number;
+}
+
+/**
+ * Collects every violation instead of throwing on the first, so one run reports
+ * the whole picture. The CLI wrapper below turns a non-empty `errors` into a
+ * non-zero exit.
+ */
+export function validateContent(): ContentReport {
   const errors: string[] = [];
 
   // Global slug uniqueness: registry keys are `${topicSlug}/${chapterSlug}`
@@ -101,18 +113,26 @@ function main() {
     }
   }
 
-  if (errors.length) {
-    console.error(`\nContent validation failed with ${errors.length} error(s):\n`);
-    for (const e of errors) console.error("  " + e);
+  return {
+    errors,
+    totalChapters: Object.keys(chapters).length,
+    shippedTopics: leafSlugs.size - comingSoonSlugs.size,
+    comingSoonTopics: comingSoonSlugs.size,
+  };
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const report = validateContent();
+
+  if (report.errors.length) {
+    console.error(`\nContent validation failed with ${report.errors.length} error(s):\n`);
+    for (const e of report.errors) console.error("  " + e);
     process.exit(1);
   }
 
-  const totalTopics = leafSlugs.size;
-  const shippedTopics = totalTopics - comingSoonSlugs.size;
-  const pendingSuffix = comingSoonSlugs.size > 0 ? ` (+${comingSoonSlugs.size} připravujeme)` : "";
+  const pendingSuffix =
+    report.comingSoonTopics > 0 ? ` (+${report.comingSoonTopics} připravujeme)` : "";
   console.log(
-    `✓ Content OK: ${Object.keys(chapters).length} chapters across ${shippedTopics} topics${pendingSuffix}`
+    `✓ Content OK: ${report.totalChapters} chapters across ${report.shippedTopics} topics${pendingSuffix}`
   );
 }
-
-main();

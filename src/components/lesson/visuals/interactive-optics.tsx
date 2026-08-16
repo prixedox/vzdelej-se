@@ -12,6 +12,55 @@ interface InteractiveOpticsProps {
   showRays?: boolean;
 }
 
+const SVG_W = 440;
+const SVG_H = 300;
+
+// Clamp a point to SVG boundaries
+function clampX(x: number): number {
+  return Math.max(5, Math.min(SVG_W - 5, x));
+}
+function clampY(y: number): number {
+  return Math.max(5, Math.min(SVG_H - 5, y));
+}
+
+// Compute line-boundary intersection for extending rays
+// Given a point and direction, find where the ray exits the SVG
+function extendRay(
+  x0: number,
+  y0: number,
+  dx: number,
+  dy: number,
+): { x: number; y: number } {
+  // Find the parameter t for each boundary
+  const candidates: number[] = [];
+  if (dx !== 0) {
+    const tLeft = (5 - x0) / dx;
+    const tRight = (SVG_W - 5 - x0) / dx;
+    if (tLeft > 0.001) candidates.push(tLeft);
+    if (tRight > 0.001) candidates.push(tRight);
+  }
+  if (dy !== 0) {
+    const tTop = (5 - y0) / dy;
+    const tBot = (SVG_H - 5 - y0) / dy;
+    if (tTop > 0.001) candidates.push(tTop);
+    if (tBot > 0.001) candidates.push(tBot);
+  }
+  // Pick the smallest positive t that keeps us in bounds
+  let bestT = Infinity;
+  for (const t of candidates) {
+    const px = x0 + dx * t;
+    const py = y0 + dy * t;
+    if (px >= 4 && px <= SVG_W - 4 && py >= 4 && py <= SVG_H - 4) {
+      if (t < bestT) bestT = t;
+    }
+  }
+  if (bestT === Infinity) bestT = 1;
+  return {
+    x: clampX(x0 + dx * bestT),
+    y: clampY(y0 + dy * bestT),
+  };
+}
+
 export function InteractiveOptics({
   element = "convex-lens",
   defaultFocalLength = 5,
@@ -30,10 +79,8 @@ export function InteractiveOptics({
   const fSigned = isConverging ? f : -f;
 
   // SVG layout
-  const svgW = 440;
-  const svgH = 300;
-  const axisY = svgH / 2; // optical axis vertical center
-  const lensX = isMirror ? 320 : svgW / 2; // lens at center, mirror on right
+  const axisY = SVG_H / 2; // optical axis vertical center
+  const lensX = isMirror ? 320 : SVG_W / 2; // lens at center, mirror on right
   const scale = 15; // px per cm
 
   // Thin lens / mirror equation: 1/f = 1/a + 1/b => b = a*f / (a - f)
@@ -89,52 +136,6 @@ export function InteractiveOptics({
       f2Label: "F'",
     };
   }, [lensX, fSigned, scale, isMirror]);
-
-  // Clamp a point to SVG boundaries
-  function clampX(x: number): number {
-    return Math.max(5, Math.min(svgW - 5, x));
-  }
-  function clampY(y: number): number {
-    return Math.max(5, Math.min(svgH - 5, y));
-  }
-
-  // Compute line-boundary intersection for extending rays
-  // Given a point and direction, find where the ray exits the SVG
-  function extendRay(
-    x0: number,
-    y0: number,
-    dx: number,
-    dy: number,
-  ): { x: number; y: number } {
-    // Find the parameter t for each boundary
-    const candidates: number[] = [];
-    if (dx !== 0) {
-      const tLeft = (5 - x0) / dx;
-      const tRight = (svgW - 5 - x0) / dx;
-      if (tLeft > 0.001) candidates.push(tLeft);
-      if (tRight > 0.001) candidates.push(tRight);
-    }
-    if (dy !== 0) {
-      const tTop = (5 - y0) / dy;
-      const tBot = (svgH - 5 - y0) / dy;
-      if (tTop > 0.001) candidates.push(tTop);
-      if (tBot > 0.001) candidates.push(tBot);
-    }
-    // Pick the smallest positive t that keeps us in bounds
-    let bestT = Infinity;
-    for (const t of candidates) {
-      const px = x0 + dx * t;
-      const py = y0 + dy * t;
-      if (px >= 4 && px <= svgW - 4 && py >= 4 && py <= svgH - 4) {
-        if (t < bestT) bestT = t;
-      }
-    }
-    if (bestT === Infinity) bestT = 1;
-    return {
-      x: clampX(x0 + dx * bestT),
-      y: clampY(y0 + dy * bestT),
-    };
-  }
 
   // Generate principal rays
   const rays = useMemo(() => {
@@ -310,7 +311,7 @@ export function InteractiveOptics({
     return result;
   }, [
     objectSvgX, objectTopY, lensX, axisY, focalPoints,
-    isConverging, isMirror, showRays, scale, fSigned, a, svgW, svgH,
+    isConverging, isMirror, showRays, scale, fSigned,
   ]);
 
   // Lens / mirror symbol rendering
@@ -523,7 +524,7 @@ export function InteractiveOptics({
 
       {/* SVG Diagram */}
       <div className="flex justify-center w-full">
-        <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full max-w-lg" aria-label="Geometrick\u00E1 optika">
+        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full max-w-lg" aria-label="Geometrická optika">
           <defs>
             <linearGradient id="opticsBg" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#fefce8" />
@@ -538,23 +539,23 @@ export function InteractiveOptics({
           </defs>
 
           {/* Background */}
-          <rect x={0} y={0} width={svgW} height={svgH} fill="url(#opticsBg)" rx={8} />
+          <rect x={0} y={0} width={SVG_W} height={SVG_H} fill="url(#opticsBg)" rx={8} />
 
           {/* Subtle grid */}
           {Array.from({ length: 9 }, (_, i) => {
             const x = 40 + i * 45;
-            return <line key={`gv${i}`} x1={x} y1={10} x2={x} y2={svgH - 10} stroke="#e5e7eb" strokeWidth="0.4" />;
+            return <line key={`gv${i}`} x1={x} y1={10} x2={x} y2={SVG_H - 10} stroke="#e5e7eb" strokeWidth="0.4" />;
           })}
           {Array.from({ length: 6 }, (_, i) => {
             const y = 25 + i * 50;
-            return <line key={`gh${i}`} x1={10} y1={y} x2={svgW - 10} y2={y} stroke="#e5e7eb" strokeWidth="0.4" />;
+            return <line key={`gh${i}`} x1={10} y1={y} x2={SVG_W - 10} y2={y} stroke="#e5e7eb" strokeWidth="0.4" />;
           })}
 
           {/* Optical axis */}
           <line
             x1={10}
             y1={axisY}
-            x2={svgW - 10}
+            x2={SVG_W - 10}
             y2={axisY}
             stroke="#94a3b8"
             strokeWidth="1.5"

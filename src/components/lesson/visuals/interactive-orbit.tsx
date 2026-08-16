@@ -31,8 +31,6 @@ export function InteractiveOrbit({
 
   // Animation state
   const angleRef = useRef(0);
-  const rafRef = useRef<number>(0);
-  const lastTimeRef = useRef(0);
   const [displayAngle, setDisplayAngle] = useState(0);
 
   // SVG dimensions
@@ -84,12 +82,37 @@ export function InteractiveOrbit({
     return rings;
   }, [showGField, surfaceG, pxPerUnit]);
 
-  // Animation
-  const animate = useCallback(
-    (timestamp: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-      const dt = Math.min((timestamp - lastTimeRef.current) / 1000, 0.05);
-      lastTimeRef.current = timestamp;
+  const startAnimation = useCallback(() => {
+    setIsPlaying(true);
+  }, []);
+
+  const stopAnimation = useCallback(() => {
+    setIsPlaying(false);
+  }, []);
+
+  /**
+   * Editing a parameter invalidates the orbit in progress, so every slider
+   * rewinds the satellite alongside its own setter. Doing it here rather than in
+   * an effect keeps the reset tied to the interaction that caused it.
+   */
+  const resetOrbit = useCallback(() => {
+    setIsPlaying(false);
+    angleRef.current = 0;
+    setDisplayAngle(0);
+  }, []);
+
+  // The loop lives inside the effect so it can call itself without a
+  // self-referencing useCallback, and so cleanup owns the frame handle.
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    let raf = 0;
+    let lastTime = 0;
+
+    const step = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
 
       // Angular velocity = v/r (in display units, sped up)
       const omega = (vOrbital / orbRadius) * 2; // speed factor for visibility
@@ -97,37 +120,12 @@ export function InteractiveOrbit({
       if (angleRef.current > 2 * Math.PI) angleRef.current -= 2 * Math.PI;
 
       setDisplayAngle(angleRef.current);
-      rafRef.current = requestAnimationFrame(animate);
-    },
-    [vOrbital, orbRadius]
-  );
-
-  const startAnimation = useCallback(() => {
-    lastTimeRef.current = 0;
-    setIsPlaying(true);
-  }, []);
-
-  const stopAnimation = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    setIsPlaying(false);
-  }, []);
-
-  useEffect(() => {
-    if (isPlaying) {
-      lastTimeRef.current = 0;
-      rafRef.current = requestAnimationFrame(animate);
-    }
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      raf = requestAnimationFrame(step);
     };
-  }, [isPlaying, animate]);
 
-  // Reset on param change
-  useEffect(() => {
-    stopAnimation();
-    angleRef.current = 0;
-    setDisplayAngle(0);
-  }, [orbRadius, centralMass, stopAnimation]);
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [isPlaying, vOrbital, orbRadius]);
 
   // Arrowhead marker
   const arrowMarker = (id: string, color: string) => (
@@ -370,8 +368,32 @@ export function InteractiveOrbit({
 
       {/* Sliders */}
       <div className="w-full max-w-xs mx-auto space-y-1">
-        <SliderControl label="r" value={orbRadius} min={1.5} max={8} step={0.5} unit="R" onChange={setOrbRadius} color="#6366f1" />
-        <SliderControl label="M" value={centralMass} min={1} max={10} step={1} unit="" onChange={setCentralMass} color="#3b82f6" />
+        <SliderControl
+          label="r"
+          value={orbRadius}
+          min={1.5}
+          max={8}
+          step={0.5}
+          unit="R"
+          onChange={(v) => {
+            setOrbRadius(v);
+            resetOrbit();
+          }}
+          color="#6366f1"
+        />
+        <SliderControl
+          label="M"
+          value={centralMass}
+          min={1}
+          max={10}
+          step={1}
+          unit=""
+          onChange={(v) => {
+            setCentralMass(v);
+            resetOrbit();
+          }}
+          color="#3b82f6"
+        />
       </div>
 
       {/* Play/Pause */}
@@ -384,11 +406,7 @@ export function InteractiveOrbit({
           {isPlaying ? "⏸ Pauza" : "▶ Oběh"}
         </button>
         <button
-          onClick={() => {
-            stopAnimation();
-            angleRef.current = 0;
-            setDisplayAngle(0);
-          }}
+          onClick={resetOrbit}
           className="px-3 py-1.5 text-sm font-medium rounded-full border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
         >
           ↺ Reset

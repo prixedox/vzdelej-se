@@ -19,41 +19,39 @@ const CHART_B = SVG_H - 40;
 const CHART_W = CHART_R - CHART_L;
 const CHART_H = CHART_B - CHART_T;
 
-function formatNum(n: number): string {
-  return n.toFixed(3).replace(".", ",");
-}
-
+/** Outcome keys are English identifiers; `getLabels` supplies the Czech display text. */
 function getOutcomes(mode: "coin" | "dice" | "marbles"): string[] {
-  if (mode === "coin") return ["Panna", "Orel"];
+  if (mode === "coin") return ["heads", "tails"];
   if (mode === "dice") return ["1", "2", "3", "4", "5", "6"];
-  return ["Cervena", "Modra"];
+  return ["red", "blue"];
 }
 
+/** Czech labels, index-aligned with `getOutcomes(mode)`. */
 function getLabels(mode: "coin" | "dice" | "marbles"): string[] {
   if (mode === "coin") return ["Panna", "Orel"];
   if (mode === "dice") return ["1", "2", "3", "4", "5", "6"];
-  return ["Cervena", "Modra"];
+  return ["Červená", "Modrá"];
 }
 
 function getTheoreticalP(mode: "coin" | "dice" | "marbles", outcome: string, marbleConfig: { red: number; blue: number }): number {
   if (mode === "coin") return 0.5;
   if (mode === "dice") return 1 / 6;
   const total = marbleConfig.red + marbleConfig.blue;
-  if (outcome === "Cervena") return marbleConfig.red / total;
+  if (outcome === "red") return marbleConfig.red / total;
   return marbleConfig.blue / total;
 }
 
 function rollOne(mode: "coin" | "dice" | "marbles", marbleConfig: { red: number; blue: number }): string {
-  if (mode === "coin") return Math.random() < 0.5 ? "Panna" : "Orel";
+  if (mode === "coin") return Math.random() < 0.5 ? "heads" : "tails";
   if (mode === "dice") return String(Math.floor(Math.random() * 6) + 1);
   const total = marbleConfig.red + marbleConfig.blue;
-  return Math.random() < marbleConfig.red / total ? "Cervena" : "Modra";
+  return Math.random() < marbleConfig.red / total ? "red" : "blue";
 }
 
 function getEmoji(mode: "coin" | "dice" | "marbles", result: string): string {
   if (mode === "coin") return "\uD83E\uDE99";
   if (mode === "dice") return "\uD83C\uDFB2";
-  return result === "Cervena" ? "\uD83D\uDD34" : "\uD83D\uDD35";
+  return result === "red" ? "\uD83D\uDD34" : "\uD83D\uDD35";
 }
 
 function getBarColor(mode: "coin" | "dice" | "marbles", outcome: string, idx: number): string {
@@ -62,7 +60,7 @@ function getBarColor(mode: "coin" | "dice" | "marbles", outcome: string, idx: nu
     const colors = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6"];
     return colors[idx];
   }
-  return outcome === "Cervena" ? "#ef4444" : "#3b82f6";
+  return outcome === "red" ? "#ef4444" : "#3b82f6";
 }
 
 export function InteractiveProbability({
@@ -106,11 +104,6 @@ export function InteractiveProbability({
   const total = results.length;
   const lastResult = total > 0 ? results[total - 1] : null;
 
-  const maxFreq = useMemo(() => {
-    if (total === 0) return 1;
-    return Math.max(...outcomes.map((o) => frequencies[o]), 1);
-  }, [frequencies, outcomes, total]);
-
   const buttonLabel = mode === "coin" ? "Hodit minci" : mode === "dice" ? "Hodit kostkou" : "Tahni kuličku";
 
   const theoreticalFormula = useMemo(() => {
@@ -125,11 +118,11 @@ export function InteractiveProbability({
       {/* Info display */}
       <div className="flex flex-wrap justify-center gap-2 text-xs font-medium">
         <span className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
-          Pokusu: {total}
+          Pokusů: {total}
         </span>
         {lastResult && (
           <span className="bg-amber-100 dark:bg-amber-900/40 px-2 py-1 rounded-full">
-            {getEmoji(mode, lastResult)} {lastResult === "Cervena" ? "Cervena" : lastResult === "Modra" ? "Modra" : lastResult}
+            {getEmoji(mode, lastResult)} {labels[outcomes.indexOf(lastResult)] ?? lastResult}
           </span>
         )}
         <span className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded-full">
@@ -140,7 +133,7 @@ export function InteractiveProbability({
       {/* SVG Histogram */}
       {showHistogram && (
         <div className="flex justify-center w-full">
-          <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full max-w-lg" aria-label="Histogram pravdepodobnosti">
+          <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full max-w-lg" aria-label="Histogram pravděpodobnosti">
             <defs>
               <radialGradient id="probBg" cx="50%" cy="40%" r="70%">
                 <stop offset="0%" stopColor="#f8fafc" />
@@ -172,7 +165,7 @@ export function InteractiveProbability({
 
             {/* Y axis title */}
             <text x={14} y={CHART_T + CHART_H / 2} fill="#64748b" fontSize={10} fontWeight="bold" transform={`rotate(-90, 14, ${CHART_T + CHART_H / 2})`} textAnchor="middle">
-              Rel. cetnost
+              Rel. četnost
             </text>
 
             {/* Bars */}
@@ -265,7 +258,7 @@ export function InteractiveProbability({
             {showTheoreticalLine && (
               <g>
                 <line x1={CHART_R - 120} y1={18} x2={CHART_R - 90} y2={18} stroke="#1e293b" strokeWidth={1.5} strokeDasharray="6 3" />
-                <text x={CHART_R - 85} y={22} fill="#1e293b" fontSize={9}>Teor. pravdepodobnost</text>
+                <text x={CHART_R - 85} y={22} fill="#1e293b" fontSize={9}>Teor. pravděpodobnost</text>
               </g>
             )}
           </svg>

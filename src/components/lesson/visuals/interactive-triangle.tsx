@@ -73,7 +73,6 @@ export function InteractiveTriangle({
         ],
         c,
         area,
-        height: sideB,
         angles: [angleA, 90, angleB],
       };
     }
@@ -97,7 +96,6 @@ export function InteractiveTriangle({
         ],
         c: 0,
         area,
-        height: sideB,
         angles: [0, 0, 0],
       };
     }
@@ -131,12 +129,11 @@ export function InteractiveTriangle({
       ],
       c: sideC,
       area,
-      height: (2 * area) / sideA,
       angles: [alpha, beta, gamma],
     };
   }, [sideA, sideB, mode]);
 
-  const { points, c, area, height, angles } = geometry;
+  const { points, c, area, angles } = geometry;
   const [pA, pB, pC] = points;
 
   return (
@@ -183,7 +180,7 @@ export function InteractiveTriangle({
 
       {/* SVG */}
       <div className="flex justify-center w-full">
-        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full max-w-lg" aria-label="Trojuhelnik">
+        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full max-w-lg" aria-label="Trojúhelník">
           <defs>
             <radialGradient id="triBg" cx="50%" cy="40%" r="70%">
               <stop offset="0%" stopColor="#f8fafc" />

@@ -31,17 +31,11 @@ export const PROSE_KEYS = new Set([
 ]);
 
 /**
- * Chapters written without Czech diacritics before the rule existed.
- * These read as broken to a Czech student and must be repaired; delete each
- * entry as it is fixed. Do NOT add to this list — new content must pass.
+ * Chapters written without Czech diacritics before the rule existed. The last
+ * entries were repaired, so the gate now covers every chapter — keep it empty.
+ * Do NOT add to this list; fix the prose instead.
  */
-export const DIACRITIC_EXEMPT = new Set([
-  "limits/intro",
-  "probability/intro",
-  "triangles/intro",
-  "derivatives/intro",
-  "trigonometric-functions/intro",
-]);
+export const DIACRITIC_EXEMPT = new Set<string>([]);
 
 export const MIN_DIACRITIC_RATIO = 0.04;
 /** Below this much prose the ratio is too noisy to judge. */

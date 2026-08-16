@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { MathDisplay } from "../math-display";
 import { SliderControl } from "./slider-control";
 
@@ -168,15 +168,17 @@ export function InteractiveFunctionGraph({
   const plotW = W - PAD.left - PAD.right;
   const plotH = H - PAD.top - PAD.bottom;
 
-  function toSvgX(x: number) {
-    return PAD.left + ((x - xMin) / (xMax - xMin)) * plotW;
-  }
-  function toSvgY(y: number) {
-    return PAD.top + ((yMax - y) / (yMax - yMin)) * plotH;
-  }
+  const toSvgX = useCallback(
+    (x: number) => PAD.left + ((x - xMin) / (xMax - xMin)) * plotW,
+    [xMin, xMax, plotW],
+  );
+  const toSvgY = useCallback(
+    (y: number) => PAD.top + ((yMax - y) / (yMax - yMin)) * plotH,
+    [yMin, yMax, plotH],
+  );
 
   // Generate curve path
-  const { path, points } = useMemo(() => {
+  const path = useMemo(() => {
     const pts: Array<{ x: number; svgX: number; svgY: number; y: number }> = [];
     const n = 300;
     for (let i = 0; i <= n; i++) {
@@ -197,8 +199,8 @@ export function InteractiveFunctionGraph({
         drawing = false;
       }
     }
-    return { path: segments.join(""), points: pts };
-  }, [functionType, params, xMin, xMax, yMin, yMax]);
+    return segments.join("");
+  }, [functionType, params, xMin, xMax, toSvgX, toSvgY]);
 
   // Special points
   const special = useMemo(() => {

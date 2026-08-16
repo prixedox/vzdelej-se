@@ -10,10 +10,12 @@ data.generated.ts            ← AUTO-GENERATED registry (committed) — never h
 schema.ts                    ← Zod `deckChapterSchema` / `stageChapterSchema` (per-format), used by scripts/validate-content.ts
 validate-stage.ts            ← Stage-only cross-checks: unknown params/readouts, formula-leak-before-naming
 diacritics.ts                ← Czech diacritic gate over every prose field (see PROSE_KEYS)
-{subject}/                   ← math/ or physics/
+{subject}/                   ← one dir per subject; only math/ and physics/ hold chapters today
   {topic-slug}/              ← English topic slug (e.g. linear-equations)
     {chapter-slug}.ts        ← English chapter slug (e.g. intro)
 ```
+
+The other five subject dirs (chemistry, biology, informatics, history, geography) are empty on purpose — every leaf in their trees is `comingSoon`, which the validator skips. See each subject's own `CLAUDE.md` before adding the first chapter there.
 
 Each chapter file exports `export const chapter: ChapterDefinition` — a `DeckChapter | StageChapter`
 union discriminated on `format`. Deck chapters (`format` omitted or `"deck"`) have `lesson: Lesson`;
@@ -34,6 +36,38 @@ Manual steps if you'd rather:
 2. Export `export const chapter: ChapterDefinition = { slug, topicSlug, order, title, lesson }`
 3. `pnpm build:registry` to refresh `data.generated.ts`
 
+```ts
+// src/lib/lessons/math/linear-equations/two-step-equations.ts
+import type { ChapterDefinition } from "@/types/chapter";
+import type { Lesson } from "@/types/lesson";
+
+const lesson: Lesson = {
+  title: "Dvoukrokové rovnice",
+  steps: [
+    { type: "explain", body: "Rovnice typu $2x + 3 = 11$ řešíme ve dvou krocích..." },
+  ],
+  summary: { keyTakeaways: ["Nejdřív odečítáme/přičítáme, pak násobíme/dělíme."] },
+};
+
+export const chapter: ChapterDefinition = {
+  slug: "two-step-equations",
+  topicSlug: "linear-equations",
+  order: 2,
+  title: "Dvoukrokové rovnice",
+  lesson,
+};
+```
+
+## Step Types
+
+`explain` (2–3 sentences + optional visual) · `multiple-choice` (per-choice feedback, exactly one
+correct) · `text-input` (free text, optional `wrongAnswerFeedback` + `numericTolerance`) ·
+`explore` (interactive visual + prompt) · `reveal` (click-to-show) · `sort-order` (drag to
+reorder) · `prediction` (guess-then-reveal).
+
+Stage chapters use beats instead (`observe`, `manipulate`, `predict` — see `@/types/stage`), and
+may reuse these step types only in their `apply` screens.
+
 ## Validation
 
 `pnpm validate:content` (runs on `prebuild`) branches on `chapter.format` and parses each
@@ -47,8 +81,8 @@ chapter against `deckChapterSchema` or `stageChapterSchema`, then enforces:
 - No two chapters in a topic share the same `order`
 - Every leaf topic has at least one chapter
 - Every chapter's prose passes the Czech diacritic gate (`diacritics.ts`) — below a minimum
-  háček/čárka ratio over enough letters, the build fails (`DIACRITIC_EXEMPT` is a fixed,
-  shrinking legacy list; do not add to it)
+  háček/čárka ratio over enough letters, the build fails. The legacy `DIACRITIC_EXEMPT` list is
+  now empty and the gate covers every chapter; keep it that way and fix the prose instead
 
 Stage chapters only, via `validate-stage.ts`:
 

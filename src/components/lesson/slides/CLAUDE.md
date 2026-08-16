@@ -17,5 +17,6 @@ Each corresponds 1:1 with a `LessonStep` variant (`@/types/lesson`) plus the ter
 
 - Receives slide data as props — no data fetching inside
 - Answer callbacks (`onAnswer`, `onInteracted`) passed down from LessonShell
+- Stage chapters reuse these components for their `apply` screens via the same `SlideRenderer`, but discard the answers — nothing here may assume it is being scored
 - Use `MathText` for body text with mixed markdown + LaTeX
 - All visible text in Czech

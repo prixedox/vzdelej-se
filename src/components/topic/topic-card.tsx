@@ -25,12 +25,10 @@ function subscribe(callback: () => void): () => void {
 export function TopicCard({
   topic,
   href,
-  childCount,
   chapterSlugs,
 }: {
   topic: TopicNode;
   href: string;
-  childCount?: number;
   /** Chapter slugs for this topic — required for topics that link to chapter lists. */
   chapterSlugs?: readonly string[];
 }) {
@@ -78,11 +76,6 @@ export function TopicCard({
               {topic.description && (
                 <p className="text-sm text-muted-foreground">
                   {topic.description}
-                </p>
-              )}
-              {childCount !== undefined && (
-                <p className="text-xs text-muted-foreground">
-                  {childCount} {childCount === 1 ? "téma" : childCount >= 2 && childCount <= 4 ? "témata" : "témat"}
                 </p>
               )}
             </div>

@@ -64,7 +64,7 @@ export const subjects = [
     description: "Pravěk, starověk, středověk, novověk, 20. století",
     icon: "📜",
     color: "from-stone-500 to-amber-700",
-    leafCount: 22,
+    leafCount: 21,
   },
   {
     slug: "geography",

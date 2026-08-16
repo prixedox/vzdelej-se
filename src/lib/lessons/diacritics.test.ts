@@ -106,10 +106,28 @@ describe("checkDiacritics", () => {
     expect(errors[0]).toContain("[diacritics]");
   });
 
+  it("ships with an empty grandfather list, so the gate covers every chapter", () => {
+    expect([...DIACRITIC_EXEMPT]).toEqual([]);
+  });
+
   it("skips chapters on the grandfather list", () => {
-    const [exempt] = [...DIACRITIC_EXEMPT];
-    const [topicSlug, slug] = exempt.split("/");
-    expect(checkDiacritics(exempt, makeChapter(longStripped, slug, topicSlug))).toEqual([]);
+    // The shipped list is empty, so inject an entry to exercise the escape
+    // hatch itself rather than coupling this test to real content.
+    DIACRITIC_EXEMPT.add("legacy-topic/legacy-chapter");
+    try {
+      expect(
+        checkDiacritics(
+          "legacy-topic/legacy-chapter",
+          makeChapter(longStripped, "legacy-chapter", "legacy-topic")
+        )
+      ).toEqual([]);
+      // Same prose, not on the list -> still fails.
+      expect(
+        checkDiacritics("legacy-topic/other", makeChapter(longStripped, "other", "legacy-topic"))
+      ).toHaveLength(1);
+    } finally {
+      DIACRITIC_EXEMPT.delete("legacy-topic/legacy-chapter");
+    }
   });
 
   it("skips chapters with too little prose to judge", () => {

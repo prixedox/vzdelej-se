@@ -45,6 +45,16 @@ StageShell (owns params via useAnimatedParams, derives readouts, tracks beat ind
 | `stage-complete.tsx` | Stage end screen — key takeaways only, no score |
 | `use-animated-params.ts` | `setNow` for direct drag (instant), `springTo` for beat presets (travels via `lerpParams`, so the student watches the move) |
 
+## Adding a New Stage Type
+
+1. Add the string to `StageType` in `@/types/stage`
+2. Create the pure readout module in `src/lib/lesson/stages/` — params, ranges, declared readouts, `readouts()`
+3. Register it in `src/lib/lesson/stages/registry.ts`; `solvableParams` may list only the params your component actually lets the student move
+4. Create the controlled component here in `stages/` and add its case to `stage-canvas.tsx`
+
+Both the registry and `stage-canvas.tsx` are exhaustive over `StageType`, so skipping step 3 or 4
+is a `tsc` error rather than a runtime surprise.
+
 ## Keyboard Navigation
 
 - `ArrowLeft`/`ArrowRight` for slide/beat nav — skipped when focus is on `input`/`textarea`/`select`

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MathDisplay } from "../math-display";
 import { SliderControl } from "./slider-control";
 
@@ -33,8 +33,6 @@ export function InteractiveCollision({
   const [phase, setPhase] = useState<Phase>("ready");
   const [animProgress, setAnimProgress] = useState(0); // 0 to 1
 
-  const rafRef = useRef<number>(0);
-  const startTimeRef = useRef(0);
 
   // Post-collision velocities
   const v1After = elastic
@@ -117,47 +115,54 @@ export function InteractiveCollision({
     [centerX, blockW1, blockW2, elastic, v1, v1After, v2After]
   );
 
-  const animate = useCallback(
-    (timestamp: number) => {
-      if (!startTimeRef.current) startTimeRef.current = timestamp;
-      const elapsed = timestamp - startTimeRef.current;
+  const handleCollide = useCallback(() => {
+    setPhase("approaching");
+    setAnimProgress(0);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setPhase("ready");
+    setAnimProgress(0);
+  }, []);
+
+  /**
+   * Editing a parameter invalidates the run in progress, so every control rewinds
+   * to "ready" alongside its own setter. Doing it here rather than in an effect
+   * keeps the reset tied to the interaction that caused it.
+   */
+  function withReset<T>(set: (value: T) => void) {
+    return (value: T) => {
+      set(value);
+      handleReset();
+    };
+  }
+
+  // The loop lives inside the effect so it can call itself without a
+  // self-referencing useCallback, and so cleanup owns the frame handle.
+  useEffect(() => {
+    if (phase !== "approaching") return;
+
+    let raf = 0;
+    let startTime = 0;
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
       const duration = 2000; // 2 seconds total
       const progress = Math.min(elapsed / duration, 1);
 
       setAnimProgress(progress);
 
       if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
+        raf = requestAnimationFrame(step);
       } else {
         setPhase("done");
       }
-    },
-    []
-  );
-
-  const handleCollide = useCallback(() => {
-    setPhase("approaching");
-    setAnimProgress(0);
-    startTimeRef.current = 0;
-    rafRef.current = requestAnimationFrame(animate);
-  }, [animate]);
-
-  const handleReset = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    setPhase("ready");
-    setAnimProgress(0);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
 
-  // Reset when params change
-  useEffect(() => {
-    handleReset();
-  }, [m1, m2, v1, v2, elastic, handleReset]);
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [phase]);
 
   const pos = getPositions(phase === "ready" ? 0 : animProgress);
   const isImpact = animProgress >= 0.4 && animProgress < 0.55;
@@ -366,17 +371,17 @@ export function InteractiveCollision({
 
       {/* Controls */}
       <div className="w-full max-w-xs mx-auto space-y-1">
-        <SliderControl label="m₁" value={m1} min={1} max={10} step={1} unit="kg" onChange={setM1} color="#3b82f6" />
-        <SliderControl label="m₂" value={m2} min={1} max={10} step={1} unit="kg" onChange={setM2} color="#ef4444" />
-        <SliderControl label="v₁" value={v1} min={1} max={20} step={1} unit="m/s" onChange={setV1} color="#3b82f6" />
-        <SliderControl label="v₂" value={v2} min={-10} max={0} step={1} unit="m/s" onChange={setV2} color="#ef4444" />
+        <SliderControl label="m₁" value={m1} min={1} max={10} step={1} unit="kg" onChange={withReset(setM1)} color="#3b82f6" />
+        <SliderControl label="m₂" value={m2} min={1} max={10} step={1} unit="kg" onChange={withReset(setM2)} color="#ef4444" />
+        <SliderControl label="v₁" value={v1} min={1} max={20} step={1} unit="m/s" onChange={withReset(setV1)} color="#3b82f6" />
+        <SliderControl label="v₂" value={v2} min={-10} max={0} step={1} unit="m/s" onChange={withReset(setV2)} color="#ef4444" />
       </div>
 
       {/* Type toggle + Collide button */}
       <div className="flex items-center gap-3">
         {(collisionType === "choosable") && (
           <button
-            onClick={() => setElastic(!elastic)}
+            onClick={() => withReset(setElastic)(!elastic)}
             className="px-3 py-1.5 text-xs font-medium rounded-full border transition-colors"
             style={{
               backgroundColor: elastic ? "#dbeafe" : "#fee2e2",

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/layout/footer";
 import { ArrowLeft } from "lucide-react";
 

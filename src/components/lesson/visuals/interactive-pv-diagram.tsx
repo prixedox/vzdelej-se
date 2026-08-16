@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { MathDisplay } from "../math-display";
 import { SliderControl } from "./slider-control";
 
@@ -8,7 +8,6 @@ interface InteractivePVDiagramProps {
   processType?: "isothermal" | "isobaric" | "isochoric" | "adiabatic" | "all";
   defaultP?: number; // initial pressure in kPa
   defaultV?: number; // initial volume in L
-  defaultT?: number; // initial temperature in K
   showWork?: boolean;
   gamma?: number; // adiabatic index (Cp/Cv)
   n?: number; // moles
@@ -18,7 +17,6 @@ export function InteractivePVDiagram({
   processType = "all",
   defaultP = 200,
   defaultV = 2,
-  defaultT = 300,
   showWork = true,
   gamma = 1.4,
   n = 1,
@@ -50,8 +48,14 @@ export function InteractivePVDiagram({
   const temperature = nRT / (n * 8.314); // approximate T
 
   // Map data to SVG coordinates
-  const toSvgX = (v: number) => plotL + ((v - vMin) / (vMax - vMin)) * plotW;
-  const toSvgY = (p: number) => plotB - ((p - pMin) / (pMax - pMin)) * plotH;
+  const toSvgX = useCallback(
+    (v: number) => plotL + ((v - vMin) / (vMax - vMin)) * plotW,
+    [plotL, plotW],
+  );
+  const toSvgY = useCallback(
+    (p: number) => plotB - ((p - pMin) / (pMax - pMin)) * plotH,
+    [plotB, plotH],
+  );
 
   // Generate process curves
   const curves = useMemo(() => {

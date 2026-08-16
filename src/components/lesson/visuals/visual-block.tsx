@@ -30,6 +30,17 @@ import { InteractiveDerivative } from "./interactive-derivative";
 import { AnimatedEquationSolver } from "./animated-equation-solver";
 import type { VisualBlock as VisualBlockType } from "@/types/lesson";
 
+/**
+ * Authored visual props reach the router as `Record<string, unknown>` — chapter
+ * content is checked by Zod at build time, not by the compiler. Each visual owns
+ * the real prop interface, so the target type is inferred from the JSX spread and
+ * asserted once here, at the single trust boundary. Spreading `any` instead would
+ * also drop type checking on the sibling props passed next to it.
+ */
+function visualProps<T>(props: Record<string, unknown>): T {
+  return props as unknown as T;
+}
+
 export function VisualBlock({
   visual,
   animated = false,
@@ -43,94 +54,94 @@ export function VisualBlock({
 
   switch (type) {
     case "balance-scale":
-      content = <BalanceScale {...(props as any)} animated={animated} />;
+      content = <BalanceScale {...visualProps(props)} animated={animated} />;
       break;
     case "number-line":
-      content = <NumberLine {...(props as any)} animated={animated} />;
+      content = <NumberLine {...visualProps(props)} animated={animated} />;
       break;
     case "motion-diagram":
-      content = <MotionDiagram {...(props as any)} animated={animated} />;
+      content = <MotionDiagram {...visualProps(props)} animated={animated} />;
       break;
     case "velocity-graph":
-      content = <VelocityGraph {...(props as any)} animated={animated} />;
+      content = <VelocityGraph {...visualProps(props)} animated={animated} />;
       break;
     case "trajectory":
-      content = <Trajectory {...(props as any)} animated={animated} />;
+      content = <Trajectory {...visualProps(props)} animated={animated} />;
       break;
     case "graph-st":
       content = (
         <VelocityGraph
-          {...(props as any)}
+          {...visualProps(props)}
           yLabel="s (m)"
           animated={animated}
         />
       );
       break;
     case "interactive-balance-scale":
-      content = <InteractiveBalanceScale {...(props as any)} />;
+      content = <InteractiveBalanceScale {...visualProps(props)} />;
       break;
     case "interactive-number-line":
-      content = <InteractiveNumberLine {...(props as any)} />;
+      content = <InteractiveNumberLine {...visualProps(props)} />;
       break;
     case "interactive-trajectory":
-      content = <InteractiveTrajectory {...(props as any)} />;
+      content = <InteractiveTrajectory {...visualProps(props)} />;
       break;
     case "interactive-velocity-graph":
-      content = <InteractiveVelocityGraph {...(props as any)} />;
+      content = <InteractiveVelocityGraph {...visualProps(props)} />;
       break;
     case "interactive-motion":
-      content = <InteractiveMotion {...(props as any)} />;
+      content = <InteractiveMotion {...visualProps(props)} />;
       break;
     case "interactive-roller-coaster":
-      content = <InteractiveRollerCoaster {...(props as any)} />;
+      content = <InteractiveRollerCoaster {...visualProps(props)} />;
       break;
     case "interactive-inclined-plane":
-      content = <InteractiveInclinedPlane {...(props as any)} />;
+      content = <InteractiveInclinedPlane {...visualProps(props)} />;
       break;
     case "interactive-collision":
-      content = <InteractiveCollision {...(props as any)} />;
+      content = <InteractiveCollision {...visualProps(props)} />;
       break;
     case "interactive-pendulum":
-      content = <InteractivePendulum {...(props as any)} />;
+      content = <InteractivePendulum {...visualProps(props)} />;
       break;
     case "interactive-spring-oscillator":
-      content = <InteractiveSpringOscillator {...(props as any)} />;
+      content = <InteractiveSpringOscillator {...visualProps(props)} />;
       break;
     case "interactive-orbit":
-      content = <InteractiveOrbit {...(props as any)} />;
+      content = <InteractiveOrbit {...visualProps(props)} />;
       break;
     case "interactive-pv-diagram":
-      content = <InteractivePVDiagram {...(props as any)} />;
+      content = <InteractivePVDiagram {...visualProps(props)} />;
       break;
     case "interactive-electric-field":
-      content = <InteractiveElectricField {...(props as any)} />;
+      content = <InteractiveElectricField {...visualProps(props)} />;
       break;
     case "interactive-circuit":
-      content = <InteractiveCircuit {...(props as any)} />;
+      content = <InteractiveCircuit {...visualProps(props)} />;
       break;
     case "interactive-wave":
-      content = <InteractiveWave {...(props as any)} />;
+      content = <InteractiveWave {...visualProps(props)} />;
       break;
     case "interactive-optics":
-      content = <InteractiveOptics {...(props as any)} />;
+      content = <InteractiveOptics {...visualProps(props)} />;
       break;
     case "interactive-atom":
-      content = <InteractiveAtom {...(props as any)} />;
+      content = <InteractiveAtom {...visualProps(props)} />;
       break;
     case "interactive-function-graph":
-      content = <InteractiveFunctionGraph {...(props as any)} />;
+      content = <InteractiveFunctionGraph {...visualProps(props)} />;
       break;
     case "interactive-unit-circle":
-      content = <InteractiveUnitCircle {...(props as any)} />;
+      content = <InteractiveUnitCircle {...visualProps(props)} />;
       break;
     case "interactive-triangle":
-      content = <InteractiveTriangle {...(props as any)} />;
+      content = <InteractiveTriangle {...visualProps(props)} />;
       break;
     case "interactive-probability":
-      content = <InteractiveProbability {...(props as any)} />;
+      content = <InteractiveProbability {...visualProps(props)} />;
       break;
     case "interactive-derivative":
-      content = <InteractiveDerivative {...(props as any)} />;
+      content = <InteractiveDerivative {...visualProps(props)} />;
       break;
     case "animated-equation-solver":
       content = <AnimatedEquationSolver {...props} />;

@@ -6,14 +6,13 @@ import { SliderControl } from "./slider-control";
 
 interface InteractiveRollerCoasterProps {
   trackProfile?: "hills" | "loop" | "hills-and-loop";
-  loopRadius?: number;
   maxHeight?: number;
   showFriction?: boolean;
   g?: number;
 }
 
 // Pre-defined track profiles as (x, y) normalized points [0-1, 0-1] where y=0 is top
-function getTrackPoints(profile: string, loopR: number): { x: number; y: number }[] {
+function getTrackPoints(profile: string): { x: number; y: number }[] {
   const pts: { x: number; y: number }[] = [];
   const steps = 200;
 
@@ -53,20 +52,7 @@ function getTrackPoints(profile: string, loopR: number): { x: number; y: number 
       pts.push({ x, y });
     }
   } else if (profile === "hills") {
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const x = t;
-      // Start high, two hills
-      const base = 0.2;
-      const startH = 1.0 - t * 0.1;
-      const hill1 = 0.35 * Math.sin(t * Math.PI * 2) * Math.exp(-2 * (t - 0.35) ** 2);
-      const hill2 = 0.2 * Math.sin(t * Math.PI * 3) * Math.exp(-3 * (t - 0.7) ** 2);
-      const drop = t < 0.15 ? (1.0 - base) * (1 - t / 0.15) : 0;
-      const y = base - hill1 - hill2 + drop + (1.0 - base) * (1 - Math.min(t / 0.15, 1));
-      pts.push({ x, y: Math.max(0.02, Math.min(0.98, 1 - (drop + base + hill1 + hill2))) });
-    }
-    // Simpler approach: explicit keypoints
-    pts.length = 0;
+    // Explicit keypoints, smoothed below — a closed-form hill sum was harder to tune.
     const keyY = [1.0, 0.95, 0.8, 0.5, 0.2, 0.15, 0.2, 0.45, 0.35, 0.15, 0.2, 0.35, 0.25, 0.18, 0.2];
     for (let i = 0; i < keyY.length; i++) {
       pts.push({ x: i / (keyY.length - 1), y: keyY[i] });
@@ -134,7 +120,6 @@ function getTrackPoints(profile: string, loopR: number): { x: number; y: number 
 
 export function InteractiveRollerCoaster({
   trackProfile = "hills",
-  loopRadius = 10,
   maxHeight = 50,
   showFriction = false,
   g = 10,
@@ -148,17 +133,11 @@ export function InteractiveRollerCoaster({
   const trackL = 340;
   const trackT = 30;
   const trackB = 240;
-  const trackR = trackL + 10;
   const barX = 380;
   const barW = 24;
   const barH = 180;
 
-  const trackPoints = useMemo(() => getTrackPoints(trackProfile, loopRadius), [trackProfile, loopRadius]);
-
-  // Get track height at normalized position
-  const heightAtPos = useMemo(() => {
-    return trackPoints.map((p) => p.y); // 0 = bottom, 1 = top
-  }, [trackPoints]);
+  const trackPoints = useMemo(() => getTrackPoints(trackProfile), [trackProfile]);
 
   // Map position (0-100) to track index
   const posIdx = Math.round((position / 100) * (trackPoints.length - 1));
@@ -186,7 +165,6 @@ export function InteractiveRollerCoaster({
   const svgPath = useMemo(() => {
     return trackPoints
       .map((p, i) => {
-        const sx = trackL + (trackR - trackL) * 0 + p.x * (trackR - 50);
         const x = 30 + p.x * trackL;
         const y = trackB - p.y * (trackB - trackT);
         return `${i === 0 ? "M" : "L"} ${x} ${y}`;

@@ -6,9 +6,20 @@ Interactive and static visual widgets embedded in slides.
 
 `visual-block.tsx` — switch on `VisualBlock.type` (see `@/types/lesson` `VisualType`), renders the matching component. Unknown types render nothing (silent fail). All visuals are `"use client"`.
 
+Authored props arrive as `Record<string, unknown>`, so the router hands them over through the
+`visualProps<T>()` helper, which infers each component's prop type from the JSX spread. Use it for
+new cases — never spread `as any`, which would also stop type-checking the sibling props
+(`animated={animated}` and friends) passed alongside.
+
 ## Shared
 
-`slider-control.tsx` — reusable slider with label + value, rendered with a Czech decimal comma (`3,14`, not `3.14`). Use for all parameter controls.
+`slider-control.tsx` — reusable slider with an associated `<Label>` and value readout, rendered
+with a Czech decimal comma (`3,14`, not `3.14`) and mirrored into `aria-valuetext`. Use for all
+parameter controls.
+
+`motion-g.tsx` — `<MotionG animated>` renders `motion.g` when animating and a plain `<g>`
+otherwise. Picking the tag inline (`animated ? motion.g : "g"`) yields a union element type that
+rejects the motion-only props, which is what the old `as any` spreads were hiding.
 
 ## Design Patterns
 
@@ -28,7 +39,8 @@ Interactive and static visual widgets embedded in slides.
 
 ## Props
 
-Props arrive as `Record<string, unknown>` from the router. Define a typed interface inside your component and cast immediately.
+Authored props arrive as `Record<string, unknown>`. Declare a typed props interface on your
+component and let the router's `visualProps<T>()` infer it — the one cast lives there, not here.
 
 ## Adding a New Visual
 

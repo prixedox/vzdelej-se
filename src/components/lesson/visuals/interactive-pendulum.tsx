@@ -26,8 +26,6 @@ export function InteractivePendulum({
 
   // Physics state (angle in radians, angular velocity)
   const stateRef = useRef({ theta: 0, omega: 0 });
-  const rafRef = useRef<number>(0);
-  const lastTimeRef = useRef(0);
 
   const theta0Rad = (angle0 * Math.PI) / 180;
   const period = 2 * Math.PI * Math.sqrt(length / grav);
@@ -67,11 +65,39 @@ export function InteractivePendulum({
     return pts.join(" ");
   }, [theta0Rad, stringLen, pivotX, pivotY]);
 
-  const animate = useCallback(
-    (timestamp: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-      const dt = Math.min((timestamp - lastTimeRef.current) / 1000, 0.05); // cap dt
-      lastTimeRef.current = timestamp;
+  const startAnimation = useCallback(() => {
+    stateRef.current = { theta: theta0Rad, omega: 0 };
+    setIsPlaying(true);
+  }, [theta0Rad]);
+
+  const stopAnimation = useCallback(() => {
+    setIsPlaying(false);
+  }, []);
+
+  /**
+   * Editing a parameter invalidates the swing in progress, so every slider
+   * rewinds the bob alongside its own setter. Doing it here rather than in an
+   * effect keeps the reset tied to the interaction that caused it.
+   */
+  const resetToAngle = useCallback((angleDeg: number) => {
+    const rad = (angleDeg * Math.PI) / 180;
+    setIsPlaying(false);
+    stateRef.current = { theta: rad, omega: 0 };
+    setDisplayTheta(rad);
+  }, []);
+
+  // The loop lives inside the effect so it can call itself without a
+  // self-referencing useCallback, and so cleanup owns the frame handle.
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    let raf = 0;
+    let lastTime = 0;
+
+    const step = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05); // cap dt
+      lastTime = timestamp;
 
       const state = stateRef.current;
 
@@ -83,38 +109,12 @@ export function InteractivePendulum({
       state.theta += state.omega * dt;
 
       setDisplayTheta(state.theta);
-      rafRef.current = requestAnimationFrame(animate);
-    },
-    [grav, length]
-  );
-
-  const startAnimation = useCallback(() => {
-    stateRef.current = { theta: theta0Rad, omega: 0 };
-    lastTimeRef.current = 0;
-    setIsPlaying(true);
-  }, [theta0Rad]);
-
-  const stopAnimation = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    setIsPlaying(false);
-  }, []);
-
-  useEffect(() => {
-    if (isPlaying) {
-      lastTimeRef.current = 0;
-      rafRef.current = requestAnimationFrame(animate);
-    }
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      raf = requestAnimationFrame(step);
     };
-  }, [isPlaying, animate]);
 
-  // Reset when params change
-  useEffect(() => {
-    stopAnimation();
-    stateRef.current = { theta: theta0Rad, omega: 0 };
-    setDisplayTheta(theta0Rad);
-  }, [length, angle0, grav, theta0Rad, stopAnimation]);
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [isPlaying, grav, length]);
 
   const bobRadius = 14;
 
@@ -274,10 +274,46 @@ export function InteractivePendulum({
 
       {/* Sliders */}
       <div className="w-full max-w-xs mx-auto space-y-1">
-        <SliderControl label="L" value={length} min={0.5} max={3} step={0.1} unit="m" onChange={setLength} color="#6366f1" />
-        <SliderControl label="θ₀" value={angle0} min={5} max={80} step={5} unit="°" onChange={setAngle0} color="#3b82f6" />
+        <SliderControl
+          label="L"
+          value={length}
+          min={0.5}
+          max={3}
+          step={0.1}
+          unit="m"
+          onChange={(v) => {
+            setLength(v);
+            resetToAngle(angle0);
+          }}
+          color="#6366f1"
+        />
+        <SliderControl
+          label="θ₀"
+          value={angle0}
+          min={5}
+          max={80}
+          step={5}
+          unit="°"
+          onChange={(v) => {
+            setAngle0(v);
+            resetToAngle(v);
+          }}
+          color="#3b82f6"
+        />
         {showGSlider && (
-          <SliderControl label="g" value={grav} min={1} max={20} step={1} unit="m/s²" onChange={setGrav} color="#22c55e" />
+          <SliderControl
+            label="g"
+            value={grav}
+            min={1}
+            max={20}
+            step={1}
+            unit="m/s²"
+            onChange={(v) => {
+              setGrav(v);
+              resetToAngle(angle0);
+            }}
+            color="#22c55e"
+          />
         )}
       </div>
 
@@ -291,11 +327,7 @@ export function InteractivePendulum({
           {isPlaying ? "⏸ Pauza" : "▶ Spustit"}
         </button>
         <button
-          onClick={() => {
-            stopAnimation();
-            stateRef.current = { theta: theta0Rad, omega: 0 };
-            setDisplayTheta(theta0Rad);
-          }}
+          onClick={() => resetToAngle(angle0)}
           className="px-3 py-1.5 text-sm font-medium rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
         >
           ↺ Reset

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { MotionG } from "./motion-g";
 
 interface BalanceScaleProps {
   leftItems: string[];
@@ -19,16 +19,6 @@ export function BalanceScale({
 }: BalanceScaleProps) {
   const tilt = balanced ? 0 : -3;
 
-  const BeamG = animated ? motion.g : "g";
-  const beamProps = animated
-    ? {
-        initial: { rotate: -8 },
-        animate: { rotate: tilt },
-        transition: { type: "spring", stiffness: 80, damping: 12, delay: 0.2 },
-        style: { transformOrigin: "200px 100px" },
-      }
-    : {};
-
   return (
     <div className="flex justify-center my-4">
       <svg viewBox="0 0 400 220" className="w-full max-w-md" aria-label="Váha">
@@ -37,7 +27,14 @@ export function BalanceScale({
         <rect x="195" y="100" width="10" height="90" fill="#94a3b8" rx="2" />
 
         {/* Beam */}
-        <BeamG {...(beamProps as any)} transform={animated ? undefined : `rotate(${tilt}, 200, 100)`}>
+        <MotionG
+          animated={animated}
+          initial={{ rotate: -8 }}
+          animate={{ rotate: tilt }}
+          transition={{ type: "spring", stiffness: 80, damping: 12, delay: 0.2 }}
+          style={{ transformOrigin: "200px 100px" }}
+          transform={animated ? undefined : `rotate(${tilt}, 200, 100)`}
+        >
           <rect x="40" y="96" width="320" height="8" fill="#475569" rx="4" />
 
           {/* Fulcrum triangle */}
@@ -51,16 +48,14 @@ export function BalanceScale({
           {leftItems.map((item, i) => {
             const x = 55 + i * (110 / Math.max(leftItems.length, 1));
             const isX = item.toLowerCase().includes("x");
-            const ItemG = animated ? motion.g : "g";
-            const itemProps = animated
-              ? {
-                  initial: { opacity: 0, y: -20 } as any,
-                  animate: { opacity: 1, y: 0 } as any,
-                  transition: { delay: 0.4 + i * 0.1, type: "spring", stiffness: 200 },
-                }
-              : {};
             return (
-              <ItemG key={`l-${i}`} {...(itemProps as any)}>
+              <MotionG
+                key={`l-${i}`}
+                animated={animated}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.1, type: "spring", stiffness: 200 }}
+              >
                 <rect
                   x={x - 14}
                   y={115}
@@ -81,7 +76,7 @@ export function BalanceScale({
                 >
                   {item}
                 </text>
-              </ItemG>
+              </MotionG>
             );
           })}
 
@@ -93,16 +88,14 @@ export function BalanceScale({
           {rightItems.map((item, i) => {
             const x = 295 + i * (110 / Math.max(rightItems.length, 1));
             const isX = item.toLowerCase().includes("x");
-            const ItemG = animated ? motion.g : "g";
-            const itemProps = animated
-              ? {
-                  initial: { opacity: 0, y: -20 } as any,
-                  animate: { opacity: 1, y: 0 } as any,
-                  transition: { delay: 0.5 + i * 0.1, type: "spring", stiffness: 200 },
-                }
-              : {};
             return (
-              <ItemG key={`r-${i}`} {...(itemProps as any)}>
+              <MotionG
+                key={`r-${i}`}
+                animated={animated}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1, type: "spring", stiffness: 200 }}
+              >
                 <rect
                   x={x - 14}
                   y={115}
@@ -123,10 +116,10 @@ export function BalanceScale({
                 >
                   {item}
                 </text>
-              </ItemG>
+              </MotionG>
             );
           })}
-        </BeamG>
+        </MotionG>
 
         {/* Equal sign */}
         {balanced && (

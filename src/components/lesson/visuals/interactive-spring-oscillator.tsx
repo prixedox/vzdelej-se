@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { MathDisplay } from "../math-display";
 import { SliderControl } from "./slider-control";
 
@@ -42,9 +42,6 @@ export function InteractiveSpringOscillator({
   const [isPlaying, setIsPlaying] = useState(false);
   const [time, setTime] = useState(0);
 
-  const rafRef = useRef<number>(0);
-  const lastTimeRef = useRef(0);
-  const graphPointsRef = useRef<{ t: number; x: number }[]>([]);
 
   const omega = useMemo(() => Math.sqrt(k / mass), [k, mass]);
   const period = useMemo(() => (2 * Math.PI) / omega, [omega]);
@@ -76,55 +73,47 @@ export function InteractiveSpringOscillator({
   const blockX = eqX + xCurrent * pixPerCm;
   const springEndX = blockX - blockW / 2;
 
-  const animate = useCallback(
-    (timestamp: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-      const dt = (timestamp - lastTimeRef.current) / 1000;
-      lastTimeRef.current = timestamp;
-
-      setTime((prev) => {
-        const newT = prev + dt;
-        // Add to graph trail
-        const xVal = x0 * Math.cos(omega * newT);
-        graphPointsRef.current.push({ t: newT, x: xVal });
-        // Keep last 5 seconds
-        const cutoff = newT - 5;
-        while (graphPointsRef.current.length > 0 && graphPointsRef.current[0].t < cutoff) {
-          graphPointsRef.current.shift();
-        }
-        return newT;
-      });
-
-      rafRef.current = requestAnimationFrame(animate);
-    },
-    [omega, x0]
-  );
-
+  // The loop lives inside the effect so it can call itself without a
+  // self-referencing useCallback, and so cleanup owns the frame handle.
   useEffect(() => {
-    if (isPlaying) {
-      lastTimeRef.current = 0;
-      rafRef.current = requestAnimationFrame(animate);
-    } else {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    }
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (!isPlaying) return;
+
+    let raf = 0;
+    let lastTime = 0;
+
+    const step = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const dt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+
+      setTime((prev) => prev + dt);
+
+      raf = requestAnimationFrame(step);
     };
-  }, [isPlaying, animate]);
+
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [isPlaying]);
 
   const handleReset = useCallback(() => {
     setIsPlaying(false);
     setTime(0);
-    graphPointsRef.current = [];
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // Reset when params change
-  useEffect(() => {
-    handleReset();
-  }, [k, mass, x0, handleReset]);
+  /**
+   * Editing a parameter invalidates the oscillation in progress, so every slider
+   * rewinds alongside its own setter. Doing it here rather than in an effect
+   * keeps the reset tied to the interaction that caused it.
+   */
+  function withReset(set: (value: number) => void) {
+    return (value: number) => {
+      set(value);
+      handleReset();
+    };
+  }
 
-  // Build graph path
+  // Build graph path. x(t) is analytic, so the trailing 5 s is resampled from the
+  // motion itself rather than accumulated into a buffer as the animation runs.
   const graphPath = useMemo(() => {
     if (!showGraph) return "";
     const graphTop = 210;
@@ -134,21 +123,22 @@ export function InteractiveSpringOscillator({
     const graphW = graphR - graphL;
     const graphMid = graphTop + graphH / 2;
 
-    const pts = graphPointsRef.current;
-    if (pts.length < 2) return "";
+    const tMax = time;
+    const tMin = Math.max(0, time - 5);
+    if (tMax - tMin < 0.05) return "";
+    const tRange = tMax - tMin;
 
-    const tMin = pts[0].t;
-    const tMax = pts[pts.length - 1].t;
-    const tRange = Math.max(tMax - tMin, 0.1);
-
-    return pts
-      .map((p, i) => {
-        const px = graphL + ((p.t - tMin) / tRange) * graphW;
-        const py = graphMid - (p.x / Math.max(x0, 1)) * (graphH / 2 - 5);
-        return `${i === 0 ? "M" : "L"} ${px} ${py}`;
-      })
-      .join(" ");
-  }, [time, showGraph, x0]); // time dependency triggers recompute
+    const samples = 160;
+    const segments: string[] = [];
+    for (let i = 0; i <= samples; i++) {
+      const t = tMin + (tRange * i) / samples;
+      const x = x0 * Math.cos(omega * t);
+      const px = graphL + ((t - tMin) / tRange) * graphW;
+      const py = graphMid - (x / Math.max(x0, 1)) * (graphH / 2 - 5);
+      segments.push(`${i === 0 ? "M" : "L"} ${px} ${py}`);
+    }
+    return segments.join(" ");
+  }, [time, showGraph, x0, omega]);
 
   // Energy bar dimensions
   const barX = 420;
@@ -333,9 +323,9 @@ export function InteractiveSpringOscillator({
 
       {/* Sliders */}
       <div className="w-full max-w-xs mx-auto space-y-1">
-        <SliderControl label="k" value={k} min={10} max={400} step={10} unit="N/m" onChange={setK} color="#6366f1" />
-        <SliderControl label="m" value={mass} min={0.5} max={5} step={0.5} unit="kg" onChange={setMass} color="#3b82f6" />
-        <SliderControl label="x₀" value={x0} min={1} max={10} step={1} unit="cm" onChange={setX0} color="#ef4444" />
+        <SliderControl label="k" value={k} min={10} max={400} step={10} unit="N/m" onChange={withReset(setK)} color="#6366f1" />
+        <SliderControl label="m" value={mass} min={0.5} max={5} step={0.5} unit="kg" onChange={withReset(setMass)} color="#3b82f6" />
+        <SliderControl label="x₀" value={x0} min={1} max={10} step={1} unit="cm" onChange={withReset(setX0)} color="#ef4444" />
       </div>
 
       {/* Play/Pause/Reset */}

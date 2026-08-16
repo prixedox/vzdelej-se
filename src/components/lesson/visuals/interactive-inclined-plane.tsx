@@ -57,8 +57,6 @@ export function InteractiveInclinedPlane({
 
   // Slide offset
   const slideOffset = forces.isSliding ? Math.min(forces.accel * 2, 30) : 0;
-  const slideX = bx + slideOffset * cosA;
-  const slideY = by - slideOffset * (-sinA);
   const actualBx = bx + slideOffset * cosA;
   const actualBy = by + slideOffset * sinA;
 

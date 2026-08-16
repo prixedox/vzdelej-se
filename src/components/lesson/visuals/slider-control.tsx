@@ -2,6 +2,8 @@
 
 import { useId } from "react";
 
+import { Label } from "@/components/ui/label";
+
 /**
  * Czech convention is a decimal comma (3,14 not 3.14). JS's own number→string
  * conversion already picks the shortest round-tripping representation with no
@@ -83,16 +85,23 @@ export function SliderControl({
         .${cls}:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.1); }
         .${cls}:active::-moz-range-thumb { cursor: grabbing; transform: scale(1.1); }
       `}</style>
-      <span className="text-sm font-semibold text-muted-foreground min-w-[2.5rem] text-right">
+      <Label
+        htmlFor={id}
+        className="justify-end text-sm font-semibold text-muted-foreground min-w-[2.5rem]"
+      >
         {label}
-      </span>
+      </Label>
       <input
+        id={id}
         type="range"
         min={min}
         max={max}
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
+        // The visible readout sits in a sibling span, so screen readers get the
+        // same Czech-formatted number and unit here rather than the raw value.
+        aria-valuetext={`${formatCzechNumber(value)}${unit ? ` ${unit}` : ""}`}
         className={`${cls} flex-1 h-6`}
       />
       <span

@@ -1,6 +1,9 @@
 # Vzdělej.se
 
-Czech educational platform for math & physics. Static interactive lessons — no database, no auth, no server calls. Pure static site.
+Czech educational platform: math, physics, chemistry, biology, informatics, history, geography.
+Static interactive lessons — no database, no auth, no server calls. `next.config.ts` sets
+`output: "export"` + `basePath: "/vzdelej-se"`; the build ships to GitHub Pages, so every dynamic
+route needs `generateStaticParams` (helpers in `src/lib/static-params.ts`).
 
 ## Commands
 
@@ -16,28 +19,30 @@ pnpm new-chapter <subject>/<topic>/<chapter> [title]   # Scaffold a chapter
 pnpm new-topic   <subject>/<category>/<topic>  [name]  # Scaffold topic + intro chapter
 ```
 
-## Code Style
-
-- TypeScript strict — no `any`, no `@ts-ignore`
-- Imports: `@/` alias (maps to `src/`), order: React → external libs → internal
-- PascalCase component files, `"use client"` only when hooks/browser APIs are used
-- All user-facing text is **Czech** — code comments, identifiers, and slugs are English
-- `cn()` from `@/lib/utils` for conditional Tailwind classes
-- Animations: import from `motion/react` (NOT `framer-motion`)
-
 ## Architecture
 
 ```
 src/app/          → Next.js App Router: (app)/ with sidebar, (marketing)/ public pages
-src/components/   → ui/ (shadcn), layout/, lesson/ (slide deck + slides + visuals), topic/
-src/lib/          → lessons/ (chapter content), lesson/ (engine), topics/ (trees), utils/
-src/types/        → Shared interfaces: chapter, lesson, slide, topic
+src/components/   → ui/ (shadcn), layout/, lesson/ (deck player + stage player), topic/
+src/lib/          → lessons/ (chapter content), lesson/ (engine + stages/), topics/ (trees)
+src/types/        → chapter, lesson, slide, stage, topic
 scripts/          → Node-only codegen + validation + scaffolders
 ```
 
 **Data flow:** `types/` ← `lib/` ← `components/` ← `app/`. Never import backwards.
 
-**Chapter flow:** a topic is a folder of chapter files. `/topics/{subject}` lists topics → `/topics/{subject}/{topic}` lists chapters → `/topics/{subject}/{topic}/{chapter}` plays the lesson. Each chapter file at `src/lib/lessons/{subject}/{topic-slug}/{chapter-slug}.ts` exports `export const chapter: ChapterDefinition`. `scripts/build-registry.ts` stitches them into `src/lib/lessons/data.generated.ts` (committed); `data.ts` exposes `getChapter`, `getChaptersForTopic`, `hasChapter`.
+**Chapter flow:** a topic is a folder of chapter files. `/topics/{subject}` lists topics → `/topics/{subject}/{topic}` lists chapters → `/topics/{subject}/{topic}/{chapter}` plays the lesson (missing chapter → "Kapitola nenalezena" fallback in `chapter-page.tsx`). Each chapter file at `src/lib/lessons/{subject}/{topic-slug}/{chapter-slug}.ts` exports `export const chapter: ChapterDefinition` — a `DeckChapter | StageChapter` union discriminated on `format` (`"deck"`, optional, or `"stage"`). `scripts/build-registry.ts` stitches them into `src/lib/lessons/data.generated.ts` (committed); `data.ts` exposes `getChapter`, `getChaptersForTopic`, `hasChapter`.
+
+Every source directory carries its own `CLAUDE.md` with the local rules — read it before editing there.
+
+## Code Style
+
+- TypeScript strict — no `any`, no `@ts-ignore`
+- Imports: `@/` alias (maps to `src/`), order: React → external libs → internal
+- PascalCase component files, `"use client"` only when hooks/browser APIs are used
+- All user-facing text is **Czech**; slugs stay English
+- `cn()` from `@/lib/utils` for conditional Tailwind classes
+- Animations: import from `motion/react` (NOT `framer-motion`)
 
 ## Czech Math Conventions
 
@@ -54,17 +59,10 @@ scripts/          → Node-only codegen + validation + scaffolders
 - Spacing: use Tailwind scale (`p-4`, `gap-6`), avoid arbitrary values
 - shadcn/ui "new-york" style — add new components via `pnpm dlx shadcn@latest add <name>`, never edit `ui/` files manually
 
-## Error Handling
-
-- Missing chapter → show "Kapitola nenalezena" fallback with back link (see `[chapterSlug]/page.tsx`)
-- Visual component gets unknown type → render nothing (silent fail in `visual-block.tsx` switch)
-- Answer evaluation never throws — always returns boolean
-- Content validation runs on `prebuild` — bad chapters fail the build loudly
-
 ## Accessibility
 
 - Interactive visuals must have descriptive `aria-label` on the container
-- Keyboard navigation: Arrow keys for slides, Tab for interactive controls
+- Keyboard navigation: Arrow keys for slides and beats, Tab for interactive controls
 - All form inputs need associated `<Label>` components
 - Use semantic HTML (`<main>`, `<nav>`, `<section>`) in layouts
 - Color alone should not convey meaning — pair with icons or text

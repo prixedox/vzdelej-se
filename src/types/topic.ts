@@ -15,5 +15,3 @@ export interface TopicTreeData {
   icon: string;
   topics: readonly TopicNode[];
 }
-
-export type Subject = "math" | "physics";

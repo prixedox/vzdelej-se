@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { MotionG } from "./motion-g";
 
 interface NumberLineProps {
   min: number;
@@ -98,16 +98,14 @@ export function NumberLine({
 
         {/* Points */}
         {points.map((p, i) => {
-          const PointG = animated ? motion.g : "g";
-          const pointProps = animated
-            ? {
-                initial: { opacity: 0, y: -25 } as any,
-                animate: { opacity: 1, y: 0 } as any,
-                transition: { delay: 0.3 + i * 0.15, type: "spring", stiffness: 260, damping: 12 },
-              }
-            : {};
           return (
-            <PointG key={i} {...(pointProps as any)}>
+            <MotionG
+              key={i}
+              animated={animated}
+              initial={{ opacity: 0, y: -25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + i * 0.15, type: "spring", stiffness: 260, damping: 12 }}
+            >
               <circle
                 cx={xPos(p.value)}
                 cy={lineY}
@@ -126,7 +124,7 @@ export function NumberLine({
               >
                 {p.label}
               </text>
-            </PointG>
+            </MotionG>
           );
         })}
       </svg>

@@ -4,13 +4,17 @@ Physics chapter content. One folder per leaf topic from `src/lib/topics/physics-
 
 ```
 physics/
-  mechanics/
+  kinematics/
     intro.ts
+    velocity-as-slope.ts
+    projectile-motion.ts
   quantum-physics/
     intro.ts
   electric-circuits/
     intro.ts
 ```
+
+14 of the tree's 19 leaves have a folder here; the other 5 are `comingSoon` and need none.
 
 - Folder name = topic `slug` (English, matches a leaf in the tree)
 - File name (sans `.ts`) = chapter `slug` (English)

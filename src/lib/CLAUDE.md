@@ -4,12 +4,11 @@ Pure logic and data. No React imports — components belong in `src/components/`
 
 | Directory | Purpose |
 |-----------|---------|
-| `lesson/` | Slide builder, answer evaluator, progress store, math colors |
-| `lessons/` | Static chapter content: `data.ts` shim + `data.generated.ts` (generated) + `{subject}/{topic}/{chapter}.ts` files + Zod schema |
-| `topics/` | Topic tree definitions (math-tree, physics-tree, index) |
-| `utils/` | Czech pluralization, constants, general helpers |
+| `lesson/` | Engine: slide builder, beat builder, answer evaluator, goal check + solver, progress store, math colors, `stages/` readout modules |
+| `lessons/` | Static chapter content: `data.ts` shim + `data.generated.ts` (generated) + `{subject}/{topic}/{chapter}.ts` files + Zod schema, stage cross-checks, diacritic gate |
+| `topics/` | One `{subject}-tree.ts` per subject (math, physics, chemistry, biology, informatics, history, geography) + `index.ts` |
 
-Root: `utils.ts` exports `cn()` (clsx + tailwind-merge).
+Root: `utils.ts` exports `cn()` (clsx + tailwind-merge). `static-params.ts` enumerates every dynamic route for `output: "export"`.
 
 ## Design
 

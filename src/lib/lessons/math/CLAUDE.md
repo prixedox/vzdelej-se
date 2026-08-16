@@ -6,12 +6,15 @@ Math chapter content. One folder per leaf topic from `src/lib/topics/math-tree.t
 math/
   linear-equations/
     intro.ts              # export const chapter: ChapterDefinition = { ... }
-    two-step-equations.ts
+    word-problems.ts
   quadratic-equations/
     intro.ts
-  functions/
+    discriminant.ts
+  logarithmic-functions/
     intro.ts
 ```
+
+21 of the tree's 26 leaves have a folder here; the other 5 are `comingSoon` and need none.
 
 - Folder name = topic `slug` (English, matches a leaf in the tree)
 - File name (sans `.ts`) = chapter `slug` (English)
